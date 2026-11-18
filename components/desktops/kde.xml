@@ -8,7 +8,7 @@
 		</profile>
 	</profiles>
 	<!-- Common exclusions for KDE variants -->
-	<packages type="image" patternType="plusRecommended" profiles="KDE-Desktop,KDE-Mobile">
+	<packages type="image" profiles="KDE-Desktop,KDE-Mobile">
 		<ignore name="gnome-disk-utility"/> <!-- redundant with kde partitionmanager -->
 		<ignore name="mariadb-server-utils"/> <!-- Not needed on desktops (pagure.io:fedora-kde/SIG#566) -->
 		<ignore name="system-config-language"/> <!-- redundant with kcms -->
@@ -24,7 +24,7 @@
 		<ignore name="ktorrent"/> <!-- ~15 megs -->
 		<ignore name="initial-setup"/> <!-- redundant with plasma-setup -->
 	</packages>
-	<packages type="image" patternType="plusRecommended" profiles="KDE-Desktop">
+	<packages type="image" profiles="KDE-Desktop">
 		<!-- install env-group to resolve RhBug:1891500 -->
 		<namedCollection name="kde-desktop-environment"/>
 		<!-- kde-apps namedCollection dropped (issue #23): it pulled Krita, Kdenlive, Calligra,
@@ -73,7 +73,7 @@
 		<ignore name="kdepim-addons"/>      <!-- KPIM plugins pulled in by several PIM apps -->
 		<ignore name="gwenview"/>           <!-- KDE image viewer -->
 	</packages>
-	<packages type="image" patternType="plusRecommended" profiles="KDE-Mobile">
+	<packages type="image" profiles="KDE-Mobile">
 		<!-- install env-group to resolve RhBug:1891500 -->
 		<namedCollection name="kde-mobile-environment"/>
 		<namedCollection name="firefox"/>
