@@ -24,7 +24,12 @@
 		<ignore name="ktorrent"/> <!-- ~15 megs -->
 		<ignore name="initial-setup"/> <!-- redundant with plasma-setup -->
 	</packages>
-	<packages type="image" patternType="plusRecommended" profiles="KDE-Desktop">
+	<!-- patternType onlyRequired (was plusRecommended) drops the weak/recommended
+	     deps of the kde-desktop-environment pattern so the live ISO stays small;
+	     required KDE session packages are kept. Scoped to KDE profiles only, so it
+	     does not affect XFCE/GNOME/etc. Iteration 2 for keeping the ISO under 2 GB
+	     (fix #24 / PR #27); CI measures the result and names the next targets. -->
+	<packages type="image" patternType="onlyRequired" profiles="KDE-Desktop">
 		<!-- install env-group to resolve RhBug:1891500 -->
 		<namedCollection name="kde-desktop-environment"/>
 		<!-- kde-apps namedCollection dropped (issue #23): it pulled Krita, Kdenlive, Calligra,
