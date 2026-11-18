@@ -540,4 +540,15 @@ if [[ "$kiwi_profiles" == *"FEX"* ]]; then
 	rm /usr/bin/rm
 fi
 
+#======================================
+# Report the largest packages (ISO-size diagnosis)
+#======================================
+## Print the top-30 largest installed packages so the build log points at the
+## heavy hitters when the ISO trips the GitHub Releases 2 GB limit (the size check
+## in .github/workflows/build.yml, issues #6/#23/#24). awk limits to 30 lines
+## instead of `head` so it reads all of sort's output and never triggers a SIGPIPE
+## that would fail the build under `set -o pipefail` above.
+echo "=== TOP 30 LARGEST PACKAGES IN IMAGE ==="
+rpm -qa --qf '%{SIZE}\t%{NAME}\n' | sort -rn | awk 'NR <= 30 {printf "%.1f MB\t%s\n", $1/1024/1024, $2}'
+
 exit 0
