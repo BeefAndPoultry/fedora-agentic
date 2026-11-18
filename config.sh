@@ -70,9 +70,6 @@ if [[ "$kiwi_profiles" == *"Cloud"* ]] || [[ "$kiwi_profiles" == *"Disk"* ]] || 
 	passwd -l root
 fi
 
-echo "=== PRE TOP 30 LARGEST PACKAGES IN IMAGE ==="
-rpm -qa --qf '%{SIZE}\t%{NAME}\n' | sort -rn | awk 'NR <= 30 {printf "%.1f MB\t%s\n", $1/1024/1024, $2}'
-
 #======================================
 # Setup default services
 #--------------------------------------
@@ -119,9 +116,6 @@ if [[ "$kiwi_profiles" == *"Live"* ]]; then
 		echo 'livesys_session="xfce"' > /etc/sysconfig/livesys
 	fi
 fi
-
-echo "=== PRE TOP 30 LARGEST PACKAGES IN IMAGE ==="
-rpm -qa --qf '%{SIZE}\t%{NAME}\n' | sort -rn | awk 'NR <= 30 {printf "%.1f MB\t%s\n", $1/1024/1024, $2}'
 
 #======================================
 # Setup firstboot initial setup
@@ -549,12 +543,17 @@ fi
 #======================================
 # Report the largest packages (ISO-size diagnosis)
 #======================================
-## Print the top-30 largest installed packages so the build log points at the
-## heavy hitters when the ISO trips the GitHub Releases 2 GB limit (the size check
-## in .github/workflows/build.yml, issues #6/#23/#24). awk limits to 30 lines
+## Write the top-30 largest installed packages to a file on the image rootfs so
+## build.yml can cat it after extracting the rootfs. This keeps the report even
+## when the ISO trips the GitHub Releases 2 GB limit (the size check in
+## .github/workflows/build.yml, issues #6/#23/#24). awk limits to 30 lines
 ## instead of `head` so it reads all of sort's output and never triggers a SIGPIPE
 ## that would fail the build under `set -o pipefail` above.
-echo "=== TOP 30 LARGEST PACKAGES IN IMAGE ==="
-rpm -qa --qf '%{SIZE}\t%{NAME}\n' | sort -rn | awk 'NR <= 30 {printf "%.1f MB\t%s\n", $1/1024/1024, $2}'
+{
+  echo "=== TOP 30 LARGEST PACKAGES IN IMAGE ==="
+  rpm -qa --qf '%{SIZE}\t%{NAME}\n' | sort -rn | awk 'NR <= 30 {printf "%.1f MB\t%s\n", $1/1024/1024, $2}'
+} > /var/log/largest-packages.txt
+
+cat /var/log/largest-packages.txt
 
 exit 0

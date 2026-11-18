@@ -55,14 +55,13 @@ jobs:
             --output-dir=./outdir
 
       - name: Report largest packages in image
-        # config.sh prints this inside the KIWI chroot, where its stdout is
-        # captured by kiwi-ng and never reaches the runner. So instead we extract
-        # the assembled rootfs from the built ISO and query rpm here, where GitHub
-        # Actions actually captures stdout. Runs before the size check so the
-        # diagnosis is even available when the ISO trips the 2 GB limit (issues
-        # #6/#23/#24). Needs a privileged container: loopback-mounting an ISO
-        # requires loop devices, which the --privileged fedora:latest container
-        # provides.
+        # config.sh writes this file on the image rootfs before the chroot exits.
+        # kiwi-ng captures config.sh's stdout, so we can't see it directly; instead
+        # we extract the assembled rootfs from the built ISO and cat the file build.yml
+        # wrote, where GitHub Actions actually captures stdout. Runs before the size
+        # check so the diagnosis is even available when the ISO trips the 2 GB limit
+        # (issues #6/#23/#24). Needs a privileged container: loopback-mounting an ISO
+        # requires loop devices, which the --privileged fedora:latest container provides.
         run: |
           set -euxo pipefail
           dnf install -y squashfs-tools
@@ -81,22 +80,23 @@ jobs:
           # The t2linux/KIWI live ISO stores the root filesystem as a squashfs
           # image somewhere on the ISO. Pick the largest one (the root is by far
           # the heaviest).
+          find /tmp/mntsrc -name '*'
           SQ=$(find /tmp/mntsrc -name '*.squashfs' -printf '%s %p\n' 2>/dev/null | sort -rn | head -n1 | awk '{print $2}')
           if [ -n "$SQ" ]; then
             echo "Extracting rootfs squashfs: $SQ"
             unsquashfs -d /tmp/rootfs "$SQ" || true
           fi
 
-          if [ -f /tmp/rootfs/usr/bin/rpm ]; then
+          # config.sh wrote this on the image rootfs; cat it so GitHub Actions
+          # captures its output. Skip gracefully if the squashfs didn't extract.
+          if [ -f /tmp/rootfs/var/log/largest-packages.txt ]; then
             echo "=== TOP 30 LARGEST PACKAGES IN IMAGE ==="
-            # RPM sizes are in bytes; awk prints them in MB. Use awk 'NR <= 30'
-            # (not `head`) so it reads all of sort's output and never triggers a
-            # SIGPIPE that would fail the build under `set -o pipefail`.
-            rpm --root=/tmp/rootfs -qa --qf '%{SIZE}\t%{NAME}\n' | sort -rn | awk 'NR <= 30 {printf "%.1f MB\t%s\n", $1/1024/1024, $2}'
+            cat /tmp/rootfs/var/log/largest-packages.txt
           else
-            echo "Could not locate the rootfs squashfs inside the ISO; skipping package report" >&2
+            echo "Could not locate the package report in the extracted rootfs; skipping package report" >&2
           fi
 
+          umount /tmp/mntsrc 2>/dev/null || true
           umount /tmp/mntsrc 2>/dev/null || true
 
       - name: Verify ISO is under 2GB
