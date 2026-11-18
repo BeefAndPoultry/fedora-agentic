@@ -3,7 +3,6 @@ name: Build Custom Fedora ISO
 on:
   workflow_dispatch:
   pull_request:
-    branches: [ main ]
   push:
     branches: [ main ]
 
@@ -80,7 +79,7 @@ jobs:
           # The t2linux/KIWI live ISO stores the root filesystem as a squashfs
           # image somewhere on the ISO. Pick the largest one (the root is by far
           # the heaviest).
-          find /tmp/mntsrc -name '*'
+          #find /tmp/mntsrc -name '*'
           SQ="/tmp/mntsrc/LiveOS/squashfs.img"
           if [ -n "$SQ" ]; then
             echo "Extracting rootfs squashfs: $SQ"
@@ -99,6 +98,22 @@ jobs:
           umount /tmp/mntsrc 2>/dev/null || true
           umount /tmp/mntsrc 2>/dev/null || true
 
+
+      - name: Report largest packages in image 2
+        run: |
+          if [ -f ./outdir-build/build/image-root/var/log/largest-packages.txt ]; then
+            echo "=== TOP 30 LARGEST PACKAGES IN IMAGE ==="
+            cat ./outdir-build/build/image-root/var/log/largest-packages.txt
+          elif [ -d ./outdir-build/build/image-root ]; then
+            echo "=== TOP 30 LARGEST PACKAGES IN IMAGE (via rpm --root) ==="
+            rpm --root="$(realpath ./outdir-build/build/image-root)" \
+              -qa --qf '%{SIZE}\t%{NAME}\n' | sort -rn | head -n 30 | \
+              awk '{printf "%.1f MB\t%s\n", $1/1024/1024, $2}'
+          else
+            echo "image-root not found under ./outdir-build/build/image-root" >&2
+          fi
+
+
       - name: Verify ISO is under 2GB
         run: |
           ISO_FILE=$(find ./outdir -name "*.iso" | head -n 1)
@@ -112,7 +127,7 @@ jobs:
 
       - name: Upload to GitHub Releases
         # Only publish a release on pushes to main; never on pull requests.
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: build-${{ github.run_number }}
