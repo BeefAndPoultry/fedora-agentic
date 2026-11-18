@@ -90,5 +90,6 @@
 		<ignore name="firefox"/>
 		<ignore name="firefox-langpacks"/>             <!-- 48.8 MB (English Firefox works without extras) -->
 		<ignore name="vlc-libs"/>                      <!-- 43.3 MB -->
+		<ignore name="plasma-workspace-wallpapers"/> <!-- 294.8 MB -->
 	</packages>
 </image>
