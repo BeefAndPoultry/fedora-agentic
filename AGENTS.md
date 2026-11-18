@@ -59,7 +59,9 @@ GitHub runners run Ubuntu, so the build launches a **privileged**
 `fedora:latest` container (KIWI needs loop devices and must build the squashfs
 filesystem). The workflow lives in `.github/workflows/build.yml`. It runs on
 pull requests targeting `main`, on pushes to `main`, and manually via
-workflow dispatch — so every PR gets an ISO build before merge.
+workflow dispatch — so every PR gets an ISO build before merge. The actual
+GitHub Releases upload is gated behind `if: github.event_name == 'push'`, so a
+release is published only on pushes to `main` and never from a pull request.
 
 ## Repository structure
 
