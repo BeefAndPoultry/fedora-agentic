@@ -24,6 +24,34 @@
 		<package name="fedora-release-kde-mobile"/>
 	</packages>
 	<packages type="image" patternType="onlyRequired" profiles="KDE-Desktop-Disk,KDE-Desktop-Live">
+		<!-- Leaf consumers of the bases we ignore above (libreoffice-data, akonadi-server,
+			 ibus, vlc-libs, podman). The kde-desktop-environment env-group and DesktopCommon's
+			 plusRecommended still RECOMMEND these leaf packages; each one hard-Requires a base
+			 we've dropped, so leaving them in produced unsatisfiable dependencies and failed the
+			 build (problems 1-18 from DNF5). Ignoring the leaves is the root-cause fix rather
+			 than cascade-ignoring — drop the consumer, not the base, so the transaction stays
+			 satisfiable. Reinstallable via dnf later. -->
+		<ignore name="libreoffice-writer"/>
+		<ignore name="libreoffice-calc"/>
+		<ignore name="libreoffice-impress"/>
+		<ignore name="libreoffice-graphicfilter"/>
+		<ignore name="libreoffice-emailmerge"/>
+		<ignore name="libreoffice-pyuno"/>
+		<ignore name="akonadi-server-mysql"/>
+		<ignore name="korganizer"/>
+		<ignore name="kaddressbook"/>
+		<ignore name="kleopatra"/>
+		<ignore name="vlc-plugin-gstreamer"/>
+		<ignore name="phonon-qt6-backend-vlc"/>
+		<ignore name="toolbox"/>
+		<ignore name="ibus-typing-booster"/>
+		<ignore name="ibus-m17n"/>
+		<ignore name="ibus-libpinyin"/>
+		<ignore name="ibus-hangul"/>
+		<ignore name="ibus-anthy"/>
+		<ignore name="ibus-table-chinese"/>
+		<ignore name="ibus-table-chinese-cangjie"/>
+		<ignore name="ibus-table"/>
 		<!-- onlyRequired: the kde-desktop-environment collection no longer RECOMMENDS
 		     the LibreOffice/Akonadi/ibus/VLC/podman consumer stack. Those consumers
 	             hard-require bases that we ignore globally (libreoffice-data, akonadi-server,
@@ -41,8 +69,8 @@
 		     <ignore> is global — it removes the package from the whole
 		     transaction regardless of which profile drags it in (Recommends:
 		     or otherwise), so listing these here trims them everywhere yet
-		     keeps firefox, mesa-vulkan-drivers and llama-cpp intact. Sizes are
-		     approximate uncompressed MB from the build's top-30 report. -->
+	             keeps firefox, mesa-vulkan-drivers and llama-cpp intact. Sizes are
+	             approximate uncompressed MB from the build's top-30 report. -->
 		<ignore name="libreoffice-core"/>              <!-- 289.1 MB -->
 		<ignore name="libreoffice-data"/>
 		<ignore name="libreoffice-help-en"/>           <!-- 51.2 MB -->
