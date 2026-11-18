@@ -57,15 +57,12 @@
 			KAddressBook, and media players), adding ~150-250 MB. Users who want PIM/media apps can
 			install them later via dnf or Flatpak.
 		-->
-		<namedCollection name="firefox"/>
+		<!-- <namedCollection name="firefox"/> -->
 		<!-- LibreOffice suite dropped to keep the live ISO under GitHub's 2 GB release limit
 	     (issue #3); users can install it later via dnf or Flatpak. -->
-		<namedCollection name="x86-emulation" arch="aarch64"/>
+		<!-- <namedCollection name="x86-emulation" arch="aarch64"/> -->
 		<package name="fuse"/>
-		<!-- kde-l10n dropped (issue #24): the meta-package pulls translations for ~80 languages
-     (~200-300 MB) with no functional value on the primary-locale live ISO; users can install
-     individual languages later via dnf. -->
-		<ignore name="kde-l10n"/>
+		<package name="kde-l10n"/>
 		<!-- Trim heavy, non-essential desktop apps so the live ISO stays small and users can
 	     reinstall them later via dnf or Flatpak (issue #3). -->
 		<ignore name="dragon"/>             <!-- KDE file/media manager -->
@@ -82,9 +79,7 @@
 		<namedCollection name="firefox"/>
 		<namedCollection name="x86-emulation" arch="aarch64"/>
 		<package name="fuse"/>
-		<!-- kde-l10n dropped (issue #24): pulls ~200-300 MB of translations that add no functional
-     value on the primary-locale ISO; users can install individual languages later via dnf. -->
-		<ignore name="kde-l10n"/>
+		<package name="kde-l10n"/>
 		<ignore name="plasma-welcome"/>
 		<ignore name="plasma-welcome-fedora"/>
 	</packages>

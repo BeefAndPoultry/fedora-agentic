@@ -70,6 +70,9 @@ if [[ "$kiwi_profiles" == *"Cloud"* ]] || [[ "$kiwi_profiles" == *"Disk"* ]] || 
 	passwd -l root
 fi
 
+echo "=== PRE TOP 30 LARGEST PACKAGES IN IMAGE ==="
+rpm -qa --qf '%{SIZE}\t%{NAME}\n' | sort -rn | awk 'NR <= 30 {printf "%.1f MB\t%s\n", $1/1024/1024, $2}'
+
 #======================================
 # Setup default services
 #--------------------------------------
@@ -116,6 +119,9 @@ if [[ "$kiwi_profiles" == *"Live"* ]]; then
 		echo 'livesys_session="xfce"' > /etc/sysconfig/livesys
 	fi
 fi
+
+echo "=== PRE TOP 30 LARGEST PACKAGES IN IMAGE ==="
+rpm -qa --qf '%{SIZE}\t%{NAME}\n' | sort -rn | awk 'NR <= 30 {printf "%.1f MB\t%s\n", $1/1024/1024, $2}'
 
 #======================================
 # Setup firstboot initial setup

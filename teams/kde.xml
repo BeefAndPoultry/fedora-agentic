@@ -28,6 +28,6 @@
 		     the ISO under GitHub's 2 GB release cap (fix #24 / PR #27). Reinstallable
 		     later via `dnf install plasma-welcome-fedora`. -->
 		<ignore name="plasma-welcome-fedora"/>
-		<package name="plasma-welcome-fedora"/>
+		<!-- <package name="plasma-welcome-fedora"/> -->
 	</packages>
 </image>
