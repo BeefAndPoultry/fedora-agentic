@@ -81,7 +81,7 @@ jobs:
           # image somewhere on the ISO. Pick the largest one (the root is by far
           # the heaviest).
           find /tmp/mntsrc -name '*'
-          SQ=$(find /tmp/mntsrc -name '*.squashfs' -printf '%s %p\n' 2>/dev/null | sort -rn | head -n1 | awk '{print $2}')
+          SQ="/tmp/mntsrc/LiveOS/squashfs.img"
           if [ -n "$SQ" ]; then
             echo "Extracting rootfs squashfs: $SQ"
             unsquashfs -d /tmp/rootfs "$SQ" || true
