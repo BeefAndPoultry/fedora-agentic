@@ -34,7 +34,7 @@
 		<namedCollection name="workstation-product"/>
 		<package name="gnome-classic-session"/>
 	</packages>
-	<packages type="image" profiles="KDE-Desktop">
+	<packages type="image" patternType="onlyRequired" profiles="KDE-Desktop">
 		<namedCollection name="kde-desktop-environment"/>
 		<!-- <namedCollection name="kde-apps"/> -->
 		<!-- <namedCollection name="kde-media"/> -->

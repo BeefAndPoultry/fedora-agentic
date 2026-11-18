@@ -17,13 +17,19 @@
 			<requires profile="KDE-Mobile"/>
 		</profile>
 	</profiles>
-	<packages type="bootstrap" profiles="KDE-Desktop-Disk,KDE-Desktop-Live">
+	<packages type="bootstrap" patternType="onlyRequired" profiles="KDE-Desktop-Disk,KDE-Desktop-Live">
 		<package name="fedora-release-kde"/>
 	</packages>
-	<packages type="bootstrap" profiles="KDE-Mobile-Disk,KDE-Mobile-Live">
+	<packages type="bootstrap" patternType="onlyRequired" profiles="KDE-Mobile-Disk,KDE-Mobile-Live">
 		<package name="fedora-release-kde-mobile"/>
 	</packages>
-	<packages type="image" profiles="KDE-Desktop-Disk,KDE-Desktop-Live">
+	<packages type="image" patternType="onlyRequired" profiles="KDE-Desktop-Disk,KDE-Desktop-Live">
+		<!-- onlyRequired: the kde-desktop-environment collection no longer RECOMMENDS
+		     the LibreOffice/Akonadi/ibus/VLC/podman consumer stack. Those consumers
+	             hard-require bases that we ignore globally (libreoffice-data, akonadi-server,
+	             ibus, vlc-libs, podman), so recommending them produced unsatisfiable
+	             dependencies and broke the build. Only the explicitly-listed KDE Gear
+	             apps above remain, keeping the live ISO under GitHub's 2 GB cap. -->
 		<!-- Plasma Welcome app is optional for a live ISO; drop it to help keep
 		     the ISO under GitHub's 2 GB release cap (fix #24 / PR #27). Reinstallable
 		     later via `dnf install plasma-welcome-fedora`. -->
@@ -49,8 +55,9 @@
 		<ignore name="mariadb-server"/>                <!-- 80.4 MB (akonadi embedded db) -->
 		<ignore name="mariadb-common"/>
 		<ignore name="akonadi-server"/>
-		<ignore name="google-noto-serif-cjk-vf-fonts"/><!-- 54.8 MB -->
-		<ignore name="google-noto-sans-cjk-vf-fonts"/>
+		<!-- NOTE: google-noto-*-cjk-vf-fonts intentionally NOT ignored here because they
+		            are hard-required by the base default-fonts-cjk-* packages (errors 14/15
+		            during the build). Kept so the transaction stays satisfiable. -->
 		<ignore name="podman"/>                        <!-- 52.7 MB -->
 		<ignore name="firefox-langpacks"/>             <!-- 48.8 MB (English Firefox works without extras) -->
 		<ignore name="vlc-libs"/>                      <!-- 43.3 MB -->
