@@ -31,7 +31,7 @@
 			 build (problems 1-18 from DNF5). Ignoring the leaves is the root-cause fix rather
 			 than cascade-ignoring — drop the consumer, not the base, so the transaction stays
 			 satisfiable. Reinstallable via dnf later. -->
-		<ignore name="libreoffice-writer"/>
+		<!-- <ignore name="libreoffice-writer"/>
 		<ignore name="libreoffice-calc"/>
 		<ignore name="libreoffice-impress"/>
 		<ignore name="libreoffice-graphicfilter"/>
@@ -51,7 +51,7 @@
 		<ignore name="ibus-anthy"/>
 		<ignore name="ibus-table-chinese"/>
 		<ignore name="ibus-table-chinese-cangjie"/>
-		<ignore name="ibus-table"/>
+		<ignore name="ibus-table"/> -->
 		<!-- onlyRequired: the kde-desktop-environment collection no longer RECOMMENDS
 		     the LibreOffice/Akonadi/ibus/VLC/podman consumer stack. Those consumers
 	             hard-require bases that we ignore globally (libreoffice-data, akonadi-server,
