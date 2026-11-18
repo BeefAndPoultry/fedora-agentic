@@ -47,7 +47,9 @@
 		<package name="plasma-pa"/>       <!-- PulseAudio volume control -->
 		<package name="kde-gtk-config"/><!-- GTK theme integration -->
 		<package name="breeze-gtk"/>      <!-- Breeze GTK theme -->
-		<package name="sddm-wayland-plasma"/><!-- SDDM Wayland session -->
+		<!-- sddm-wayland-plasma dropped (maintainer): we use plasma-login-manager + kcm-plasmalogin instead -->
+		<package name="plasma-login-manager"/><!-- SDDM login manager -->
+		<package name="kcm-plasmalogin"/><!-- SDDM/KCM login configuration -->
 		<package name="plasma-workspace-wayland"/><!-- Plasma Wayland session -->
 		<!-- kde-media and kde-pim collections dropped (issue #6): the <ignore> tags below
 			already removed dragon/elisa/akregator/kmail/kontact, but keeping these collections
