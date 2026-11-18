@@ -24,7 +24,7 @@
 		<ignore name="ktorrent"/> <!-- ~15 megs -->
 		<ignore name="initial-setup"/> <!-- redundant with plasma-setup -->
 	</packages>
-	<packages type="image" profiles="KDE-Desktop">
+	<packages type="image" patternType="plusRecommended" profiles="KDE-Desktop">
 		<!-- install env-group to resolve RhBug:1891500 -->
 		<namedCollection name="kde-desktop-environment"/>
 		<!-- kde-apps namedCollection dropped (issue #23): it pulled Krita, Kdenlive, Calligra,
