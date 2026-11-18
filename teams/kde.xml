@@ -77,7 +77,7 @@
 		<ignore name="java-25-openjdk-headless"/>      <!-- 237.0 MB (pulled by libreoffice) -->
 		<ignore name="glibc-all-langpacks"/>           <!-- 227.2 MB (en_US + glibc-minimal-langpack remain) -->
 		<ignore name="ibus"/>                          <!-- 147.4 MB (Wayland virtual keyboard / fcitx5 if installed later) -->
-		<ignore name="python3-botocore"/>              <!-- 119.9 MB (AWS SDK from anaconda cloud plugins) -->
+		<!--<ignore name="python3-botocore"/>-->              <!-- 119.9 MB (AWS SDK from anaconda cloud plugins) -->
 		<ignore name="cldr-emoji-annotation"/>         <!-- 119.0 MB -->
 		<ignore name="nvidia-gpu-firmware"/>           <!-- 101.0 MB -->
 		<ignore name="mariadb-server"/>                <!-- 80.4 MB (akonadi embedded db) -->
@@ -87,6 +87,7 @@
 		            are hard-required by the base default-fonts-cjk-* packages (errors 14/15
 		            during the build). Kept so the transaction stays satisfiable. -->
 		<ignore name="podman"/>                        <!-- 52.7 MB -->
+		<ignore name="firefox"/>
 		<ignore name="firefox-langpacks"/>             <!-- 48.8 MB (English Firefox works without extras) -->
 		<ignore name="vlc-libs"/>                      <!-- 43.3 MB -->
 	</packages>
