@@ -226,6 +226,18 @@ exceeds this (≈2.5+ GB), so:
     exit 1
   fi
   ```
+- Break down the ISO by package when it trips that gate — `config.sh` runs inside
+  the chroot and prints the top-30 largest installed packages to the build log,
+  so the next trimming pass targets the right packages:
+
+  ```bash
+  echo "=== TOP 30 LARGEST PACKAGES IN IMAGE ==="
+  rpm -qa --qf '%{SIZE}\t%{NAME}\n' | sort -rn | awk 'NR <= 30 {printf "%.1f MB\t%s\n", $1/1024/1024, $2}'
+  ```
+
+  `awk` limits to 30 lines rather than `head`, because `config.sh` runs with
+  `set -o pipefail`: `head` closing the pipe early would make `sort` receive a
+  SIGPIPE and fail the build.
 
 ## Contribution workflow
 
