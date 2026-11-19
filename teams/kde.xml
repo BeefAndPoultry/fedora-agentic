@@ -71,7 +71,8 @@
 		     or otherwise), so listing these here trims them everywhere yet
 	             keeps firefox, mesa-vulkan-drivers and llama-cpp intact. Sizes are
 	             approximate uncompressed MB from the build's top-30 report. -->
-		<!--<ignore name="libreoffice-core"/> -->              <!-- 289.1 MB -->
+		<ignore name="libreoffice"/>
+		<ignore name="libreoffice-core"/>              <!-- 289.1 MB -->
 		<!--<ignore name="libreoffice-data"/> -->
 		<!--<ignore name="libreoffice-help-en"/> -->           <!-- 51.2 MB -->
 		<!--<ignore name="java-25-openjdk-headless"/> -->      <!-- 237.0 MB (pulled by libreoffice) -->
@@ -87,7 +88,7 @@
 		            are hard-required by the base default-fonts-cjk-* packages (errors 14/15
 		            during the build). Kept so the transaction stays satisfiable. -->
 		<!--<ignore name="podman"/> -->                        <!-- 52.7 MB -->
-		<!--<ignore name="firefox"/> -->
+		<ignore name="firefox"/>
 		<!--<ignore name="firefox-langpacks"/> -->             <!-- 48.8 MB (English Firefox works without extras) -->
 		<!--<ignore name="vlc-libs"/> -->                      <!-- 43.3 MB -->
 		<ignore name="plasma-workspace-wallpapers"/> <!-- 294.8 MB -->
