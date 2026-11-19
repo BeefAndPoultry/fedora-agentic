@@ -555,7 +555,7 @@ dnf remove -y --noautoremove \
 	plasma-workspace-wallpapers || true
 
 dnf clean all
-rm -rf /var/cache/* /var/tmp/* /tmp/*
+rm -rf /var/cache/dnf /var/cache/libdnf5 /var/tmp/* /tmp/*
 fc-cache -f
 
 #======================================
