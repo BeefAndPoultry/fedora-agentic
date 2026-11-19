@@ -543,11 +543,16 @@ fi
 # Remove heavy firmware/extras that aren't needed to boot the Live ISO
 # (reinstall them in firstboot-packages.sh after disk installation)
 dnf remove -y --noautoremove \
-    nvidia-gpu-firmware \
+	nvidia-gpu-firmware \
+    qt6-qtwebengine \
     glibc-all-langpacks \
+    ibus \
     cldr-emoji-annotation \
+    mariadb-server \
     google-noto-serif-cjk-vf-fonts \
-    plasma-workspace-wallpapers || true
+    podman \
+    vlc-libs \
+	plasma-workspace-wallpapers || true
 
 dnf clean all
 rm -rf /var/cache/dnf /var/cache/libdnf5
