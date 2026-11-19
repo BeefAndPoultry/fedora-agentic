@@ -8,7 +8,7 @@
 	<packages type="image" patternType="onlyRequired" profiles="DesktopCommon">
 		<!-- onlyRequired: stop pulling the full Workstation/Desktop weak-dependency
 		     stack (libreoffice-core, java-25-openjdk-headless, mariadb-server, podman,
-		     etc.) that plusRecommended adds to every desktop's named collections.
+		     etc.) that onlyRequired adds to every desktop's named collections.
 		     Keeps the live ISO under GitHub's 2 GB cap; those deps are optional and
 		     reinstallable via dnf later. -->
 		<namedCollection name="fonts"/>

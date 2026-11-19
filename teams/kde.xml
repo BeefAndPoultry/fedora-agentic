@@ -26,7 +26,7 @@
 	<packages type="image" patternType="onlyRequired" profiles="KDE-Desktop-Disk,KDE-Desktop-Live">
 		<!-- Leaf consumers of the bases we ignore above (libreoffice-data, akonadi-server,
 			 ibus, vlc-libs, podman). The kde-desktop-environment env-group and DesktopCommon's
-			 plusRecommended still RECOMMEND these leaf packages; each one hard-Requires a base
+			 onlyRequired still RECOMMEND these leaf packages; each one hard-Requires a base
 			 we've dropped, so leaving them in produced unsatisfiable dependencies and failed the
 			 build (problems 1-18 from DNF5). Ignoring the leaves is the root-cause fix rather
 			 than cascade-ignoring — drop the consumer, not the base, so the transaction stays
@@ -64,7 +64,7 @@
 		<ignore name="plasma-welcome-fedora"/>
 		<!-- <package name="plasma-welcome-fedora"/> -->
 		<!-- Cut the Fedora Workstation/Desktop weak-dependency stack that
-		     DesktopCommon (@plusRecommended) and LiveInstall pull in for the
+		     DesktopCommon (@onlyRequired) and LiveInstall pull in for the
 		     KDE spin, so the live ISO stays under GitHub's 2 GB cap. In KIWI a
 		     <ignore> is global — it removes the package from the whole
 		     transaction regardless of which profile drags it in (Recommends:
