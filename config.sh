@@ -540,6 +540,18 @@ if [[ "$kiwi_profiles" == *"FEX"* ]]; then
 	rm /usr/bin/rm
 fi
 
+# Remove heavy firmware/extras that aren't needed to boot the Live ISO
+# (reinstall them in firstboot-packages.sh after disk installation)
+dnf remove -y --noautoremove \
+    nvidia-gpu-firmware \
+    glibc-all-langpacks \
+    cldr-emoji-annotation \
+    google-noto-serif-cjk-vf-fonts \
+    plasma-workspace-wallpapers || true
+
+dnf clean all
+rm -rf /var/cache/dnf /var/cache/libdnf5
+
 #======================================
 # Report the largest packages (ISO-size diagnosis)
 #======================================
