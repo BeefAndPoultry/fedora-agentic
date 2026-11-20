@@ -2,7 +2,7 @@
 	<profiles>
 		<profile name="HardwareMinimal" description="Minimal hardware support for live images"/>
 		<profile name="LiveInstallMinimal" description="Live Install ISO">
-			<requires profile="HardwareMinimal"/>
+			<!-- <requires profile="HardwareMinimal"/> -->
 			<requires profile="BootCoreLive"/>
 		</profile>
 
@@ -11,14 +11,14 @@
 		</profile>
 
 		<profile name="NetworkExtras" description="Network extras for live images">
-			<requires profile="HardwareMinimal"/>
+			<!-- <requires profile="HardwareMinimal"/> -->
 		</profile>
 		<!-- Agentic build: same KDE spin but with a slimmed ISO. All package
 		     customizations live here in one profile so the upstream components/
 		     files stay clean; select this profile with image-profile=KDE-Desktop-Live-Agentic. -->
 		<profile name="KDE-Agentic-Live" description="KDE Plasma Desktop Spin Live DVD (agentic, slimmed)">
-			<requires profile="DesktopCommonMinimal"/>
-			<requires profile="LiveInstall"/>
+			<!-- <requires profile="DesktopCommonMinimal"/> -->
+			<requires profile="LiveInstallMinimal"/>
 			<requires profile="NetworkExtras"/>
 		</profile>
 	</profiles>
