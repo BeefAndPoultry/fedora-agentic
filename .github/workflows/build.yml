@@ -51,7 +51,7 @@ jobs:
           ./kiwi-build \
             --kiwi-file=Fedora.kiwi \
             --image-type=iso \
-            --image-profile=KDE-Desktop-Live-Agentic \
+            --image-profile=KDE-Agentic-Live \
             --image-release=0 \
             --output-dir=./outdir
 
