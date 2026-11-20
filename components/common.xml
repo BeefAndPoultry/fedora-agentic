@@ -7,7 +7,7 @@
 		<namedCollection name="standard"/>
 		<ignore name="qemu-user-static"/> <!-- Saves ~100MB -->
 	</packages>
-	<packages type="image" patternType="onlyRequired" profiles="HardwareCommon">
+	<packages type="image" patternType="plusRecommended" profiles="HardwareCommon">
 		<namedCollection name="hardware-support"/>
 		<package name="bcm283x-firmware" arch="aarch64"/>
 		
