@@ -31,7 +31,7 @@
 		</type>
 	</preferences>
 
-	<packages type="iso" patternType="plusRecommended" profiles="LiveInstallMinimal">
+	<packages type="iso" patternType="onlyRequired" profiles="LiveInstallMinimal">
 		<!-- Filter out unwanted EFI files from the embedded ESP, see rhbz#2358785 -->
 		<file name="iso-esp-excludes.yaml" target="image/exclude_files_efifatimage.yaml"/>
 		<!-- The point of a live image is to install -->
@@ -128,7 +128,7 @@
 
 	<packages type="image" patternType="onlyRequired" profiles="DesktopCommonMinimal">
 		<namedCollection name="fonts"/>
-		<namedCollection name="multimedia"/>
+		<!-- <namedCollection name="multimedia"/> -->
 		<namedCollection name="networkmanager-submodules"/>
 		<!-- <namedCollection name="printing"/> -->
 		<!-- <namedCollection name="guest-desktop-agents"/> -->
