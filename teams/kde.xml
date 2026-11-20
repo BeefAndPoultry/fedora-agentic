@@ -4,6 +4,10 @@
 			<requires profile="KDE-Desktop"/>
 			<requires profile="LiveInstall"/>
 		</profile>
+		<profile name="NeyworkExtras" description="Network extras for live images">
+			<requires profile="BaseCommon"/>
+			<requires profile="HardwareCommon"/>
+		</profile>
 		<!-- Agentic build: same KDE spin but with a slimmed ISO. All package
 		     customizations live here in one profile so the upstream components/
 		     files stay clean; select this profile with image-profile=KDE-Desktop-Live-Agentic. -->
