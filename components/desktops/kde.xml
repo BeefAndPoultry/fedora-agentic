@@ -75,7 +75,7 @@
 		<ignore name="khelpcenter"/>      <!-- KDE help center -->
 		<ignore name="plasma-nm-openconnect"/> <!-- KDE OpenConnect VPN plugin -->
 		<ignore name="anaconda-webui"/> <!-- Anaconda web UI -->
-		<ignore name="kaccounts"/> <!-- KDE online accounts -->
+		<ignore name="kaccounts*"/> <!-- KDE online accounts -->
 	</packages>
 	<packages type="image" patternType="onlyRequired" profiles="KDE-Mobile">
 		<!-- install env-group to resolve RhBug:1891500 -->
