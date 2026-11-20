@@ -7,7 +7,7 @@
 		<!-- Agentic build: same KDE spin but with a slimmed ISO. All package
 		     customizations live here in one profile so the upstream components/
 		     files stay clean; select this profile with image-profile=KDE-Desktop-Live-Agentic. -->
-		<profile name="KDE-Desktop-Live-Agentic" description="KDE Plasma Desktop Spin Live DVD (agentic, slimmed)">
+		<profile name="KDE-Agentic-Live" description="KDE Plasma Desktop Spin Live DVD (agentic, slimmed)">
 			<requires profile="DesktopCommon"/>
 			<requires profile="LiveInstall"/>
 		</profile>
@@ -38,7 +38,7 @@
 	     GNOME utilities pulled in via GTK deps so the live ISO stays small.
 	     Kept out of components/desktops/kde.xml so the upstream component is
 	     untouched. -->
-	<packages type="image" patternType="onlyRequired" profiles="KDE-Desktop-Live-Agentic">
+	<packages type="image" patternType="onlyRequired" profiles="KDE-Agentic-Live">
 		<namedCollection name="kde-desktop-environment"/>
 		<namedCollection name="x86-emulation" arch="aarch64"/>
 		<package name="fuse"/>
