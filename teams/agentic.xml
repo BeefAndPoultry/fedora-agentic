@@ -159,6 +159,15 @@
 		<package name="plasma-nm-pptp"/>
 		<package name="kf6-kwallet"/>
 		<package name="kwalletmanager"/>
+		<package name="plasma-disks"/>
+		<package name="kde-settings-plasmalogin"/>
+		<package name="kde-settings-pulseaudio"/>
+		<package name="udisks2"/>
+		<package name="filelight"/>
+		<package name="kdialog"/>
+		<package name="kdnssd"/>
+		<package name="kmenuedit"/>
+		<package name="firefox"/>
 
 		<namedCollection name="x86-emulation" arch="aarch64"/>
 		<package name="fuse"/>
@@ -187,6 +196,8 @@
 		<package name="plasma-discover-packagekit"/>
 		<package name="PackageKit"/>
 		<package name="plasma-discover-flatpak"/>
+		<package name="flatpak"/>
+		<package name="fedora-flathub-remote"/>
 	</packages>
 
 	<packages type="image" patternType="plusRecommended" profiles="NetworkExtras">
