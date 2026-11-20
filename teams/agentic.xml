@@ -84,6 +84,9 @@
 		<package name="NetworkManager-wwan"/>
 		<package name="wpa_supplicant"/>
 
+        <namedCollection name="hardware-support"/>
+		<package name="linux-firmware"/>
+
         <!-- Wireless firmware for a broad range of built-in and USB adapters. -->
 		<package name="atheros-firmware"/>
 		<package name="b43-fwcutter"/>
