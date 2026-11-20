@@ -48,8 +48,8 @@
 		<ignore name="glibc-all-langpacks"/>
 		<ignore name="python3-boto*"/>
 		<ignore name="mariadb-server-utils"/>
-		<!-- <ignore name="*mariadb*"/>
-		<ignore name="*mysql*"/> -->
+		<ignore name="*mariadb*"/>
+		<ignore name="*mysql*"/>
 		<!-- <ignore name="google-*-fonts"/> -->
 		<!-- <ignore name="qt*-qtwebengine*"/> -->
 		<ignore name="podman"/>
