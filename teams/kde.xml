@@ -51,6 +51,7 @@
 		<package name="kate"/>
 		<package name="kscreen"/>
 		<package name="kinfocenter"/>
+		<namedCollection name="networkmanager-submodules"/>
 		<!-- <namedCollection name="kde-desktop-environment"/> -->
 		<namedCollection name="x86-emulation" arch="aarch64"/>
 		<package name="fuse"/>
