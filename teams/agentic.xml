@@ -102,6 +102,5 @@
 		<package name="realtek-firmware"/>
 		<package name="tiwilink-firmware"/>
 		<package name="atmel-firmware"/>
-		<package name="zd1211-firmware"/>
 	</packages>
 </image>
