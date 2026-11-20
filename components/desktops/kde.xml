@@ -45,13 +45,15 @@
 		<ignore name="libreoffice*"/>
 		<ignore name="firefox*"/>
 		<!-- <ignore name="java-25-openjdk-headless"/> -->
-		<!-- <ignore name="glibc-all-langpacks"/> -->
+		<ignore name="glibc-all-langpacks"/>
 		<ignore name="python3-boto*"/>
 		<ignore name="mariadb-server-utils"/>
 		<!-- <ignore name="*mariadb*"/>
 		<ignore name="*mysql*"/> -->
 		<!-- <ignore name="google-*-fonts"/> -->
 		<!-- <ignore name="qt*-qtwebengine*"/> -->
+		<ignore name="podman"/>
+		<ignore name="skopeo"/>
 
 		<!-- Trim heavy, non-essential desktop apps so the live ISO stays small and users can
 	     reinstall them later via dnf or Flatpak (issue #3). -->
