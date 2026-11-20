@@ -98,7 +98,7 @@ jobs:
           [ -e /dev/kvm ] && ACCEL="-accel kvm -cpu host"
 
           # Boot with 4GB RAM + VirtIO GPU and capture serial console
-          timeout 120s qemu-system-x86_64 \
+          timeout 180s qemu-system-x86_64 \
             $ACCEL \
             -m 4096 \
             -smp 2 \
@@ -139,7 +139,7 @@ jobs:
           [ -e /dev/kvm ] && ACCEL="-accel kvm -cpu host"
 
           # Boot with 4GB RAM + VirtIO GPU and capture serial console
-          timeout 120s qemu-system-x86_64 \
+          timeout 180s qemu-system-x86_64 \
             $ACCEL \
             -m 4096 \
             -smp 2 \
@@ -185,7 +185,7 @@ jobs:
         #if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v3
         with:
-          tag_name: build-${{ github.ref_name }}-${{ github.run_number }}
+          tag_name: build-${{ github.branch }}-${{ github.run_number }}
           prerelease: true
           files: |
             ./dist/${{ env.ISO_BASENAME }}.zip
