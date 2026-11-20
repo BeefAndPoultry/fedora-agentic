@@ -4,7 +4,7 @@
 			<requires profile="KDE-Desktop"/>
 			<requires profile="LiveInstall"/>
 		</profile>
-		<profile name="NeyworkExtras" description="Network extras for live images">
+		<profile name="NetworkExtras" description="Network extras for live images">
 			<requires profile="BaseCommon"/>
 			<requires profile="HardwareCommon"/>
 		</profile>
