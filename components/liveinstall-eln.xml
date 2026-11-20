@@ -52,7 +52,7 @@
 		<package name="anaconda-install-env-deps"/>
 		<package name="anaconda-live"/>
 		<package name="dracut-live"/>
-		<!-- <package name="glibc-all-langpacks"/> -->
+		<package name="glibc-all-langpacks"/>
 		<package name="isomd5sum"/>
 		<package name="kernel"/>
 		<package name="kernel-modules"/>
