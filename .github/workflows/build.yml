@@ -165,28 +165,37 @@ jobs:
             exit 1
           fi
 
-      - name: Zip ISO into ≤1.9GB parts
-        # GitHub Releases caps single-file uploads at 2GB; split the ISO so each
-        # part stays under 1.9GB. zip multi-part archives are reassembled with
-        # `unzip -s` or a simple cat of <name>.z0N…<name>.zip + <name>.zip.
+      - name: Zip ISO into ≤1.95GB parts
+        # GitHub Releases caps single-file uploads at 2GB; only split the ISO when
+        # it actually exceeds 1.95GB, so smaller images upload as a single file.
+        # zip multi-part archives are reassembled with `unzip -s` or a simple cat
+        # of <name>.z0N…<name>.zip + <name>.zip.
         run: |
+          set -euo pipefail
           ISO_FILE=$(find ./outdir -name "*.iso" | head -n 1)
+          ISO_SIZE=$(stat -c%s "$ISO_FILE")
+          # 1.95 GB threshold (binary GiB), matching the zip part size below.
+          THRESHOLD=2093054976
+          if [ "$ISO_SIZE" -lt "$THRESHOLD" ]; then
+            echo "ISO is $((ISO_SIZE / 1024 / 1024)) MB (≤1.95GB); uploading unsplit."
+            exit 0
+          fi
           ISO_BASENAME=$(basename "$ISO_FILE" .iso)
-          echo "Splitting $ISO_FILE into ≤1.9GB zip parts"
-          mkdir -p ./dist
+          echo "ISO is $((ISO_SIZE / 1024 / 1024)) MB (>1.95GB); splitting into ≤1.95GB zip parts"
           zip --version | head -n 1
-          # `--split` emits <ISO_BASENAME>.z01, .z02, … and final .zip
-          zip -j -0 -s 1950m "./dist/${ISO_BASENAME}.zip" "$ISO_FILE"
-          ls -lh ./dist
+          # `-s` emits <ISO_BASENAME>.z01, .z02, … and final .zip
+          zip -j -0 -s 1950m "./outdir/${ISO_BASENAME}.zip" "$ISO_FILE"
+          ls -lh ./outdir
           echo "ISO_BASENAME=$ISO_BASENAME" >> "$GITHUB_ENV"
+          rm -f "$ISO_FILE"
 
       - name: Upload to GitHub Releases
-        # Only publish a release on pushes to main; never on pull requests.
+        # If you only want to publish a release on pushes to main; never on pull requests.
         #if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v3
         with:
-          tag_name: build-${{ github.branch }}-${{ github.run_number }}
+          # tag name with 45 for the Fedora base version
+          tag_name: build-45-${{ github.head_ref || github.ref_name }}-${{ github.run_number }}
           prerelease: true
           files: |
-            ./dist/${{ env.ISO_BASENAME }}.zip
-            ./dist/${{ env.ISO_BASENAME }}.z*
+            ./outdir/*
