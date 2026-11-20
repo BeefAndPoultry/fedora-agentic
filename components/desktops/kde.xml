@@ -68,12 +68,14 @@
 		<ignore name="kdepim-addons"/>      <!-- KPIM plugins pulled in by several PIM apps -->
 		<ignore name="gwenview"/>           <!-- KDE image viewer -->
 		<ignore name="neochat"/>		   <!-- KDE chat client -->
-		<ignore name="plasma-discover"/>	  <!-- KDE software center -->
+		<ignore name="plasma-discover*"/>	  <!-- KDE software center -->
 		<ignore name="korganizer"/>         <!-- KDE calendar -->
 		<ignore name="kio-gdrive"/>         <!-- KDE Google Drive plugin -->
 		<ignore name="kdeplasma-addons"/>  <!-- KDE Plasma desktop widgets -->
 		<ignore name="khelpcenter"/>      <!-- KDE help center -->
 		<ignore name="plasma-nm-openconnect"/> <!-- KDE OpenConnect VPN plugin -->
+		<ignore name="anaconda-webui"/> <!-- Anaconda web UI -->
+		<ignore name="kaccounts"/> <!-- KDE online accounts -->
 	</packages>
 	<packages type="image" patternType="onlyRequired" profiles="KDE-Mobile">
 		<!-- install env-group to resolve RhBug:1891500 -->
