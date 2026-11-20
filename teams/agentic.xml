@@ -14,8 +14,8 @@
 		     customizations live here in one profile so the upstream components/
 		     files stay clean; select this profile with image-profile=KDE-Desktop-Live-Agentic. -->
 		<profile name="KDE-Agentic-Live" description="KDE Plasma Desktop Spin Live DVD (agentic, slimmed)">
-			<requires profile="DesktopCommonMinimal"/>
-			<requires profile="LiveInstall"/>
+			<requires profile="DesktopCommon"/>
+			<requires profile="LiveInstallMinimal"/>
 			<requires profile="NetworkExtras"/>
 		</profile>
 	</profiles>
