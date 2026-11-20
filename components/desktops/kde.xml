@@ -48,8 +48,8 @@
 		<ignore name="glibc-all-langpacks"/>
 		<ignore name="python3-boto*"/>
 		<ignore name="mariadb*"/>
-		<ignore name="google-*-fonts"/>
-		<ignore name="qt*-qtwebengine*"/>
+		<!-- <ignore name="google-*-fonts"/> -->
+		<!-- <ignore name="qt*-qtwebengine*"/> -->
 
 		<!-- Trim heavy, non-essential desktop apps so the live ISO stays small and users can
 	     reinstall them later via dnf or Flatpak (issue #3). -->
