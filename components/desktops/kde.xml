@@ -55,7 +55,7 @@
 		<ignore name="podman"/>
 		<ignore name="skopeo"/>
 		<ignore name="toolbox"/>
-		<ignore name="ibus"/>
+		<ignore name="ibus*"/>
 
 		<!-- Trim heavy, non-essential desktop apps so the live ISO stays small and users can
 	     reinstall them later via dnf or Flatpak (issue #3). -->
