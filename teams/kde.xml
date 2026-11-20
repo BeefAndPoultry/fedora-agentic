@@ -75,7 +75,7 @@
 	</packages>
 
 	<packages type="image" patternType="plusRecommended" profiles="NetworkExtras">
-		<namedCollection name="networkmanager"/>
+		<!-- <namedCollection name="networkmanager"/> -->
 		<namedCollection name="networkmanager-submodules"/>
 		<package name="NetworkManager-config-connectivity-fedora"/>
 		<package name="wireless-regdb"/>
