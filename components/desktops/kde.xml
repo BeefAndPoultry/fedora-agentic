@@ -55,7 +55,8 @@
 		<ignore name="podman"/>
 		<ignore name="skopeo"/>
 		<ignore name="toolbox"/>
-		<ignore name="ibus*"/>
+		<!-- <ignore name="ibus*"/> -->
+		<ignore name="plasma-print-manager"/>
 
 		<!-- Trim heavy, non-essential desktop apps so the live ISO stays small and users can
 	     reinstall them later via dnf or Flatpak (issue #3). -->
@@ -67,6 +68,12 @@
 		<ignore name="kdepim-addons"/>      <!-- KPIM plugins pulled in by several PIM apps -->
 		<ignore name="gwenview"/>           <!-- KDE image viewer -->
 		<ignore name="neochat"/>		   <!-- KDE chat client -->
+		<ignore name="plasma-discover"/>	  <!-- KDE software center -->
+		<ignore name="korganizer"/>         <!-- KDE calendar -->
+		<ignore name="kio-gdrive"/>         <!-- KDE Google Drive plugin -->
+		<ignore name="kdeplasma-addons"/>  <!-- KDE Plasma desktop widgets -->
+		<ignore name="khelpcenter"/>      <!-- KDE help center -->
+		<ignore name="plasma-nm-openconnect"/> <!-- KDE OpenConnect VPN plugin -->
 	</packages>
 	<packages type="image" patternType="onlyRequired" profiles="KDE-Mobile">
 		<!-- install env-group to resolve RhBug:1891500 -->
