@@ -128,11 +128,7 @@
 
 	<packages type="image" patternType="onlyRequired" profiles="DesktopCommonMinimal">
 		<namedCollection name="fonts"/>
-		<!-- <namedCollection name="multimedia"/> -->
 		<namedCollection name="networkmanager-submodules"/>
-		<!-- <namedCollection name="printing"/> -->
-		<!-- <namedCollection name="guest-desktop-agents"/> -->
-		<!-- <package name="mediawriter"/> -->
 		<ignore name="gfs2-utils"/>
 		<ignore name="reiserfs-utils"/>
 	</packages>
@@ -164,7 +160,6 @@
 		<package name="kf6-kwallet"/>
 		<package name="kwalletmanager"/>
 
-		<!-- <namedCollection name="kde-desktop-environment"/> -->
 		<namedCollection name="x86-emulation" arch="aarch64"/>
 		<package name="fuse"/>
 		<package name="kde-l10n"/>
@@ -187,6 +182,13 @@
         <ignore name="wine*"/>
 	</packages>
 
+	<packages type="image" patternType="plusRecommended" profiles="KDE-Agentic-Live">
+		<package name="plasma-discover"/>
+		<package name="plasma-discover-packagekit"/>
+		<package name="PackageKit"/>
+		<package name="plasma-discover-flatpak"/>
+	</packages>
+
 	<packages type="image" patternType="plusRecommended" profiles="NetworkExtras">
 		<namedCollection name="networkmanager-submodules"/>
 		<package name="NetworkManager-config-connectivity-fedora"/>
@@ -195,7 +197,6 @@
 
 		<package name="dnsmasq"/>
 		<package name="iptables-nft"/>
-		<!-- <package name="NetworkManager-bluetooth"/> -->
 		<package name="NetworkManager-wifi"/>
 		<package name="NetworkManager-wwan"/>
 		<package name="wpa_supplicant"/>
