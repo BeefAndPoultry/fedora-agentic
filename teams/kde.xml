@@ -4,6 +4,12 @@
 			<requires profile="KDE-Desktop"/>
 			<requires profile="LiveInstall"/>
 		</profile>
+		<!-- Agentic build: same KDE spin but with a slimmed ISO. All package
+		     customizations live here in one profile so the upstream components/
+		     files stay clean; select this profile with image-profile=KDE-Desktop-Live-Agentic. -->
+		<profile name="KDE-Desktop-Live-Agentic" description="KDE Plasma Desktop Spin Live DVD (agentic, slimmed)">
+			<requires profile="KDE-Desktop-Live"/>
+		</profile>
 		<profile name="KDE-Desktop-Disk" description="KDE Plasma Desktop Spin Install Disk">
 			<requires profile="BootDiskCore"/>
 			<requires profile="KDE-Desktop"/>
@@ -25,5 +31,67 @@
 	</packages>
 	<packages type="image" patternType="onlyRequired" profiles="KDE-Desktop-Disk,KDE-Desktop-Live">
 		<package name="plasma-welcome-fedora"/>
+	</packages>
+
+	<!-- Agentic-specific ignores: trim KDE apps, LibreOffice, tracker and
+	     GNOME utilities pulled in via GTK deps so the live ISO stays small.
+	     Kept out of components/desktops/kde.xml so the upstream component is
+	     untouched. -->
+	<packages type="image" patternType="onlyRequired" profiles="KDE-Desktop-Live-Agentic">
+		<!-- namedCollection kde-apps (KDE Applications) -->
+		<!-- <ignore name="kcalc"/> -->     <!-- KDE calculator -->
+		<ignore name="keditbookmarks"/>     <!-- KDE bookmark editor -->
+		<ignore name="kmahjongg"/>          <!-- KDE mahjongg puzzle game -->
+		<ignore name="kmines"/>             <!-- KDE minesweeper game -->
+		<ignore name="kmouth"/>             <!-- KDE speech synthesizer tool -->
+		<ignore name="kpat"/>               <!-- KDE patience card game -->
+		<ignore name="krdc"/>               <!-- KDE remote desktop client -->
+		<ignore name="krusader"/>           <!-- KDE two-panel file manager -->
+		<ignore name="ktorrent"/>           <!-- KDE torrent client -->
+		<ignore name="neochat"/>            <!-- KDE chat client -->
+		<ignore name="okular"/>             <!-- KDE document viewer -->
+		<ignore name="qrca"/>               <!-- QR code generator/analyzer -->
+		<ignore name="skanpage"/>           <!-- KDE scanner frontend (aarch64,ppc64le,x86_64) -->
+		<!-- namedCollection kde-media (KDE Multimedia support) -->
+		<ignore name="digikam"/>            <!-- KDE digital photo management -->
+		<ignore name="dragon"/>             <!-- KDE file/media manager -->
+		<ignore name="elisa-player"/>       <!-- KDE music player -->
+		<ignore name="gwenview"/>           <!-- KDE image viewer -->
+		<ignore name="k3b"/>                <!-- KDE disc burning application -->
+		<ignore name="kamera"/>             <!-- KDE webcam capture tool -->
+		<ignore name="kamoso"/>             <!-- KDE webcam tool -->
+		<ignore name="kolourpaint"/>        <!-- KDE paint program -->
+		<!-- namedCollection kde-pim (KDE PIM) -->
+		<ignore name="akregator"/>          <!-- KDE RSS news reader -->
+		<ignore name="kaddressbook*"/>      <!-- KDE address book -->
+		<ignore name="kleopatra"/>          <!-- KDE crypto utility -->
+		<ignore name="kmail"/>              <!-- KDE email client -->
+		<ignore name="kontact"/>            <!-- KDE personal information manager -->
+		<ignore name="korganizer"/>         <!-- KDE calendar -->
+		<ignore name="kdepim-addons"/>      <!-- KPIM plugins pulled in by several PIM apps -->
+		<!-- Remaining KDE components (not part of the three app groups above) -->
+		<ignore name="plasma-discover*"/>   <!-- KDE software center -->
+		<ignore name="khelpcenter"/>        <!-- KDE help center -->
+		<ignore name="spectacle"/>          <!-- KDE screenshot tool -->
+		<ignore name="kdeplasma-addons"/>   <!-- KDE Plasma desktop widgets -->
+		<ignore name="kio-gdrive"/>         <!-- KDE Google Drive plugin -->
+		<ignore name="plasma-nm-openconnect"/><!-- KDE OpenConnect VPN plugin -->
+		<!-- Space issues -->
+		<ignore name="libreoffice*"/>       <!-- ~250MB office suite, reinstall via Flatpak -->
+		<ignore name="firefox*"/>           <!-- pull in via Flatpak for a smaller base -->
+		<ignore name="tracker"/>            <!-- metadata DB pulled in by gtk3 -->
+		<ignore name="tracker-miners"/>     <!-- tracker search backends -->
+		<ignore name="gnome-disk-utility"/> <!-- redundant with kde partitionmanager -->
+		<ignore name="mariadb-server-utils"/><!-- not needed on desktops -->
+		<ignore name="system-config-language"/><!-- redundant with kcms -->
+		<ignore name="system-config-printer"/><!-- redundant with kcms -->
+		<ignore name="initial-setup"/>      <!-- redundant with plasma-setup -->
+		<!-- Avoid pulling unrelated stacks (podman/containers, vlc) onto the live desktop -->
+		<ignore name="podman"/>
+		<ignore name="skopeo"/>
+		<ignore name="toolbox"/>
+		<ignore name="vlc-*"/>
+		<ignore name="vlc"/>
+		<ignore name="phonon-qt6-backend-vlc"/>
 	</packages>
 </image>
