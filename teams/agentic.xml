@@ -8,6 +8,7 @@
 		     customizations live here in one profile so the upstream components/
 		     files stay clean; select this profile with image-profile=KDE-Desktop-Live-Agentic. -->
 		<profile name="KDE-Agentic-Live" description="KDE Plasma Desktop Spin Live DVD (agentic, slimmed)">
+            <requires profile="HardwareMinimal"/>
 			<requires profile="DesktopCommon"/>
 			<requires profile="LiveInstall"/>
 			<requires profile="NetworkExtras"/>
@@ -19,6 +20,71 @@
 	</packages>
 	<packages type="image" patternType="onlyRequired" profiles="KDE-Agentic-Live">
 		<package name="plasma-welcome-fedora"/>
+	</packages>
+
+    <packages type="image" patternType="plusRecommended" profiles="HardwareMinimal">
+		<namedCollection name="hardware-support"/>
+		<package name="linux-firmware"/>
+		<package name="bcm283x-firmware" arch="aarch64"/>
+
+        <!-- Wireless firmware for a broad range of built-in and USB adapters. -->
+		<package name="atheros-firmware"/>
+		<package name="b43-fwcutter"/>
+		<package name="b43-openfwwf"/>
+		<package name="brcmfmac-firmware"/>
+		<package name="iwlegacy-firmware"/>
+		<package name="iwlwifi-dvm-firmware"/>
+		<package name="iwlwifi-mvm-firmware"/>
+		<package name="iwlwifi-mld-firmware"/>
+		<package name="libertas-firmware"/>
+		<package name="mt7xxx-firmware"/>
+		<package name="nxpwireless-firmware"/>
+		<package name="realtek-firmware"/>
+		<package name="tiwilink-firmware"/>
+		<package name="atmel-firmware"/>
+
+        <!-- Ignore hardware packages not explicitly included above so they don't
+		     get pulled in by the hardware-support collection. -->
+		<ignore name="alsa-sof-firmware" arch="x86_64"/>
+		<ignore name="amd-gpu-firmware"/>
+		<ignore name="cirrus-audio-firmware" arch="x86_64"/>
+		<ignore name="intel-audio-firmware" arch="x86_64"/>
+		<ignore name="intel-gpu-firmware"/>
+		<ignore name="intel-lpmd" arch="x86_64"/>
+		<ignore name="intel-vsc-firmware" arch="x86_64"/>
+		<ignore name="nvidia-gpu-firmware"/>
+		<ignore name="qcom-firmware" arch="aarch64"/>
+		<ignore name="qcom-wwan-firmware"/>
+		<ignore name="qrtr" arch="aarch64"/>
+		<ignore name="rmtfs" arch="aarch64"/>
+		<ignore name="usb_modeswitch"/>
+		<ignore name="acpi"/>
+		<ignore name="acpitool"/>
+		<ignore name="alsa-firmware"/>
+		<ignore name="cmospwd" arch="x86_64"/>
+		<ignore name="dvb-firmware"/>
+		<ignore name="gpsd"/>
+		<ignore name="gpsd-clients"/>
+		<ignore name="hddtemp"/>
+		<ignore name="hdparm"/>
+		<ignore name="iscan-firmware"/>
+		<ignore name="libifp"/>
+		<ignore name="liquidio-firmware"/>
+		<ignore name="lsscsi"/>
+		<ignore name="mlxsw_spectrum-firmware"/>
+		<ignore name="mrvlprestera-firmware"/>
+		<ignore name="netronome-firmware"/>
+		<ignore name="opensc"/>
+		<ignore name="pcsc-lite"/>
+		<ignore name="pcsc-lite-ccid"/>
+		<ignore name="qcom-accel-firmware"/>
+		<ignore name="qed-firmware"/>
+		<ignore name="radeontop"/>
+		<ignore name="wpan-tools"/>
+	</packages>
+	<packages type="image" patternType="onlyRequired" profiles="HardwareMinimal">
+		<namedCollection name="standard"/>
+		<ignore name="qemu-user-static"/> <!-- Saves ~100MB -->
 	</packages>
 
 	<!-- Agentic-specific ignores: trim KDE apps, LibreOffice, tracker and
@@ -83,24 +149,5 @@
 		<package name="NetworkManager-wifi"/>
 		<package name="NetworkManager-wwan"/>
 		<package name="wpa_supplicant"/>
-
-        <namedCollection name="hardware-support"/>
-		<package name="linux-firmware"/>
-
-        <!-- Wireless firmware for a broad range of built-in and USB adapters. -->
-		<package name="atheros-firmware"/>
-		<package name="b43-fwcutter"/>
-		<package name="b43-openfwwf"/>
-		<package name="brcmfmac-firmware"/>
-		<package name="iwlegacy-firmware"/>
-		<package name="iwlwifi-dvm-firmware"/>
-		<package name="iwlwifi-mvm-firmware"/>
-		<package name="iwlwifi-mld-firmware"/>
-		<package name="libertas-firmware"/>
-		<package name="mt7xxx-firmware"/>
-		<package name="nxpwireless-firmware"/>
-		<package name="realtek-firmware"/>
-		<package name="tiwilink-firmware"/>
-		<package name="atmel-firmware"/>
 	</packages>
 </image>
