@@ -8,7 +8,7 @@
 		</profile>
 	</profiles>
 	<!-- Common exclusions for KDE variants -->
-	<packages type="image" patternType="plusRecommended" profiles="KDE-Desktop,KDE-Mobile">
+	<packages type="image" patternType="onlyRequired" profiles="KDE-Desktop,KDE-Mobile">
 		<ignore name="gnome-disk-utility"/> <!-- redundant with kde partitionmanager -->
 		<ignore name="mariadb-server-utils"/> <!-- Not needed on desktops (pagure.io:fedora-kde/SIG#566) -->
 		<ignore name="system-config-language"/> <!-- redundant with kcms -->
@@ -24,7 +24,7 @@
 		<ignore name="ktorrent"/> <!-- ~15 megs -->
 		<ignore name="initial-setup"/> <!-- redundant with plasma-setup -->
 	</packages>
-	<packages type="image" patternType="plusRecommended" profiles="KDE-Desktop">
+	<packages type="image" patternType="onlyRequired" profiles="KDE-Desktop">
 		<!-- install env-group to resolve RhBug:1891500 -->
 		<namedCollection name="kde-desktop-environment"/>
 		<namedCollection name="kde-apps"/>
@@ -33,8 +33,8 @@
 		<namedCollection name="firefox"/>
 		<namedCollection name="libreoffice"/>
 		<namedCollection name="x86-emulation" arch="aarch64"/>
-		<package name="libreoffice-draw"/>
-		<package name="libreoffice-math"/>
+		<!-- <package name="libreoffice-draw"/>
+		<package name="libreoffice-math"/> -->
 		<package name="fuse"/>
 		<package name="kde-l10n"/>
 	</packages>
