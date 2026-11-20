@@ -10,16 +10,5 @@
 	<packages type="image" patternType="plusRecommended" profiles="HardwareCommon">
 		<namedCollection name="hardware-support"/>
 		<package name="bcm283x-firmware" arch="aarch64"/>
-		
-		<ignore name="nvidia-gpu-firmware"/>     <!-- ~101 MB (Nouveau boots live desktop without GSP firmware) -->
-		<ignore name="b43-fwcutter"/>            <!-- Legacy 2000s Broadcom Wi-Fi tool -->
-		<ignore name="b43-openfwwf"/>            <!-- Legacy 2000s Broadcom Wi-Fi firmware -->
-		<ignore name="iwlegacy-firmware"/>       <!-- Legacy Intel 3945/4965 Wi-Fi -->
-		<ignore name="libertas-firmware"/>       <!-- Legacy Marvell Libertas Wi-Fi -->
-		<ignore name="nxpwireless-firmware"/>    <!-- Embedded/IoT NXP Wi-Fi -->
-		<ignore name="tiwilink-firmware"/>       <!-- Embedded/IoT TI WiLink Wi-Fi -->
-		<!-- <ignore name="qcom-wwan-firmware"/> -->      <!-- Built-in 4G/5G cellular WWAN modems -->
-		<ignore name="intel-vsc-firmware"/>      <!-- Intel MIPI IPU6 webcam sensor controller -->
-		<ignore name="usb_modeswitch"/>          <!-- Legacy USB cellular modem switcher -->
 	</packages>
 </image>
