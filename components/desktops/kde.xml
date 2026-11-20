@@ -51,7 +51,7 @@
 		<ignore name="*mariadb*"/>
 		<ignore name="*mysql*"/>
 		<!-- <ignore name="google-*-fonts"/> -->
-		<ignore name="qt*-qtwebengine*"/>
+		<!-- <ignore name="qt*-qtwebengine*"/> -->
 		<ignore name="podman"/>
 		<ignore name="skopeo"/>
 		<ignore name="toolbox"/>
@@ -75,7 +75,11 @@
 		<ignore name="khelpcenter"/>      <!-- KDE help center -->
 		<ignore name="plasma-nm-openconnect"/> <!-- KDE OpenConnect VPN plugin -->
 		<ignore name="anaconda-webui"/> <!-- Anaconda web UI -->
-		<ignore name="kaccounts*"/> <!-- KDE online accounts -->
+		<!-- <ignore name="kaccounts*"/> --> <!-- KDE online accounts -->
+		<ignore name="kaddressbook*"/> <!-- KDE address book -->
+		<ignore name="spectacle"/> <!-- KDE screenshot tool -->
+		<ignore name="okular"/> <!-- KDE document viewer -->
+		<ignore name="kamoso"/> <!-- KDE webcam tool -->
 	</packages>
 	<packages type="image" patternType="onlyRequired" profiles="KDE-Mobile">
 		<!-- install env-group to resolve RhBug:1891500 -->
