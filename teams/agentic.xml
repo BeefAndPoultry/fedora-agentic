@@ -71,7 +71,7 @@
 		<package name="bcm283x-firmware" arch="aarch64"/>
 
         <!-- Wireless firmware for a broad range of built-in and USB adapters. -->
-		<!--<package name="atheros-firmware"/>
+		<package name="atheros-firmware"/>
 		<package name="b43-fwcutter"/>
 		<package name="b43-openfwwf"/>
 		<package name="brcmfmac-firmware"/>
@@ -84,7 +84,7 @@
 		<package name="nxpwireless-firmware"/>
 		<package name="realtek-firmware"/>
 		<package name="tiwilink-firmware"/>
-		<package name="atmel-firmware"/>-->
+		<package name="atmel-firmware"/>
 
         <!-- Ignore hardware packages not explicitly included above so they don't
 		     get pulled in by the hardware-support collection. -->
