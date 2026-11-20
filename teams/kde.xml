@@ -77,11 +77,11 @@
 		<package name="wireless-regdb"/>
 		<package name="iw"/>
 
-		<!-- <packagereq type="default">dnsmasq</packagereq>
-      <packagereq type="default">iptables-nft</packagereq>
-      <packagereq type="default">NetworkManager-bluetooth</packagereq>
-      <packagereq type="default">NetworkManager-wifi</packagereq>
-      <packagereq type="default">NetworkManager-wwan</packagereq>
-      <packagereq type="default">wpa_supplicant</packagereq> -->
+		<package name="dnsmasq"/>
+		<package name="iptables-nft"/>
+		<package name="NetworkManager-bluetooth"/>
+		<package name="NetworkManager-wifi"/>
+		<package name="NetworkManager-wwan"/>
+		<package name="wpa_supplicant"/>
 	</packages>
 </image>
