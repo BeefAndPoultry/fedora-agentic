@@ -23,7 +23,7 @@
 		<package name="plasma-welcome-fedora"/>
 	</packages>
 
-    <packages type="image" patternType="plusRecommended" profiles="HardwareMinimal">
+    <packages type="image" patternType="onlyRequired" profiles="HardwareMinimal">
 		<namedCollection name="hardware-support"/>
 		<package name="linux-firmware"/>
 		<package name="bcm283x-firmware" arch="aarch64"/>
