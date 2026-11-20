@@ -201,5 +201,21 @@
 		<package name="NetworkManager-wifi"/>
 		<package name="NetworkManager-wwan"/>
 		<package name="wpa_supplicant"/>
+
+		<!-- Wireless firmware for a broad range of built-in and USB adapters. -->
+		<package name="atheros-firmware"/>
+		<package name="b43-fwcutter"/>
+		<package name="b43-openfwwf"/>
+		<package name="brcmfmac-firmware"/>
+		<package name="iwlegacy-firmware"/>
+		<package name="iwlwifi-dvm-firmware"/>
+		<package name="iwlwifi-mvm-firmware"/>
+		<package name="iwlwifi-mld-firmware"/>
+		<package name="libertas-firmware"/>
+		<package name="mt7xxx-firmware"/>
+		<package name="nxpwireless-firmware"/>
+		<package name="realtek-firmware"/>
+		<package name="tiwilink-firmware"/>
+		<package name="atmel-firmware"/>
 	</packages>
 </image>
