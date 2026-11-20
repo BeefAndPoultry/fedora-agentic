@@ -44,5 +44,6 @@
 		<package name="fuse"/>
 		<package name="kde-l10n"/>
 
+		<ignore name="wine*"/>
 	</packages>
 </image>
