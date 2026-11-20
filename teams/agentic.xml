@@ -95,9 +95,9 @@
 		<namedCollection name="fonts"/>
 		<namedCollection name="multimedia"/>
 		<namedCollection name="networkmanager-submodules"/>
-		<namedCollection name="printing"/>
-		<namedCollection name="guest-desktop-agents"/>
-		<package name="mediawriter"/>
+		<!-- <namedCollection name="printing"/> -->
+		<!-- <namedCollection name="guest-desktop-agents"/> -->
+		<!-- <package name="mediawriter"/> -->
 		<ignore name="gfs2-utils"/>
 		<ignore name="reiserfs-utils"/>
 	</packages>
