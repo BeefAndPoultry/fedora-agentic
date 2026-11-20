@@ -69,6 +69,17 @@ jobs:
             echo "image-root not found under ./outdir-build/build/image-root" >&2
           fi
 
+      - name: Verify ISO file size
+        run: |
+          ISO_FILE=$(find ./outdir -name "*.iso" | head -n 1)
+          ISO_SIZE=$(stat -c%s "$ISO_FILE")
+          echo "Built ISO $ISO_FILE size: $((ISO_SIZE / 1024 / 1024)) MB"
+          if [ "$ISO_SIZE" -ge 2147483648 ]; then
+            echo "Error: ISO exceeds GitHub Releases 2GB limit!"
+            exit 1
+          fi
+
+
       - name: Verify iwlwifi-mld-firmware is included
         # The agentic desktop ships this Wi-Fi firmware; catch a missing package
         # before the expensive ISO build is relied upon downstream.
@@ -83,16 +94,6 @@ jobs:
             echo "SUCCESS: iwlwifi-mld-firmware is present in $PACKAGES_FILE"
           else
             echo "ERROR: iwlwifi-mld-firmware missing from $PACKAGES_FILE" >&2
-            exit 1
-          fi
-
-      - name: Verify ISO file size
-        run: |
-          ISO_FILE=$(find ./outdir -name "*.iso" | head -n 1)
-          ISO_SIZE=$(stat -c%s "$ISO_FILE")
-          echo "Built ISO $ISO_FILE size: $((ISO_SIZE / 1024 / 1024)) MB"
-          if [ "$ISO_SIZE" -ge 2147483648 ]; then
-            echo "Error: ISO exceeds GitHub Releases 2GB limit!"
             exit 1
           fi
 
