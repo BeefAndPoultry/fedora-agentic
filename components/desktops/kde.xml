@@ -74,7 +74,7 @@
 		<ignore name="kdeplasma-addons"/>  <!-- KDE Plasma desktop widgets -->
 		<ignore name="khelpcenter"/>      <!-- KDE help center -->
 		<ignore name="plasma-nm-openconnect"/> <!-- KDE OpenConnect VPN plugin -->
-		<ignore name="anaconda-webui"/> <!-- Anaconda web UI -->
+		<!-- <ignore name="anaconda-webui"/> --> <!-- Anaconda web UI -->
 		<!-- <ignore name="kaccounts*"/> --> <!-- KDE online accounts -->
 		<ignore name="kaddressbook*"/> <!-- KDE address book -->
 		<ignore name="spectacle"/> <!-- KDE screenshot tool -->
