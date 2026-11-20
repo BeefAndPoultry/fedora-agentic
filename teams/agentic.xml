@@ -1,7 +1,10 @@
 <image>
 	<profiles>
 		<profile name="HardwareMinimal" description="Minimal hardware support for live images"/>
-		<profile name="LiveInstallMinimal" description="Live Install ISO"/>
+		<profile name="LiveInstallMinimal" description="Live Install ISO">
+			<requires profile="HardwareMinimal"/>
+			<requires profile="BootCoreLive"/>
+		</profile>
 
 		<profile name="DesktopCommonMinimal" description="Minimal common desktop packages">
 			<requires profile="HardwareMinimal"/>
