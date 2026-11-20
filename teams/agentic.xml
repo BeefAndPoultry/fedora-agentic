@@ -1,16 +1,19 @@
 <image>
 	<profiles>
 		<profile name="HardwareMinimal" description="Minimal hardware support for live images"/>
+
+		<profile name="DesktopCommonMinimal" description="Minimal common desktop packages">
+			<requires profile="HardwareMinimal"/>
+		</profile>
+
 		<profile name="NetworkExtras" description="Network extras for live images">
-			<requires profile="BaseCommon"/>
-			<requires profile="HardwareCommon"/>
+			<requires profile="HardwareMinimal"/>
 		</profile>
 		<!-- Agentic build: same KDE spin but with a slimmed ISO. All package
 		     customizations live here in one profile so the upstream components/
 		     files stay clean; select this profile with image-profile=KDE-Desktop-Live-Agentic. -->
 		<profile name="KDE-Agentic-Live" description="KDE Plasma Desktop Spin Live DVD (agentic, slimmed)">
-            <requires profile="HardwareMinimal"/>
-			<requires profile="DesktopCommon"/>
+			<requires profile="DesktopCommonMinimal"/>
 			<requires profile="LiveInstall"/>
 			<requires profile="NetworkExtras"/>
 		</profile>
@@ -46,23 +49,23 @@
 
         <!-- Ignore hardware packages not explicitly included above so they don't
 		     get pulled in by the hardware-support collection. -->
-		<ignore name="alsa-sof-firmware" arch="x86_64"/>
+		<ignore name="alsa-sof-firmware"/>
 		<ignore name="amd-gpu-firmware"/>
-		<ignore name="cirrus-audio-firmware" arch="x86_64"/>
-		<ignore name="intel-audio-firmware" arch="x86_64"/>
+		<ignore name="cirrus-audio-firmware"/>
+		<ignore name="intel-audio-firmware"/>
 		<ignore name="intel-gpu-firmware"/>
-		<ignore name="intel-lpmd" arch="x86_64"/>
-		<ignore name="intel-vsc-firmware" arch="x86_64"/>
+		<ignore name="intel-lpmd"/>
+		<ignore name="intel-vsc-firmware"/>
 		<ignore name="nvidia-gpu-firmware"/>
-		<ignore name="qcom-firmware" arch="aarch64"/>
+		<ignore name="qcom-firmware"/>
 		<ignore name="qcom-wwan-firmware"/>
-		<ignore name="qrtr" arch="aarch64"/>
-		<ignore name="rmtfs" arch="aarch64"/>
+		<ignore name="qrtr"/>
+		<ignore name="rmtfs"/>
 		<ignore name="usb_modeswitch"/>
 		<ignore name="acpi"/>
 		<ignore name="acpitool"/>
 		<ignore name="alsa-firmware"/>
-		<ignore name="cmospwd" arch="x86_64"/>
+		<ignore name="cmospwd"/>
 		<ignore name="dvb-firmware"/>
 		<ignore name="gpsd"/>
 		<ignore name="gpsd-clients"/>
@@ -86,6 +89,17 @@
 	<packages type="image" patternType="onlyRequired" profiles="HardwareMinimal">
 		<namedCollection name="standard"/>
 		<ignore name="qemu-user-static"/> <!-- Saves ~100MB -->
+	</packages>
+
+	<packages type="image" patternType="onlyRequired" profiles="DesktopCommonMinimal">
+		<namedCollection name="fonts"/>
+		<namedCollection name="multimedia"/>
+		<namedCollection name="networkmanager-submodules"/>
+		<namedCollection name="printing"/>
+		<namedCollection name="guest-desktop-agents"/>
+		<package name="mediawriter"/>
+		<ignore name="gfs2-utils"/>
+		<ignore name="reiserfs-utils"/>
 	</packages>
 
 	<!-- Agentic-specific ignores: trim KDE apps, LibreOffice, tracker and
@@ -146,7 +160,7 @@
 
 		<package name="dnsmasq"/>
 		<package name="iptables-nft"/>
-		<package name="NetworkManager-bluetooth"/>
+		<!-- <package name="NetworkManager-bluetooth"/> -->
 		<package name="NetworkManager-wifi"/>
 		<package name="NetworkManager-wwan"/>
 		<package name="wpa_supplicant"/>

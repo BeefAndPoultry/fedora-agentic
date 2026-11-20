@@ -182,23 +182,23 @@ jobs:
             exit 1
           fi
 
-      - name: Zip ISO into ≤1.95GB parts
+      - name: Zip ISO into <2GB parts
         # GitHub Releases caps single-file uploads at 2GB; only split the ISO when
-        # it actually exceeds 1.95GB, so smaller images upload as a single file.
+        # it actually exceeds 2GB, so smaller images upload as a single file.
         # zip multi-part archives are reassembled with `unzip -s` or a simple cat
         # of <name>.z0N…<name>.zip + <name>.zip.
         run: |
           set -euo pipefail
           ISO_FILE=$(find ./outdir -name "*.iso" | head -n 1)
           ISO_SIZE=$(stat -c%s "$ISO_FILE")
-          # 1.95 GB threshold (binary GiB), matching the zip part size below.
-          THRESHOLD=2093054976
+          # 2 GB threshold (binary GiB), matching the zip part size below.
+          THRESHOLD=2147483648
           if [ "$ISO_SIZE" -lt "$THRESHOLD" ]; then
-            echo "ISO is $((ISO_SIZE / 1024 / 1024)) MB (≤1.95GB); uploading unsplit."
+            echo "ISO is $((ISO_SIZE / 1024 / 1024)) MB (<2GB); uploading unsplit."
             exit 0
           fi
           ISO_BASENAME=$(basename "$ISO_FILE" .iso)
-          echo "ISO is $((ISO_SIZE / 1024 / 1024)) MB (>1.95GB); splitting into ≤1.95GB zip parts"
+          echo "ISO is $((ISO_SIZE / 1024 / 1024)) MB (≥2GB); splitting into ≤1.95GB zip parts"
           zip --version | head -n 1
           # `-s` emits <ISO_BASENAME>.z01, .z02, … and final .zip
           zip -j -0 -s 1950m "./outdir/${ISO_BASENAME}.zip" "$ISO_FILE"
