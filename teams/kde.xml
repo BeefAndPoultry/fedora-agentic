@@ -41,6 +41,7 @@
 	<packages type="image" patternType="onlyRequired" profiles="KDE-Agentic-Live">
 		<namedCollection name="critical-path-kde"/>
 		<package name="policycoreutils-python-utils"/>
+		<package name="selinux-policy-targeted"/>
 		<package name="plasma-nm"/>
 		<package name="plasma-pa"/>
 		<package name="xdg-desktop-portal-kde"/>
