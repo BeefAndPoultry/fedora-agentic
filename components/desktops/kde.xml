@@ -51,7 +51,7 @@
 		<ignore name="*mariadb*"/>
 		<ignore name="*mysql*"/>
 		<!-- <ignore name="google-*-fonts"/> -->
-		<!-- <ignore name="qt*-qtwebengine*"/> -->
+		<ignore name="qt*-qtwebengine*"/>
 		<ignore name="podman"/>
 		<ignore name="skopeo"/>
 		<ignore name="toolbox"/>
