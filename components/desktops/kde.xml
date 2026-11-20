@@ -44,7 +44,7 @@
 		<ignore name="plasma-workspace-wallpapers"/>
 		<ignore name="libreoffice*"/>
 		<ignore name="firefox*"/>
-		<!-- <ignore name="java-25-openjdk-headless"/> -->
+		<ignore name="java-25-openjdk-headless"/>
 		<ignore name="glibc-all-langpacks"/>
 		<ignore name="python3-boto*"/>
 		<ignore name="mariadb-server-utils"/>
