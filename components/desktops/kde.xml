@@ -32,7 +32,7 @@
 		<namedCollection name="kde-desktop-environment"/>
 		<!-- <namedCollection name="kde-apps"/> -->
 		<!-- <namedCollection name="kde-media"/> -->
-		<namedCollection name="kde-pim" arch="aarch64,ppc64le,x86_64"/>
+		<!-- <namedCollection name="kde-pim" arch="aarch64,ppc64le,x86_64"/> -->
 		<!-- <namedCollection name="firefox"/> -->
 		<!-- <namedCollection name="libreoffice"/> -->
 		<namedCollection name="x86-emulation" arch="aarch64"/>
@@ -41,12 +41,13 @@
 		<package name="fuse"/>
 		<package name="kde-l10n"/>
 
-		<ignore name="plasma-workspace-wallpapers"/>
+		<!-- <ignore name="plasma-workspace-wallpapers"/> -->
 		<ignore name="libreoffice*"/>
 		<ignore name="firefox*"/>
-		<ignore name="java-25-openjdk-headless"/>
-		<ignore name="glibc-all-langpacks"/>
-		<ignore name="python3-boto*"/>
+		<!-- <ignore name="java-25-openjdk-headless"/> -->
+		<!-- <ignore name="glibc-all-langpacks"/> -->
+		<!-- <ignore name="python3-boto*"/> -->
+		<ignore name="mariadb-server-utils"/>
 		<!-- <ignore name="*mariadb*"/>
 		<ignore name="*mysql*"/> -->
 		<!-- <ignore name="google-*-fonts"/> -->
