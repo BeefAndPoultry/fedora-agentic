@@ -26,6 +26,10 @@
 		<package name="plasma-welcome-fedora"/>
 	</packages>
 
+	<packages type="image" patternType="onlyRequired" profiles="HardwareMinimal">
+		<namedCollection name="standard"/>
+		<ignore name="qemu-user-static"/> <!-- Saves ~100MB -->
+	</packages>
     <packages type="image" patternType="onlyRequired" profiles="HardwareMinimal">
 		<namedCollection name="hardware-support"/>
 		<package name="linux-firmware"/>
@@ -85,10 +89,6 @@
 		<ignore name="qed-firmware"/>
 		<ignore name="radeontop"/>
 		<ignore name="wpan-tools"/>
-	</packages>
-	<packages type="image" patternType="onlyRequired" profiles="HardwareMinimal">
-		<namedCollection name="standard"/>
-		<ignore name="qemu-user-static"/> <!-- Saves ~100MB -->
 	</packages>
 
 	<packages type="image" patternType="onlyRequired" profiles="DesktopCommonMinimal">
