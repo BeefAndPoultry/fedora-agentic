@@ -69,6 +69,23 @@ jobs:
             echo "image-root not found under ./outdir-build/build/image-root" >&2
           fi
 
+      - name: Verify iwlwifi-mld-firmware is included
+        # The agentic desktop ships this Wi-Fi firmware; catch a missing package
+        # before the expensive ISO build is relied upon downstream.
+        run: |
+          set -euo pipefail
+          PACKAGES_FILE=$(find ./outdir -maxdepth 1 -name "*.packages" | head -n 1)
+          if [ -z "$PACKAGES_FILE" ]; then
+            echo "ERROR: no *.packages manifest found under ./outdir" >&2
+            exit 1
+          fi
+          if grep -q "iwlwifi-mld-firmware" "$PACKAGES_FILE"; then
+            echo "SUCCESS: iwlwifi-mld-firmware is present in $PACKAGES_FILE"
+          else
+            echo "ERROR: iwlwifi-mld-firmware missing from $PACKAGES_FILE" >&2
+            exit 1
+          fi
+
       - name: Verify ISO file size
         run: |
           ISO_FILE=$(find ./outdir -name "*.iso" | head -n 1)
