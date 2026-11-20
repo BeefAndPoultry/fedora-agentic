@@ -40,9 +40,27 @@
 		<package name="libreoffice-math"/> -->
 		<package name="fuse"/>
 		<package name="kde-l10n"/>
+
 		<ignore name="plasma-workspace-wallpapers"/>
 		<ignore name="libreoffice*"/>
 		<ignore name="firefox*"/>
+		<ignore name="java-25-openjdk-headless"/>
+		<ignore name="glibc-all-langpacks"/>
+		<ignore name="python3-boto*"/>
+		<ignore name="mariadb*"/>
+		<ignore name="google-*-fonts"/>
+		<ignore name="qt*-qtwebengine*"/>
+
+		<!-- Trim heavy, non-essential desktop apps so the live ISO stays small and users can
+	     reinstall them later via dnf or Flatpak (issue #3). -->
+		<ignore name="dragon"/>             <!-- KDE file/media manager -->
+		<ignore name="elisa-player"/>       <!-- KDE music player -->
+		<ignore name="akregator"/>          <!-- KDE RSS news reader -->
+		<ignore name="kmail"/>              <!-- KDE email client -->
+		<ignore name="kontact"/>            <!-- KDE personal information manager -->
+		<ignore name="kdepim-addons"/>      <!-- KPIM plugins pulled in by several PIM apps -->
+		<ignore name="gwenview"/>           <!-- KDE image viewer -->
+		<ignore name="neochat"/>		   <!-- KDE chat client -->
 	</packages>
 	<packages type="image" patternType="onlyRequired" profiles="KDE-Mobile">
 		<!-- install env-group to resolve RhBug:1891500 -->
