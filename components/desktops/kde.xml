@@ -57,6 +57,8 @@
 		<ignore name="toolbox"/>
 		<!-- <ignore name="ibus*"/> -->
 		<ignore name="plasma-print-manager"/>
+		<ignore name="vlc-libs"/>
+		<ignore name="vlc"/>
 
 		<!-- Trim heavy, non-essential desktop apps so the live ISO stays small and users can
 	     reinstall them later via dnf or Flatpak (issue #3). -->
