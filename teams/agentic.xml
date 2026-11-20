@@ -16,11 +16,20 @@
 		<profile name="KDE-Agentic-Live" description="KDE Plasma Desktop Spin Live DVD (agentic, slimmed)">
 			<requires profile="DesktopCommonMinimal"/>
 			<requires profile="LiveInstallMinimal"/>
-			<requires profile="DesktopCommon"/>
-			<requires profile="LiveInstall"/>
 			<requires profile="NetworkExtras"/>
 		</profile>
 	</profiles>
+
+	<preferences profiles="LiveInstallMinimal" arch="x86_64">
+		<type image="iso"
+			publisher="Fedora Project" volid="Fedora_Linux" application_id="Fedora_Linux"
+			primary="true" flags="dmsquash" filesystem="erofs" erofscompression="lzma,level=6" mediacheck="true"
+			firmware="uefi" efiparttable="gpt" efifatimagesize="30" kernelcmdline="console=tty0 console=ttyS0,115200"
+			fscreateoptions="-Efragments -C 1048576"
+			>
+			<bootloader name="grub2" grub_template="grub-x86.cfg.iso-template" console="console" timeout="10"/>
+		</type>
+	</preferences>
 
 	<packages type="iso" patternType="onlyRequired" profiles="LiveInstallMinimal">
 		<!-- Filter out unwanted EFI files from the embedded ESP, see rhbz#2358785 -->
