@@ -45,6 +45,12 @@
 		<package name="plasma-nm"/>
 		<package name="plasma-pa"/>
 		<package name="xdg-desktop-portal-kde"/>
+		<package name="dolphin"/>
+		<package name="kcalc"/>
+		<package name="konsole"/>
+		<package name="kate"/>
+		<package name="kscreen"/>
+		<package name="kinfocenter"/>
 		<!-- <namedCollection name="kde-desktop-environment"/> -->
 		<namedCollection name="x86-emulation" arch="aarch64"/>
 		<package name="fuse"/>
