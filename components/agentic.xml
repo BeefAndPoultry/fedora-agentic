@@ -91,7 +91,8 @@
 		<package name="tiwilink-firmware"/>
 		<package name="atmel-firmware"/>
 
-        <!-- Intel GPU firmware and related Intel platform drivers -->
+        <!-- GPU firmware and drivers -->
+        <ignore name="mesa-vulkan-drivers"/>
         <ignore name="intel-gpu-firmware"/>
         <ignore name="amd-gpu-firmware"/>
         <ignore name="nvidia-gpu-firmware"/>
