@@ -18,6 +18,8 @@ fi
 
 systemctl enable --now grub-btrfsd.service
 
+systemctl enable --now llama-server.service
+
 # TODO: fix path in case not run from CWD
 ./install_zswap.sh
 
