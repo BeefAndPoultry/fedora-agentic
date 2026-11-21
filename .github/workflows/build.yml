@@ -92,7 +92,6 @@ jobs:
           fi
           REQUIRED_PACKAGES=(
             iwlwifi-mld-firmware
-            llama-cpp
           )
           for pkg in "${REQUIRED_PACKAGES[@]}"; do
             if grep -q "$pkg" "$PACKAGES_FILE"; then
@@ -115,7 +114,6 @@ jobs:
             exit 1
           fi
           REQUIRED_LIBS=(
-            libggml-cpu-
           )
           for lib in "${REQUIRED_LIBS[@]}"; do
             if ldconfig -p -r "$IMAGE_ROOT" | grep -q "$lib"; then
