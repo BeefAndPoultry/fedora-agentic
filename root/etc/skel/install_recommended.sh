@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 
 sudo bash << 'EOF'
 
@@ -9,6 +10,9 @@ mapfile -t RECOMMENDS < <(rpm -qa --recommends | grep -v '^(' | awk '{print $1}'
 if [[ ${#RECOMMENDS[@]} -gt 0 ]]; then
   dnf install -y --setopt=install_weak_deps=True --skip-unavailable "${RECOMMENDS[@]}"
 fi
+
+# TODO: fix path in case not run from CWD
+./install_zswap.sh
 
 EOF
 
