@@ -540,10 +540,6 @@ if [[ "$kiwi_profiles" == *"FEX"* ]]; then
 	rm /usr/bin/rm
 fi
 
-#if [[ "$kiwi_profiles" == *"KDE"* ]]; then
-#	systemctl enable plasmalogin.service
-#fi
-
 #======================================
 # Report the largest packages (ISO-size diagnosis)
 #======================================
@@ -553,5 +549,7 @@ fi
 } > /var/log/largest-packages.txt
 
 cat /var/log/largest-packages.txt
+
+systemctl enable agentic-firstboot.timer
 
 exit 0

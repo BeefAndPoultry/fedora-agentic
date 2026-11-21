@@ -3,6 +3,7 @@ Description=llama.cpp Router Inference Server
 After=network-online.target
 Wants=network-online.target
 ConditionPathExists=/etc/llama-cpp/models.ini
+ConditionFileIsExecutable=/usr/bin/llama-server
 
 [Service]
 Type=simple
@@ -10,7 +11,7 @@ DynamicUser=yes
 StateDirectory=llama-cpp
 ConfigurationDirectory=llama-cpp
 EnvironmentFile=-/etc/sysconfig/llama-server
-ExecStart=/usr/bin/llama-server --models-preset ${LLAMA_PRESET} --host ${LLAMA_HOST} --port ${LLAMA_PORT} ${LLAMA_ARGS}
+ExecStart=/usr/bin/llama-server --models-preset ${LLAMA_PRESET} --host ${LLAMA_HOST} --port ${LLAMA_PORT} $LLAMA_ARGS
 Restart=on-failure
 RestartSec=5
 

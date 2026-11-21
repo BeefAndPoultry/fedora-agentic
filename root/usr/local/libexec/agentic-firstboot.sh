@@ -1,6 +1,30 @@
 #!/bin/bash
+set -euo pipefail
 
-sudo bash << 'EOF'
+if [ -e /var/lib/agentic/firstboot-complete ]; then
+    systemctl disable --now agentic-firstboot.timer
+    systemctl disable --now agentic-firstboot.service
+    exit 0
+fi
+
+echo "Waiting for internet connection..."
+
+while true; do
+    if nmcli -t -f STATE general | grep -qx connected; then
+        if curl -fsS -o /dev/null \
+            --connect-timeout 5 \
+            --max-time 10 \
+            https://fedoraproject.org/; then
+            break
+        fi
+    fi
+
+    sleep 15
+done
+
+echo "Internet connection detected."
+
+echo "Installing additional packages..."
 
 dnf install -y --skip-unavailable --setopt=install_weak_deps=True dnf-plugins-core dnf5-plugins
 
@@ -17,12 +41,13 @@ if [[ ${#RECOMMENDS[@]} -gt 0 ]]; then
 fi
 
 systemctl enable --now grub-btrfsd.service
-
 systemctl enable --now llama-server.service
 
-# TODO: fix path in case not run from CWD
-./install_zswap.sh
+/usr/local/libexec/install-zswap.sh
 
-EOF
+# Prevent this service from running again.
+mkdir -p /var/lib/agentic
+touch /var/lib/agentic/firstboot-complete
 
-/usr/local/bin/autocomplete.sh install
+systemctl disable --now agentic-firstboot.timer
+systemctl disable agentic-firstboot.service
