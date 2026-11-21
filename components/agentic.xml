@@ -91,9 +91,6 @@
 		<package name="tiwilink-firmware"/>
 		<package name="atmel-firmware"/>
 
-        <!-- Ignore hardware packages not explicitly included above so they don't -->
-        <!-- get pulled in by the hardware-support collection. -->
-
         <!-- Intel GPU firmware and related Intel platform drivers -->
         <ignore name="intel-gpu-firmware"/>
         <ignore name="amd-gpu-firmware"/>
