@@ -121,7 +121,7 @@ parallel = 1
     if "n-cpu-moe" in model:
         lines.append(f"n-cpu-moe = {model['n-cpu-moe']}")
 
-    os.mkdir(os.path.dirname(MODELS_INI), exist_ok=True, parents=True)
+    os.makedirs(os.path.dirname(MODELS_INI), exist_ok=True)
     with open(MODELS_INI, "w", encoding="utf-8") as fh:
         fh.write("\n".join(lines) + "\n")
     os.chmod(MODELS_INI, 0o644)
@@ -138,7 +138,7 @@ def main():
             "hf-repo": "peculiar-ragdoll/Tiel-Coder-35B-A3B-GGUF",
             "hf-file": "Tiel-Coder-35B-A3B-UD-Q4_K_XL.gguf",
             "ctx-size": 65536,
-            "load-on-startup": False,
+            #"load-on-startup": False,
             "min_ram_gb": 31,
             "min_vram_gb": 30,
         },
@@ -147,7 +147,7 @@ def main():
             "hf-repo": "peculiar-ragdoll/Tiel-Coder-35B-A3B-GGUF",
             "hf-file": "Tiel-Coder-35B-A3B-UD-Q4_K_XL.gguf",
             "ctx-size": 65536,
-            "load-on-startup": False,
+            #"load-on-startup": False,
             "n-cpu-moe": 999,
             "moe-cache-mib": 4000,
             "moe-cache-cpu-share": 0.5,
@@ -159,7 +159,7 @@ def main():
             "hf-repo": "peculiar-ragdoll/Tiel-Coder-35B-A3B-GGUF",
             "hf-file": "Tiel-Coder-35B-A3B-UD-Q4_K_XL.gguf",
             "ctx-size": 65536,
-            "load-on-startup": False,
+            #"load-on-startup": False,
             "n-cpu-moe": 999,
             "moe-cache-mib": 2000,
             "moe-cache-cpu-share": 0.9,
@@ -170,7 +170,7 @@ def main():
             "name": "gemma4-e4b",
             "hf-repo": "google/gemma-4-E4B-it-qat-q4_0-gguf",
             "ctx-size": 16384,
-            "load-on-startup": False,
+            #"load-on-startup": False,
             "min_ram_gb": 11,
             "min_vram_gb": 6.5,
         },
@@ -179,7 +179,7 @@ def main():
             "hf-repo": "LiquidAI/LFM3-1.7B-GGUF",
             "hf-file": "LFM3-1.7B-QAD-Q4_0.gguf",
             "ctx-size": 16384,
-            "load-on-startup": False,
+            #"load-on-startup": False,
             "min_ram_gb": 0,
             "min_vram_gb": 0,
         },
