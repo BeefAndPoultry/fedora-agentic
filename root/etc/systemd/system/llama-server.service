@@ -2,7 +2,6 @@
 Description=llama.cpp Router Inference Server
 After=network-online.target
 Wants=network-online.target
-ConditionPathExists=/etc/llama-cpp/models.ini
 ConditionFileIsExecutable=/usr/bin/llama-server
 
 [Service]
@@ -11,7 +10,13 @@ DynamicUser=yes
 StateDirectory=llama-cpp
 ConfigurationDirectory=llama-cpp
 EnvironmentFile=-/etc/sysconfig/llama-server
-ExecStart=/usr/bin/llama-server --models-preset ${LLAMA_PRESET} --host ${LLAMA_HOST} --port ${LLAMA_PORT} $LLAMA_ARGS
+# Reduce CPU priority so the server does not starve the desktop of resources.
+Nice=19
+# (Re)generate models.ini from the host's RAM/VRAM specs as this dynamic user
+# (StateDirectory=/var/lib/llama-cpp is writable by it).
+ExecStartPre=/bin/bash -c "/usr/local/libexec/llama-cpp-populate-models.py"
+# Start llama-server via the launcher as the unprivileged dynamic user.
+ExecStart=/bin/bash /usr/local/libexec/llama-cpp-launcher.sh
 Restart=on-failure
 RestartSec=5
 

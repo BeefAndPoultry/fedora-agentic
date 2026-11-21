@@ -1,5 +1,5 @@
 LLAMA_HOST="127.0.0.1"
 LLAMA_PORT="9931"
-LLAMA_PRESET="/etc/llama-cpp/models.ini"
+LLAMA_PRESET="/var/lib/llama-cpp/models.ini"
 LLAMA_ARGS=""
 LLAMA_CACHE=/var/lib/llama-cpp/cache
