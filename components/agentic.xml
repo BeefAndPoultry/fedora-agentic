@@ -94,40 +94,10 @@
         <!-- Ignore hardware packages not explicitly included above so they don't -->
         <!-- get pulled in by the hardware-support collection. -->
 
-        <!-- Audio firmware: not needed, kept out to avoid conflicts with PulseAudio/PipeWire -->
-        <ignore name="alsa-sof-firmware"/>
-        <ignore name="cirrus-audio-firmware"/>
-        <ignore name="intel-audio-firmware"/>
-        <ignore name="alsa-firmware"/>
-
         <!-- Intel GPU firmware and related Intel platform drivers -->
         <ignore name="intel-gpu-firmware"/>
         <ignore name="amd-gpu-firmware"/>
         <ignore name="nvidia-gpu-firmware"/>
-        <ignore name="qcom-accel-firmware"/>
-        <ignore name="qed-firmware"/>
-
-        <!-- Intel platform utilities (power management and security) -->
-        <ignore name="intel-lpmd"/>
-        <ignore name="intel-vsc-firmware"/>
-
-        <!-- Qualcomm SoC and cellular firmware -->
-        <ignore name="qcom-firmware"/>
-        <ignore name="qcom-wwan-firmware"/>
-
-        <!-- Storage controllers and disk utilities -->
-        <ignore name="liquidio-firmware"/>
-        <ignore name="mlxsw_spectrum-firmware"/>
-        <ignore name="mrvlprestera-firmware"/>
-        <ignore name="lsscsi"/>
-        <ignore name="hdparm"/>
-        <ignore name="hddtemp"/>
-
-        <!-- Networking: modem control, QRTR transport and remote messaging -->
-        <ignore name="usb_modeswitch"/>
-        <ignore name="qrtr"/>
-        <ignore name="rmtfs"/>
-        <ignore name="netronome-firmware"/>
 
         <!-- Smartcard and NFC support (opensc, PC/SC readers) -->
         <ignore name="opensc"/>
