@@ -11,15 +11,6 @@
 		<profile name="NetworkExtras" description="Network extras for live images">
 			<requires profile="HardwareMinimal"/>
 		</profile>
-		<!-- Agentic build: same KDE spin but with a slimmed ISO. All package
-		     customizations live here in one profile so the upstream components/
-		     files stay clean; select this profile with image-profile=KDE-Desktop-Live-Agentic. -->
-		<profile name="KDE-Agentic-Live" description="KDE Plasma Desktop Spin Live DVD (agentic, slimmed)">
-			<requires profile="DesktopCommonMinimal"/>
-			<requires profile="LiveInstallMinimal"/>
-			<requires profile="NetworkExtras"/>
-			<requires profile="AgenticCommon"/>
-		</profile>
 	</profiles>
 
 	<preferences profiles="LiveInstallMinimal" arch="x86_64">
@@ -54,13 +45,6 @@
 		<ignore name="device-mapper-multipath"/>
 		<ignore name="fcoe-utils"/>
 		<ignore name="gfs2-utils"/>
-	</packages>
-
-	<packages type="bootstrap" patternType="onlyRequired" profiles="KDE-Agentic-Live">
-		<package name="fedora-release-kde"/>
-	</packages>
-	<packages type="image" patternType="onlyRequired" profiles="KDE-Agentic-Live">
-		<package name="plasma-welcome-fedora"/>
 	</packages>
 
 	<packages type="image" patternType="onlyRequired" profiles="HardwareMinimal">
@@ -136,77 +120,6 @@
 		<ignore name="reiserfs-utils"/>
 	</packages>
 
-	<packages type="image" patternType="onlyRequired" profiles="AgenticCommon">
-		<package name="jq"/> <!-- for agentic autocomplete.sh -->
-	</packages>
-
-	<!-- Agentic-specific ignores: trim KDE apps, LibreOffice, tracker and
-	     GNOME utilities pulled in via GTK deps so the live ISO stays small.
-	     Kept out of components/desktops/kde.xml so the upstream component is
-	     untouched. -->
-	<packages type="image" patternType="onlyRequired" profiles="KDE-Agentic-Live">
-		<namedCollection name="core"/>
-		<namedCollection name="critical-path-kde"/>
-		<package name="policycoreutils-python-utils"/>
-		<package name="selinux-policy-targeted"/>
-		<package name="plasma-nm"/>
-		<package name="plasma-pa"/>
-		<package name="xdg-desktop-portal-kde"/>
-		<package name="dolphin"/>
-		<package name="kcalc"/>
-		<package name="konsole"/>
-		<package name="kate"/>
-		<package name="kscreen"/>
-		<package name="kinfocenter"/>
-		<package name="kde-partitionmanager"/>
-		<package name="kde-settings-pulseaudio"/>
-		<package name="plasma-nm-openconnect"/>
-		<package name="plasma-nm-openswan"/>
-		<package name="plasma-nm-openvpn"/>
-		<package name="plasma-nm-pptp"/>
-		<package name="kf6-kwallet"/>
-		<package name="kwalletmanager"/>
-		<package name="plasma-disks"/>
-		<package name="kde-settings-plasmalogin"/>
-		<package name="kde-settings-pulseaudio"/>
-		<package name="udisks2"/>
-		<package name="filelight"/>
-		<package name="kdialog"/>
-		<package name="kdnssd"/>
-		<package name="kmenuedit"/>
-		<package name="firefox"/>
-
-		<namedCollection name="x86-emulation" arch="aarch64"/>
-		<package name="fuse"/>
-		<package name="kde-l10n"/>
-
-        <ignore name="gnome-disk-utility"/> <!-- redundant with kde partitionmanager -->
-		<ignore name="mariadb-server-utils"/> <!-- Not needed on desktops (pagure.io:fedora-kde/SIG#566) -->
-		<ignore name="system-config-language"/> <!-- redundant with kcms -->
-		<ignore name="system-config-printer"/> <!-- redundant with kcms -->
-		<!-- drop tracker stuff pulled in by gtk3 (pagureio:fedora-kde/SIG#124) -->
-		<ignore name="tracker"/>
-		<ignore name="tracker-miners"/>
-		<!-- space issues -->
-		<ignore name="digikam"/> <!-- digikam has duplicate functionality with gwenview (~28 megs) -->
-		<ignore name="k3b"/> <!-- ~15 megs -->
-		<ignore name="kipi-plugins"/> <!-- ~8 megs + drags in marble -->
-		<ignore name="krusader"/> <!-- ~4 megs -->
-		<ignore name="ktorrent"/> <!-- ~15 megs -->
-		<ignore name="initial-setup"/> <!-- redundant with plasma-setup -->
-
-        <ignore name="wine*"/>
-	</packages>
-
-	<packages type="image" patternType="plusRecommended" profiles="KDE-Agentic-Live">
-		<package name="plasma-discover"/>
-		<package name="plasma-discover-packagekit"/>
-		<package name="PackageKit"/>
-		<package name="plasma-discover-flatpak"/>
-		<package name="flatpak"/>
-		<package name="fedora-flathub-remote"/>
-	</packages>
-
 	<packages type="image" patternType="plusRecommended" profiles="NetworkExtras">
 		<namedCollection name="networkmanager-submodules"/>
 		<package name="NetworkManager-config-connectivity-fedora"/>
@@ -218,5 +131,9 @@
 		<package name="NetworkManager-wifi"/>
 		<package name="NetworkManager-wwan"/>
 		<package name="wpa_supplicant"/>
+	</packages>
+
+    <packages type="image" patternType="onlyRequired" profiles="AgenticCommon">
+		<package name="jq"/> <!-- for agentic autocomplete.sh -->
 	</packages>
 </image>
