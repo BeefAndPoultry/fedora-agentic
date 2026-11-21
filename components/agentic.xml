@@ -112,9 +112,6 @@
         <ignore name="dvb-firmware"/>
 
         <!-- System utilities and monitoring tools trimmed from a minimal live image -->
-        <ignore name="acpi"/>
-        <ignore name="acpitool"/>
-        <ignore name="cmospwd"/>
         <ignore name="gpsd"/>
         <ignore name="gpsd-clients"/>
         <ignore name="radeontop"/>
