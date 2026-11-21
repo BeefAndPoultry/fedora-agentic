@@ -41,7 +41,12 @@ if [[ ${#RECOMMENDS[@]} -gt 0 ]]; then
 fi
 
 systemctl enable --now grub-btrfsd.service
-systemctl enable --now llama-server.service
+
+if rpm -q llama-cpp >/dev/null 2>&1; then
+    systemctl enable --now llama-server.service
+else
+    echo "llama-cpp is not installed; skipping llama-server."
+fi
 
 /usr/local/libexec/install-zswap.sh
 

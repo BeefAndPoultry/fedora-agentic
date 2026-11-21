@@ -18,6 +18,8 @@ if [[ ! -s "$MODELS_INI" ]]; then
     exit 1
 fi
 
+mkdir -p "${LLAMA_CACHE}"
+
 # 2. Launch llama-server at lower CPU priority, like `nice -n 19`.
 #    The priority is applied via the systemd unit's "Nice=" directive instead
 #    of the "nice" binary here, because DynamicUser=yes drops CAP_SYS_NICE and

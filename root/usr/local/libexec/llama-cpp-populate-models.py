@@ -121,6 +121,7 @@ parallel = 1
     if "n-cpu-moe" in model:
         lines.append(f"n-cpu-moe = {model['n-cpu-moe']}")
 
+    os.mkdir(os.path.dirname(MODELS_INI), exist_ok=True, parents=True)
     with open(MODELS_INI, "w", encoding="utf-8") as fh:
         fh.write("\n".join(lines) + "\n")
     os.chmod(MODELS_INI, 0o644)
