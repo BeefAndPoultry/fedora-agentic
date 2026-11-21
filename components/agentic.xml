@@ -1,14 +1,28 @@
 <image>
-	<profiles>
-		<profile name="HardwareMinimal" description="Minimal hardware support for live images"/>
-		<profile name="LiveInstallMinimal" description="Live Install ISO"/>
-		<profile name="AgenticCommon" description="Common packages for agentic live images"/>
+	<!--
+	  This component holds the shared package/profile layer for the agentic live
+	  ISO. Profiles are stacked via <requires>, so selecting one pulls in all of
+	  its prerequisites (e.g. LiveInstallMinimal -> HardwareMinimal). The
+	  desktop-specific team file (teams/agentic-kde.xml) layers KDE on top of
+	  these profiles.
 
-		<profile name="DesktopCommonMinimal" description="Minimal common desktop packages">
+	  Keep this component free of desktop-app tweaks; those belong in the team
+	  file so these base profiles stay reusable.
+	-->
+	<profiles>
+		<!-- Base device support: kernel + minimal firmware for a bootable live image -->
+		<profile name="HardwareMinimal" description="Minimal hardware support for live images"/>
+		<!-- Root image type + live-install tooling (anaconda, EROFS squashfs) -->
+		<profile name="LiveInstallMinimal" description="Live Install ISO"/>
+		<!-- Networking stacks and tools added on top of HardwareMinimal -->
+		<profile name="NetworkExtras" description="Network extras for live images">
 			<requires profile="HardwareMinimal"/>
 		</profile>
+		<!-- Small, agentic-specific packages shared across all agentic desktops -->
+		<profile name="AgenticCommon" description="Common packages for agentic live images"/>
 
-		<profile name="NetworkExtras" description="Network extras for live images">
+		<!-- Common desktop essentials: fonts, multimedia codecs, NM submodules -->
+		<profile name="DesktopCommonMinimal" description="Minimal common desktop packages">
 			<requires profile="HardwareMinimal"/>
 		</profile>
 	</profiles>
@@ -25,8 +39,10 @@
 	</preferences>
 
 	<packages type="iso" patternType="onlyRequired" profiles="LiveInstallMinimal">
+		<!-- Live ISO root image for x86_64: EROFS squashfs bootloader + the tooling
+		     needed to boot a live environment and install from it -->
 		<!-- Filter out unwanted EFI files from the embedded ESP, see rhbz#2358785 -->
-		<file name="iso-esp-excludes.yaml" target="image/exclude_files_efifatimage.yaml"/>
+        <file name="iso-esp-excludes.yaml" target="image/exclude_files_efifatimage.yaml"/>
 		<!-- The point of a live image is to install -->
 		<namedCollection name="anaconda-tools"/>
 		<package name="anaconda-install-env-deps"/>
@@ -51,7 +67,10 @@
 		<namedCollection name="standard"/>
 		<ignore name="qemu-user-static"/> <!-- Saves ~100MB -->
 	</packages>
+    
     <packages type="image" patternType="onlyRequired" profiles="HardwareMinimal">
+		<!-- Hardware support: firmware, drivers and utilities to boot on real
+		     machines (aarch64 board firmware included) -->
 		<namedCollection name="hardware-support"/>
 		<package name="linux-firmware"/>
 		<package name="bcm283x-firmware" arch="aarch64"/>
@@ -72,47 +91,68 @@
 		<package name="tiwilink-firmware"/>
 		<package name="atmel-firmware"/>
 
-        <!-- Ignore hardware packages not explicitly included above so they don't
-		     get pulled in by the hardware-support collection. -->
-		<ignore name="alsa-sof-firmware"/>
-		<ignore name="amd-gpu-firmware"/>
-		<ignore name="cirrus-audio-firmware"/>
-		<ignore name="intel-audio-firmware"/>
-		<ignore name="intel-gpu-firmware"/>
-		<ignore name="intel-lpmd"/>
-		<ignore name="intel-vsc-firmware"/>
-		<ignore name="nvidia-gpu-firmware"/>
-		<ignore name="qcom-firmware"/>
-		<ignore name="qcom-wwan-firmware"/>
-		<ignore name="qrtr"/>
-		<ignore name="rmtfs"/>
-		<ignore name="usb_modeswitch"/>
-		<ignore name="acpi"/>
-		<ignore name="acpitool"/>
-		<ignore name="alsa-firmware"/>
-		<ignore name="cmospwd"/>
-		<ignore name="dvb-firmware"/>
-		<ignore name="gpsd"/>
-		<ignore name="gpsd-clients"/>
-		<ignore name="hddtemp"/>
-		<ignore name="hdparm"/>
-		<ignore name="iscan-firmware"/>
-		<ignore name="libifp"/>
-		<ignore name="liquidio-firmware"/>
-		<ignore name="lsscsi"/>
-		<ignore name="mlxsw_spectrum-firmware"/>
-		<ignore name="mrvlprestera-firmware"/>
-		<ignore name="netronome-firmware"/>
-		<ignore name="opensc"/>
-		<ignore name="pcsc-lite"/>
-		<ignore name="pcsc-lite-ccid"/>
-		<ignore name="qcom-accel-firmware"/>
-		<ignore name="qed-firmware"/>
-		<ignore name="radeontop"/>
-		<ignore name="wpan-tools"/>
+        <!-- Ignore hardware packages not explicitly included above so they don't -->
+        <!-- get pulled in by the hardware-support collection. -->
+
+        <!-- Audio firmware: not needed, kept out to avoid conflicts with PulseAudio/PipeWire -->
+        <ignore name="alsa-sof-firmware"/>
+        <ignore name="cirrus-audio-firmware"/>
+        <ignore name="intel-audio-firmware"/>
+        <ignore name="alsa-firmware"/>
+
+        <!-- Intel GPU firmware and related Intel platform drivers -->
+        <ignore name="intel-gpu-firmware"/>
+        <ignore name="amd-gpu-firmware"/>
+        <ignore name="nvidia-gpu-firmware"/>
+        <ignore name="qcom-accel-firmware"/>
+        <ignore name="qed-firmware"/>
+
+        <!-- Intel platform utilities (power management and security) -->
+        <ignore name="intel-lpmd"/>
+        <ignore name="intel-vsc-firmware"/>
+
+        <!-- Qualcomm SoC and cellular firmware -->
+        <ignore name="qcom-firmware"/>
+        <ignore name="qcom-wwan-firmware"/>
+
+        <!-- Storage controllers and disk utilities -->
+        <ignore name="liquidio-firmware"/>
+        <ignore name="mlxsw_spectrum-firmware"/>
+        <ignore name="mrvlprestera-firmware"/>
+        <ignore name="lsscsi"/>
+        <ignore name="hdparm"/>
+        <ignore name="hddtemp"/>
+
+        <!-- Networking: modem control, QRTR transport and remote messaging -->
+        <ignore name="usb_modeswitch"/>
+        <ignore name="qrtr"/>
+        <ignore name="rmtfs"/>
+        <ignore name="netronome-firmware"/>
+
+        <!-- Smartcard and NFC support (opensc, PC/SC readers) -->
+        <ignore name="opensc"/>
+        <ignore name="pcsc-lite"/>
+        <ignore name="pcsc-lite-ccid"/>
+
+        <!-- Image scanners (scanner firmware and libusb PTP driver) -->
+        <ignore name="iscan-firmware"/>
+        <ignore name="libifp"/>
+
+        <!-- Multimedia: DVB tuner firmware -->
+        <ignore name="dvb-firmware"/>
+
+        <!-- System utilities and monitoring tools trimmed from a minimal live image -->
+        <ignore name="acpi"/>
+        <ignore name="acpitool"/>
+        <ignore name="cmospwd"/>
+        <ignore name="gpsd"/>
+        <ignore name="gpsd-clients"/>
+        <ignore name="radeontop"/>
+        <ignore name="wpan-tools"/>
 	</packages>
 
-	<packages type="image" patternType="onlyRequired" profiles="DesktopCommonMinimal">
+    <!-- Common desktop essentials: fonts, media codecs, NM connection submodules -->
+    <packages type="image" patternType="onlyRequired" profiles="DesktopCommonMinimal">
 		<namedCollection name="fonts"/>
 		<namedCollection name="multimedia"/>
 		<namedCollection name="networkmanager-submodules"/>
@@ -120,7 +160,9 @@
 		<ignore name="reiserfs-utils"/>
 	</packages>
 
-	<packages type="image" patternType="plusRecommended" profiles="NetworkExtras">
+    <!-- Wireless, cellular and ad-hoc networking helpers for a live box that
+        won't have an installer on it -->
+    <packages type="image" patternType="plusRecommended" profiles="NetworkExtras">
 		<namedCollection name="networkmanager-submodules"/>
 		<package name="NetworkManager-config-connectivity-fedora"/>
 		<package name="wireless-regdb"/>
@@ -133,7 +175,8 @@
 		<package name="wpa_supplicant"/>
 	</packages>
 
+    <!-- Agentic-only helpers shared by every agentic desktop profile -->
     <packages type="image" patternType="onlyRequired" profiles="AgenticCommon">
-		<package name="jq"/> <!-- for agentic autocomplete.sh -->
+        <package name="jq"/> <!-- for agentic autocomplete.sh -->
 	</packages>
 </image>
