@@ -80,9 +80,9 @@ jobs:
           fi
 
 
-      - name: Verify iwlwifi-mld-firmware is included
-        # The agentic desktop ships this Wi-Fi firmware; catch a missing package
-        # before the expensive ISO build is relied upon downstream.
+      - name: Verify required packages are included
+        # The agentic desktop ships these packages; catch a missing one before the
+        # expensive ISO build is relied upon downstream. Extend this list as needed.
         run: |
           set -euo pipefail
           PACKAGES_FILE=$(find ./outdir -maxdepth 1 -name "*.packages" | head -n 1)
@@ -90,12 +90,41 @@ jobs:
             echo "ERROR: no *.packages manifest found under ./outdir" >&2
             exit 1
           fi
-          if grep -q "iwlwifi-mld-firmware" "$PACKAGES_FILE"; then
-            echo "SUCCESS: iwlwifi-mld-firmware is present in $PACKAGES_FILE"
-          else
-            echo "ERROR: iwlwifi-mld-firmware missing from $PACKAGES_FILE" >&2
+          REQUIRED_PACKAGES=(
+            iwlwifi-mld-firmware
+            llama-cpp
+          )
+          for pkg in "${REQUIRED_PACKAGES[@]}"; do
+            if grep -q "$pkg" "$PACKAGES_FILE"; then
+              echo "SUCCESS: $pkg is present in $PACKAGES_FILE"
+            else
+              echo "ERROR: $pkg missing from $PACKAGES_FILE" >&2
+              exit 1
+            fi
+          done
+
+      - name: Verify libraries are linked by ldconfig
+        # The agentic desktop ships a Vulkan llama.cpp build; ensure the ggml
+        # Vulkan plugin library is registered so GPU acceleration resolves at runtime.
+        # Extend REQUIRED_LIBS to check additional shared libraries in the image root.
+        run: |
+          set -euo pipefail
+          IMAGE_ROOT=$(realpath ./outdir-build/build/image-root)
+          if [ ! -d "$IMAGE_ROOT" ]; then
+            echo "ERROR: image root not found at $IMAGE_ROOT" >&2
             exit 1
           fi
+          REQUIRED_LIBS=(
+            libggml-cpu-
+          )
+          for lib in "${REQUIRED_LIBS[@]}"; do
+            if ldconfig -p -r "$IMAGE_ROOT" | grep -q "$lib"; then
+              echo "SUCCESS: $lib is registered in ldconfig cache"
+            else
+              echo "ERROR: $lib missing from ldconfig cache" >&2
+              exit 1
+            fi
+          done
 
       - name: Test boot ISO in QEMU (UEFI)
         run: |
@@ -224,6 +253,5 @@ jobs:
         with:
           tag_name: ${{ steps.meta.outputs.tag }}
           prerelease: ${{ github.event_name != 'push' || github.ref != 'refs/heads/main' }}
-          body: ${{ github.event_name != 'push' || github.ref != 'refs/heads/main' }}
           files: |
             ./outdir/*
