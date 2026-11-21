@@ -1,0 +1,9 @@
+[Unit]
+Description=Start Fedora Agentic first-boot setup
+
+[Timer]
+OnBootSec=2min
+Unit=agentic-firstboot.service
+
+[Install]
+WantedBy=timers.target
