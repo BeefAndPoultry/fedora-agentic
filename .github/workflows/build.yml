@@ -224,5 +224,6 @@ jobs:
         with:
           tag_name: ${{ steps.meta.outputs.tag }}
           prerelease: ${{ github.event_name != 'push' || github.ref != 'refs/heads/main' }}
+          body: ${{ github.event_name != 'push' || github.ref != 'refs/heads/main' }}
           files: |
             ./outdir/*
