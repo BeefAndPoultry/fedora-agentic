@@ -2,6 +2,7 @@
 	<profiles>
 		<profile name="HardwareMinimal" description="Minimal hardware support for live images"/>
 		<profile name="LiveInstallMinimal" description="Live Install ISO"/>
+		<profile name="AgenticCommon" description="Common packages for agentic live images"/>
 
 		<profile name="DesktopCommonMinimal" description="Minimal common desktop packages">
 			<requires profile="HardwareMinimal"/>
@@ -17,6 +18,7 @@
 			<requires profile="DesktopCommonMinimal"/>
 			<requires profile="LiveInstallMinimal"/>
 			<requires profile="NetworkExtras"/>
+			<requires profile="AgenticCommon"/>
 		</profile>
 	</profiles>
 
@@ -128,9 +130,14 @@
 
 	<packages type="image" patternType="onlyRequired" profiles="DesktopCommonMinimal">
 		<namedCollection name="fonts"/>
+		<namedCollection name="multimedia"/>
 		<namedCollection name="networkmanager-submodules"/>
 		<ignore name="gfs2-utils"/>
 		<ignore name="reiserfs-utils"/>
+	</packages>
+
+	<packages type="image" patternType="onlyRequired" profiles="AgenticCommon">
+		<package name="jq"/> <!-- for agentic autocomplete.sh -->
 	</packages>
 
 	<!-- Agentic-specific ignores: trim KDE apps, LibreOffice, tracker and
