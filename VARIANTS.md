@@ -19,6 +19,8 @@
 | RootFS for FEX                 | `erofs`    | `FEX-RootFS`                          |
 | KDE Plasma Desktop Edition     | `iso`      | `KDE-Desktop-Live`                    |
 |                                | `oem`      | `KDE-Desktop-Disk`                    |
+| Agentic KDE Spin               | `iso`      | `KDE-Agentic-Live`                    |
+|                                | `oem`      | `KDE-Agentic-Disk`                    |
 | KDE Plasma Mobile Spin         | `iso`      | `KDE-Mobile-Live`                     |
 |                                | `oem`      | `KDE-Mobile-Disk`                     |
 | Workstation Edition            | `iso`      | `Workstation-Live`                    |
