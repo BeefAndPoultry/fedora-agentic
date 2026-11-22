@@ -15,14 +15,12 @@ fi
 
 # Configuration parameters (adjust as needed)
 COMPRESSOR="zstd"       # Options: zstd (better ratio), lz4 (faster)
-ZPOOL="zsmalloc"        # Modern standard allocator
 MAX_POOL_PERCENT="25"   # Max % of RAM zswap can use
 
 # 3. Enable and configure zswap immediately at runtime via sysfs
 echo "Applying zswap settings to the running kernel..."
 if [[ -d /sys/module/zswap/parameters ]]; then
     echo "$COMPRESSOR" > /sys/module/zswap/parameters/compressor
-    echo "$ZPOOL" > /sys/module/zswap/parameters/zpool
     echo "$MAX_POOL_PERCENT" > /sys/module/zswap/parameters/max_pool_percent
     echo 1 > /sys/module/zswap/parameters/enabled
 else
@@ -32,7 +30,7 @@ fi
 
 # 4. Make changes persistent across reboots via GRUB
 GRUB_FILE="/etc/default/grub"
-ZSWAP_PARAMS="zswap.enabled=1 zswap.compressor=${COMPRESSOR} zswap.zpool=${ZPOOL} zswap.max_pool_percent=${MAX_POOL_PERCENT}"
+ZSWAP_PARAMS="zswap.enabled=1 zswap.compressor=${COMPRESSOR} zswap.max_pool_percent=${MAX_POOL_PERCENT}"
 
 if [[ -f "$GRUB_FILE" ]]; then
     echo "Updating $GRUB_FILE for persistence..."
@@ -48,18 +46,8 @@ if [[ -f "$GRUB_FILE" ]]; then
         echo "GRUB_CMDLINE_LINUX_DEFAULT=\"${ZSWAP_PARAMS}\"" >> "$GRUB_FILE"
     fi
 
-    # Regenerate GRUB configuration (supports Debian/Ubuntu and Fedora/RHEL)
-    if command -v update-grub >/dev/null 2>&1; then
-        update-grub
-    elif command -v grub2-mkconfig >/dev/null 2>&1; then
-        if [[ -d /sys/firmware/efi ]] && [[ -f /boot/efi/EFI/fedora/grub.cfg ]]; then
-            grub2-mkconfig -o /boot/efi/EFI/fedora/grub.cfg
-        else
-            grub2-mkconfig -o /boot/grub2/grub.cfg
-        fi
-    else
-        echo "Warning: Could not find update-grub or grub2-mkconfig. Update your bootloader manually."
-    fi
+    # Regenerate GRUB configuration
+    grub2-mkconfig -o /boot/grub2/grub.cfg
 else
     echo "Warning: $GRUB_FILE not found. If you use systemd-boot, add these kernel parameters manually:"
     echo "  $ZSWAP_PARAMS"
@@ -68,13 +56,17 @@ fi
 # ensure no zram
 dnf remove -y zram-generator-defaults zram-generator || true
 : > /etc/systemd/zram-generator.conf
+swapoff /dev/zram0 || true
+zramctl -r /dev/zram0 || true
 
 # Create a Btrfs-compatible swapfile inside the /swap subvolume
-btrfs filesystem mkswapfile --size 32g /swap/swapfile
+rm /swap/swapfile || true
+btrfs filesystem mkswapfile --size 20g /swap/swapfile
+swapon /swap/swapfile
 
 # Enable it on boot
 echo "/swap/swapfile none swap defaults 0 0" >> /etc/fstab
 
 echo ""
 echo "zswap is now active! Current status:"
-grep -H . /sys/module/zswap/parameters/{enabled,compressor,zpool,max_pool_percent}
+grep -H . /sys/module/zswap/parameters/{enabled,compressor,max_pool_percent}

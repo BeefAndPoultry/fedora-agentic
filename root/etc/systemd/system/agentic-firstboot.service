@@ -1,0 +1,15 @@
+[Unit]
+Description=Fedora Agentic First Boot Setup
+Wants=network-online.target
+After=network-online.target
+
+# Don't run in the live environment
+ConditionKernelCommandLine=!rd.live.image
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/libexec/agentic-firstboot.sh
+RemainAfterExit=yes
+Restart=on-failure
+RestartSec=5min
+TimeoutStartSec=infinity
