@@ -45,7 +45,7 @@ def parse_glxinfo_vram():
     for line in out.splitlines():
         line = line.strip()
         if line == "Unified memory: yes":
-            unified = True # TODO: treat this as half VRAM? or subtract min(half, 16GB)? or use available instead of total?
+            unified = True # TODO: treat this as half VRAM? or subtract min(half, 16GB)? or use available instead of total? need to exclude --moe-cache-mib for unified memory
         if line.startswith("Dedicated video memory:"):
             parts = line.split(":")
             if len(parts) < 2:
@@ -117,12 +117,14 @@ load-mode = mmap
 parallel = 1
 
     """)
+
+    # TODO: read the /home/*/.llama-cpp/models.ini of every user, parse their contents, and add them to a `models` dictionary along with the `model` in the argument of this function
     
     lines.append(f"[{model['name']}]")
     for key in model:
         if key not in ("name", "min_ram_gb", "min_vram_gb"):
             lines.append(f"{key} = {str(model[key])}")
-    
+
     os.makedirs(os.path.dirname(MODELS_INI), exist_ok=True)
     with open(MODELS_INI, "w", encoding="utf-8") as fh:
         fh.write("\n".join(lines) + "\n")
@@ -220,6 +222,8 @@ def main():
         #    "min_ram_gb": 11,
         #    "min_vram_gb": 7.5,
         #},
+
+        # TODO: test Ling 3.0 Tiny 8b-a1b and Ornith 1.5 9b
 
         # LFM 3 1.7b
         # F16: 4.7GB 32768 q8, 5.2GB unquant 65536

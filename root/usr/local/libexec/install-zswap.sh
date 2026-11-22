@@ -61,7 +61,7 @@ zramctl -r /dev/zram0 || true
 
 # Create a Btrfs-compatible swapfile inside the /swap subvolume
 rm /swap/swapfile || true
-btrfs filesystem mkswapfile --size 32g /swap/swapfile
+btrfs filesystem mkswapfile --size 20g /swap/swapfile
 swapon /swap/swapfile
 
 # Enable it on boot
