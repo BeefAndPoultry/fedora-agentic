@@ -199,6 +199,23 @@ presenting it can use the loopback HTTP API.
   `/usr/local/bin/generate_key.py > /etc/llama-cpp/apikey && chmod 644
   /etc/llama-cpp/apikey`.
 
+### Web UI desktop shortcut
+
+The llama.cpp server serves its HTTP API on `127.0.0.1:9931` (the `LLAMA_PORT`
+value in `root/etc/sysconfig/llama-server`). A desktop shortcut that opens this
+URL in the default browser ships in the image:
+
+- `root/usr/share/applications/llama-cpp-webui.desktop` — registers the entry in
+  the application launcher for every user.
+- `root/etc/skel/Desktop/llama-cpp-webui.desktop` — lands the shortcut on each
+  user's Desktop (the live user and, after install, new users are seeded from
+  `/etc/skel`).
+
+The file is a freedesktop `Type=Link` entry with `URL=http://127.0.0.1:9931`, so
+a double-click opens the web UI in the default browser with no "allow
+execution" prompt. Point it at a different host/port by editing the `URL=` line
+if `LLAMA_HOST`/`LLAMA_PORT` change.
+
 ### KDE Plasma widgets
 
 Install widgets system-wide with `kpackagetool6 -g` so they land in
