@@ -144,6 +144,10 @@ def build_configs(ctx):
     model_id = ctx["model_id"]
     context_window = ctx["context_window"]
 
+    # Connection: the credential in auth.json (kept private) carries the API key
+    # and LLAMA_BASE_URL. pi resolves that env var first, then normalizes it
+    # (a trailing /v1 is stripped) and re-appends it for inference calls, so a
+    # bare base here is correct and never doubles up into /v1/v1.
     auth = {
         PROVIDER: {
             "type": "api_key",
@@ -154,44 +158,23 @@ def build_configs(ctx):
         }
     }
 
+    # Catalog: providers is keyed by provider id (an object, not a list), and
+    # each provider's models is a list of model objects. Only the model id,
+    # display name and the live context window matter here; pi fills the rest.
     models = {
-        "providers": [
-            {
-                "name": PROVIDER,
-                "baseUrl": f"{base}/v1",
+        "providers": {
+            PROVIDER: {
                 "models": [
                     {
                         "id": model_id,
                         "name": model_id,
+                        "reasoning": True,
                         "contextWindow": context_window,
                         "maxTokens": max(256, context_window // 16),
-                        "thinking": {
-                            "enabled": True,
-                            "budgetTokens": context_window // 4,
-                            "defaultLevel": "auto",
-                            "levelNames": [
-                                "low",
-                                "medium",
-                                "high",
-                                "auto",
-                                "none",
-                            ],
-                            "thinkingLevelMap": {
-                                "low": {"numBits": 2},
-                                "medium": {"numBits": 2},
-                                "high": {"numBits": 1},
-                                "auto": {"numBits": 1},
-                                "none": {"numBits": 0},
-                            },
-                        },
-                        "compat": {
-                            "chat": "v3",
-                            "thinking": True,
-                        },
                     }
                 ],
             }
-        ]
+        }
     }
 
     settings = {
