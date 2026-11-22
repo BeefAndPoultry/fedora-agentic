@@ -179,6 +179,26 @@ Notes:
   `/var/lib/llama-cpp/models/`. The `ConditionPathExists` guard prevents the
   service from failing on first boot.
 
+### API key for the local LLM
+
+The llama.cpp inference server is protected by an API key so only clients
+presenting it can use the loopback HTTP API.
+
+- The key is generated during **first boot** (`agentic-firstboot.service`) by
+  running `generate_key.py` (`/usr/local/bin/generate_key.py`, which prints a
+  word-based key) and writing its output, world-readable, to
+  `/etc/llama-cpp/apikey`.
+- The launcher (`/usr/local/libexec/llama-cpp-launcher.sh`) passes the key to
+  `llama-server` via `--api-key-file /etc/llama-cpp/apikey` whenever the file
+  exists, so clients must send it (e.g. `Authorization: Bearer
+  $(cat /etc/llama-cpp/apikey)`). The flag is omitted if the key was never
+  generated, so the service still starts in that case.
+- The key is intentionally world-readable because the server only listens on
+  `127.0.0.1`. Users read it from `/etc/llama-cpp/apikey` to configure their
+  OpenAI-compatible clients (pi-agent, etc.). To rotate it:
+  `/usr/local/bin/generate_key.py > /etc/llama-cpp/apikey && chmod 644
+  /etc/llama-cpp/apikey`.
+
 ### KDE Plasma widgets
 
 Install widgets system-wide with `kpackagetool6 -g` so they land in

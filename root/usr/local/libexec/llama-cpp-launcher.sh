@@ -24,6 +24,15 @@ mkdir -p "${LLAMA_CACHE}"
 #    The priority is applied via the systemd unit's "Nice=" directive instead
 #    of the "nice" binary here, because DynamicUser=yes drops CAP_SYS_NICE and
 #    spawning "nice" would fail. The effect is identical to `nice -n 19`.
+# Require the API key generated during first boot so clients must present it
+# to use the server. The key is world-readable and the server only listens on
+# loopback, so this is safe; skip the flag if the key was never generated so
+# the service still starts in that case.
+if [ -s /etc/llama-cpp/apikey ]; then
+    echo "llama-cpp-launcher: requiring API key from /etc/llama-cpp/apikey"
+    LLAMA_ARGS="${LLAMA_ARGS} --api-key-file /etc/llama-cpp/apikey"
+fi
+
 echo "llama-cpp-launcher: starting llama-server"
 exec /usr/bin/llama-server \
     --models-preset "${LLAMA_PRESET:-$MODELS_INI}" \
