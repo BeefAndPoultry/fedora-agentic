@@ -10,15 +10,24 @@
 			<requires profile="NetworkExtras" />
 			<requires profile="AgenticCommon" />
 		</profile>
+		<!-- Non-live bootable install disk: same agentic KDE desktop, but built as a
+		     btrfs oem image (grub2, no live squashfs root or anaconda installer). Select
+		     this profile with image-profile=KDE-Desktop-Disk-Agentic. -->
+		<profile name="KDE-Agentic-Disk"
+			description="KDE Plasma Desktop Spin Install Disk (agentic)">
+			<requires profile="BootDiskCore" />
+			<requires profile="DesktopCommonMinimal" />
+			<requires profile="AgenticCommon" />
+		</profile>
 	</profiles>
 
 	<!-- Release identification so `rpm -q fedora-release` and the About dialogs
 	     report the KDE spin (vs. a generic Fedora Workstation) -->
-	<packages type="bootstrap" patternType="onlyRequired" profiles="KDE-Agentic-Live">
+	<packages type="bootstrap" patternType="onlyRequired" profiles="KDE-Agentic-Live,KDE-Agentic-Disk">
 		<package name="fedora-release-kde" />
 	</packages>
 	<!-- Post-install welcome app for the KDE spin -->
-	<packages type="image" patternType="onlyRequired" profiles="KDE-Agentic-Live">
+	<packages type="image" patternType="onlyRequired" profiles="KDE-Agentic-Live,KDE-Agentic-Disk">
 		<package name="plasma-welcome-fedora" />
 	</packages>
 
@@ -26,7 +35,7 @@
 	     GNOME utilities pulled in via GTK deps so the live ISO stays small.
 	     Kept out of components/desktops/kde.xml so the upstream component is
 	     untouched. -->
-	<packages type="image" patternType="onlyRequired" profiles="KDE-Agentic-Live">
+	<packages type="image" patternType="onlyRequired" profiles="KDE-Agentic-Live,KDE-Agentic-Disk">
 		<!-- Base system collections: minimal Fedora + the KDE critical-path that keeps the
 			desktop bootable (matches the same collections the KDE spin pulls in) -->
 		<namedCollection name="core" />
@@ -116,7 +125,7 @@
 
 	<!-- Recommended extras: Plasma Discover backends + Flatpak so users can add
 	     apps after install (mirrors the KDE spin's optional tooling) -->
-	<packages type="image" patternType="plusRecommended" profiles="KDE-Agentic-Live">
+	<packages type="image" patternType="plusRecommended" profiles="KDE-Agentic-Live,KDE-Agentic-Disk">
 		<package name="plasma-discover" />
 		<package name="plasma-discover-packagekit" />
 		<package name="PackageKit" />

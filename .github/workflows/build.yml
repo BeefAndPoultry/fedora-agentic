@@ -45,13 +45,13 @@ jobs:
         run: |
           dnf install -y kiwi kiwi-systemdeps distribution-gpg-keys git zip
 
-      - name: Build Live ISO
+      - name: Build Disk ISO
         run: |
           mkdir -p outdir
           ./kiwi-build \
             --kiwi-file=Fedora.kiwi \
             --image-type=iso \
-            --image-profile=KDE-Agentic-Live \
+            --image-profile=KDE-Agentic-Disk \
             --image-release=0 \
             --output-dir=./outdir
 
