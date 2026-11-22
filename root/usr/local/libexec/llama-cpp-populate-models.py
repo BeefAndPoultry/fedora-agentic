@@ -143,7 +143,8 @@ def main():
             "hf-file": "Tiel-Coder-35B-A3B-UD-Q4_K_XL.gguf",
             "ctx-size": 131072,
             "load-on-startup": True,
-            "min_ram_gb": 31,
+            "cache-ram": 6000,
+            "min_ram_gb": 44,
             "min_vram_gb": 30,
         },
         {
@@ -158,6 +159,7 @@ def main():
             "n-cpu-moe": 999,
             "moe-cache-mib": 6000,
             "moe-cache-cpu-share": 0.2,
+            "cache-ram": 2500,
             "min_ram_gb": 31,
             "min_vram_gb": 15,
         },
@@ -173,6 +175,7 @@ def main():
             "n-cpu-moe": 999,
             "moe-cache-mib": 4000,
             "moe-cache-cpu-share": 0.5,
+            "cache-ram": 2500,
             "min_ram_gb": 31,
             "min_vram_gb": 11.5,
         },
@@ -188,6 +191,7 @@ def main():
             "n-cpu-moe": 999,
             "moe-cache-mib": 3000,
             "moe-cache-cpu-share": 0.75,
+            "cache-ram": 2500,
             "min_ram_gb": 31,
             "min_vram_gb": 10.5, # GTX 1080 Ti
         },
@@ -203,6 +207,7 @@ def main():
             "n-cpu-moe": 999,
             "moe-cache-mib": 2000,
             "moe-cache-cpu-share": 0.9,
+            "cache-ram": 2500,
             "min_ram_gb": 30,
             "min_vram_gb": 9.5, # RTX 3080
         },
@@ -224,21 +229,34 @@ def main():
         #},
 
         # TODO: test Ling 3.0 Tiny 8b-a1b and Ornith 1.5 9b
+        {
+            "name": "ling-3-0-tiny",
+            "hf-repo": "bartowski/Ling-3.0-tiny-GGUF",
+            "hf-file": "Ling-3.0-tiny-Q4_K_M.gguf",
+            "ctx-size": 81920,
+            "cache-type-k": "q8_0",
+            "cache-type-v": "q8_0",
+            "load-on-startup": True,
+            "cache-ram": 2000,
+            "min_ram_gb": 15,
+            "min_vram_gb": 7.5,
+        },
 
         # LFM 3 1.7b
         # F16: 4.7GB 32768 q8, 5.2GB unquant 65536
         # Q8_0 3.8GB 65536 ctx
         # Q6_K 3.4GB ctx unquant 65536, 3GB with Q8 KV
         # Q4_0 QAD 2.7GB at 65536 Q8 KV, 2.3GB at 16384 Q8 KV, 2.5GB at 32768 Q8 KV, 2.3GB at 16384 Q8 KV, 3GB at 65536 unquant, 3.2GB at 131072 Q8 KV, 3.9GB at 131072 unquant KV
-        {
-            "name": "lfm3-1.7b",
-            "hf-repo": "LiquidAI/LFM3-1.7B-GGUF",
-            "hf-file": "LFM3-1.7B-Q6_K.gguf",
-            "ctx-size": 81920,
-            "load-on-startup": True,
-            "min_ram_gb": 14,
-            "min_vram_gb": 7,
-        },
+        # Q8 KV cache is about 1GB per 128k tokens
+        # {
+        #     "name": "lfm3-1.7b",
+        #     "hf-repo": "LiquidAI/LFM3-1.7B-GGUF",
+        #     "hf-file": "LFM3-1.7B-Q6_K.gguf",
+        #     "ctx-size": 81920,
+        #     "load-on-startup": True,
+        #     "min_ram_gb": 14,
+        #     "min_vram_gb": 7,
+        # },
         {
             "name": "lfm3-1.7b",
             "hf-repo": "LiquidAI/LFM3-1.7B-GGUF",
@@ -247,7 +265,8 @@ def main():
             "cache-type-k": "q8_0",
             "cache-type-v": "q8_0",
             "load-on-startup": True,
-            "min_ram_gb": 10,
+            "cache-ram": 1600,
+            "min_ram_gb": 11,
             "min_vram_gb": 5.5,
         },
         {
@@ -258,7 +277,8 @@ def main():
             "cache-type-k": "q8_0",
             "cache-type-v": "q8_0",
             "load-on-startup": True,
-            "min_ram_gb": 6,
+            "cache-ram": 800,
+            "min_ram_gb": 7,
             "min_vram_gb": 3.5, # GTX 970
         },
         {
@@ -269,6 +289,7 @@ def main():
             "cache-type-k": "q8_0",
             "cache-type-v": "q8_0",
             "load-on-startup": True,
+            "cache-ram": 600,
             "min_ram_gb": 0,
             "min_vram_gb": 0,
         },
