@@ -223,6 +223,30 @@ if [ -d /tmp/widgets ]; then
 fi
 ```
 
+### First-boot progress UI
+
+While `agentic-firstboot.service` runs its (slow) first-boot setup, a native
+KDE progress bar gives users live visibility. The root service and the user's
+graphical session are decoupled through an atomic status file in `/run/`:
+
+* **Producer** (`root/usr/local/libexec/agentic-firstboot.sh`):
+  `set_progress <percent> "message"` writes percentage (line 1) + message
+  (line 2) to `/run/agentic-firstboot-progress` (`0644`) via temp-file +
+  `chmod` + `mv`, and an `EXIT` trap removes the file so reboots never show a
+  stale popup. It is called before each major setup stage (5→100).
+* **Watcher** (`root/usr/local/bin/agentic-firstboot-ui.sh`, `0755`):
+  on KDE login it exits immediately if the status file is absent (~2 ms
+  overhead). Otherwise it opens `kdialog --progressbar` and polls the file via
+  `qdbus-qt6`, updating the bar/label every 0.5 s. Closing the window breaks the
+  loop cleanly without disturbing the producer.
+* **Autostart** (`root/etc/xdg/autostart/agentic-firstboot-ui.desktop`,
+  `0644`):
+  launches the watcher, `OnlyShowIn=KDE;`.
+
+Using `/run/` (not `/tmp/`) avoids systemd `PrivateTmp` isolation and survives
+logouts, user switches and concurrent sessions, so logging out and back in
+mid-setup re-attaches to the active progress.
+
 ## Keeping the ISO under 2 GB
 
 GitHub Releases caps uploads at 2 GB per file. A default Fedora KDE live ISO
