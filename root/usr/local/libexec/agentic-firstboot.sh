@@ -7,6 +7,25 @@ if [ -e /var/lib/agentic/firstboot-complete ]; then
     exit 0
 fi
 
+#======================================
+# Generate and expose the LLM API key
+#--------------------------------------
+## Mint an API key for the local llama.cpp inference server using
+## generate_key.py, then write it to a world-readable file. The server only
+## listens on 127.0.0.1 (loopback), so making the key world-readable here is
+## safe; users need the value to configure their OpenAI-compatible clients
+## (pi-agent, etc.).
+if [ -x /usr/local/bin/generate_key.py ]; then
+    mkdir -p /etc/llama-cpp
+    /usr/local/bin/generate_key.py > /etc/llama-cpp/apikey
+    chmod 0644 /etc/llama-cpp/apikey
+    echo "Wrote LLM API key to /etc/llama-cpp/apikey (world-readable; loopback-only server)."
+else
+    echo "generate_key.py not found or not executable; skipping API key generation." >&2
+fi
+
+/usr/local/libexec/install-zswap.sh
+
 echo "Waiting for internet connection..."
 
 while true; do
@@ -38,25 +57,6 @@ if rpm -q llama-cpp >/dev/null 2>&1; then
 else
     echo "llama-cpp is not installed; skipping llama-server."
 fi
-
-#======================================
-# Generate and expose the LLM API key
-#--------------------------------------
-## Mint an API key for the local llama.cpp inference server using
-## generate_key.py, then write it to a world-readable file. The server only
-## listens on 127.0.0.1 (loopback), so making the key world-readable here is
-## safe; users need the value to configure their OpenAI-compatible clients
-## (pi-agent, etc.).
-if [ -x /usr/local/bin/generate_key.py ]; then
-    mkdir -p /etc/llama-cpp
-    /usr/local/bin/generate_key.py > /etc/llama-cpp/apikey
-    chmod 0644 /etc/llama-cpp/apikey
-    echo "Wrote LLM API key to /etc/llama-cpp/apikey (world-readable; loopback-only server)."
-else
-    echo "generate_key.py not found or not executable; skipping API key generation." >&2
-fi
-
-/usr/local/libexec/install-zswap.sh
 
 # Prevent this service from running again.
 mkdir -p /var/lib/agentic
