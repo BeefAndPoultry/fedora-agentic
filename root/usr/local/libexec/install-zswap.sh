@@ -57,6 +57,7 @@ fi
 dnf remove -y zram-generator-defaults zram-generator || true
 : > /etc/systemd/zram-generator.conf
 swapoff /dev/zram0 || true
+zramctl -r /dev/zram0 || true
 
 # Create a Btrfs-compatible swapfile inside the /swap subvolume
 rm /swap/swapfile || true
