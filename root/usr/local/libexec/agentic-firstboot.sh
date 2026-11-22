@@ -61,6 +61,9 @@ dnf copr enable -y jmarcoshp/grub-btrfs
 
 dnf install -y --skip-unavailable --setopt=install_weak_deps=True mesa-vulkan-drivers intel-gpu-firmware amd-gpu-firmware nvidia-gpu-firmware flatpak llama-cpp snapper btrfs-assistant grub-btrfs
 
+# Node.js + npm: required to install pi (@earendil-works/pi-coding-agent) globally.
+dnf install -y --skip-unavailable --setopt=install_weak_deps=True nodejs nodejs-npm
+
 # Generate the API key *before* starting llama-server so the first boot launch
 # already requires it (the launcher reads /etc/llama-cpp/apikey). The server
 # only listens on 127.0.0.1 (loopback), so making the key world-readable here is
@@ -93,6 +96,21 @@ systemctl disable agentic-firstboot.service
 set_progress 80 "Finalizing first-boot services..."
 
 systemctl enable --now grub-btrfsd.service
+
+# Install pi (the coding agent) globally so users can run it. --ignore-scripts
+# avoids running the package's postinstall hooks inside first boot. Then populate
+# every existing user's pi configuration (~/.pi/agent/{auth.json, models.json,
+# settings.json}) from the live sources: the API key generated above, the
+# llama-server host/port in /etc/sysconfig/llama-server, and the model preset plus
+# context window in /var/lib/llama-cpp/models.ini (written by llama-server at
+# startup). Per-user configs are re-synced on each login by a KDE autostart entry
+# so an API-key rotation or a new model preset stays current.
+if npm install -g --ignore-scripts @earendil-works/pi-coding-agent; then
+    echo "pi installed ($(npm ls -g --depth=0 2>/dev/null | grep '@earendil' || echo pi))"
+else
+    echo "WARNING: failed to install pi globally" >&2
+fi
+/usr/local/libexec/pi-config-sync.py
 
 # Install missing recommended pacakkages, filter out boolean '(' expressions and install remaining weak deps
 dnf install -y --skip-unavailable --setopt=install_weak_deps=True @standard @kde-apps @kde-media @kde-desktop @printing @guest-desktop-agents @fonts @core @hardware-support plasma-workspace-wallpapers bluedevil NetworkManager-bluetooth mediawriter
