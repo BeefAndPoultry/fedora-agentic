@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=Fedora Agentic First-Boot Progress
+Exec=/usr/local/bin/agentic-firstboot-ui.sh
+OnlyShowIn=KDE;
+NoDisplay=true
