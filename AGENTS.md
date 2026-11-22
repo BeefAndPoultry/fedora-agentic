@@ -98,8 +98,13 @@ release is published only on pushes to `main` and never from a pull request.
 ├── repositories/          # RPM repositories (mirrors, RPM Fusion, COPRs)
 ├── teams/                 # Desktop-environment team/package groupings
 └── root/                  # Overlay directory; files copied verbatim into the image
-    └── etc/
-        └── ...            # e.g. sysconfig, systemd unit files
+    ├── etc/
+    │   └── ...            # e.g. sysconfig, systemd unit files
+    ├── usr/share/kwin-scripts/
+    │   └── kwin-bridge/    # KWin MCP bridge script (issue #49, Phase 1)
+    └── usr/local/libexec/
+        ├── install-kwin-bridge.sh   # opt-in, post-install installer for kwin-bridge
+        └── ...            # llama-cpp-launcher.sh, pi-config-sync.py, ...
 ```
 
 ## Customizing an image
@@ -307,6 +312,22 @@ graphical session are decoupled through an atomic status file in `/run/`:
 Using `/run/` (not `/tmp/`) avoids systemd `PrivateTmp` isolation and survives
 logouts, user switches and concurrent sessions, so logging out and back in
 mid-setup re-attaches to the active progress.
+
+### KWin MCP bridge (`kwin-bridge`, issue #49)
+
+A **Phase 1 (KWin-side)** piece of the KWin MCP Server proposed in issue #49 —
+the installable KWin script half, paired conceptually with a Rust `desktop-mcp`
+daemon that owns the D-Bus service `org.fedora.Agentic.KWin`. Installed as a
+`KWin/Script` package under `root/usr/share/kwin-scripts/kwin-bridge/`
+(`metadata.json` + `contents/code/main.js`). The script serialises window state
+through KWin's `workspace` API and polls that service for queued window actions
+(a 100 ms `QTimer`, documented in the package README); every D-Bus call is
+wrapped in `try/catch` so the bridge is inert until the Rust daemon exists. It
+ships **opt-in only** — installed via the post-install helper
+`root/usr/local/libexec/install-kwin-bridge.sh` (which degrades gracefully when
+KDE tooling is missing) and is never auto-enabled at image-build time. The Rust
+daemon half, its RPM/systemd packaging and the polling-vs-event-driven decision
+remain open per issue #49.
 
 ## Keeping the ISO under 2 GB
 
