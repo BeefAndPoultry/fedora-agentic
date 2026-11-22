@@ -178,6 +178,13 @@ Notes:
 - No `.gguf` model ships in the ISO (keeps it small); users download one into
   `/var/lib/llama-cpp/models/`. The `ConditionPathExists` guard prevents the
   service from failing on first boot.
+- `LLAMA_ARGS` enables `--metrics` and `--slots`, so the Prometheus telemetry
+  endpoint (`http://127.0.0.1:<LLAMA_PORT>/metrics`) and the slots API
+  (`/slots`, `/slot`, `/batch`) are live. Both routes listen on loopback and are
+  gated by the same API key that protects the inference server, so they are safe
+  to expose system-wide. They exist for tooling such as plasma-systemmonitor
+  (issue #41); the systemd sensor bridge that publishes them as native sensors
+  is planned as a follow-up.
 
 ### API key for the local LLM
 

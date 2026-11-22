@@ -1,5 +1,10 @@
 LLAMA_HOST="127.0.0.1"
 LLAMA_PORT="9931"
 LLAMA_PRESET="/var/lib/llama-cpp/models.ini"
-LLAMA_ARGS=""
+# Expose Prometheus telemetry (/metrics) and the slots API (/slots, /slot,
+# /batch) so tooling such as plasma-systemmonitor can read inference status and
+# metrics. Both routes stay loopback-bound and are gated behind the same API key
+# that protects the inference server (see llama-cpp-launcher.sh), so this is safe.
+# The systemd/ksystemstats bridge for issue #41 polls these two endpoints.
+LLAMA_ARGS="--metrics --slots"
 LLAMA_CACHE=/var/lib/llama-cpp/cache
