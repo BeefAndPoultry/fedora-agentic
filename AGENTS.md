@@ -130,6 +130,14 @@ CPU-focused package:
   into the image verbatim before running `config.sh`.
 - Add post-install shell commands to `config.sh`, which runs inside the image
   chroot after `root/` is overlaid.
+- System-wide KDE defaults land in `/etc/xdg/` under `root/` because KDE reads
+  that path as the base layer of its KConfig cascade before any user's
+  `~/.config/`. [`root/etc/xdg/PlasmaDiscoverUpdates`](root/etc/xdg/PlasmaDiscoverUpdates)
+  ships with automatic, immediate updates system-wide (issue #45):
+  `UseUnattendedUpdates=true` and `UseOfflineUpdates=false`, so the Software
+  Update KCM defaults to *Automatically* / *Immediately* instead of the
+  manual/offline defaults. A user can still override it in
+  `~/.config/PlasmaDiscoverUpdates`.
 
 ## The agentic stack in detail
 

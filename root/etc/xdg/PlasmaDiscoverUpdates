@@ -1,0 +1,11 @@
+; System-wide default for KDE Software Update (Discover / PackageKit KCM)
+; KIWI copies this file verbatim into the image under /etc/xdg, where KDE
+; reads it as the base layer of its KConfig cascade, so it becomes the default
+; for every user unless that user overrides it in ~/.config/.
+;
+; Issue #45: ship with automatic + immediate updates instead of manual.
+[Global]
+; Apply updates online right away instead of scheduling them for a reboot.
+UseOfflineUpdates=false
+; Check for and install updates automatically (was the manual default).
+UseUnattendedUpdates=true
