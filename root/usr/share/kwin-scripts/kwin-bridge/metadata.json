@@ -1,0 +1,12 @@
+{
+    "KPackageStructure": "KWin/Script",
+    "KPlugin": {
+        "Name": "Fedora Agentic KWin Bridge",
+        "Description": "Bridges KWin window state and actions to desktop-mcp via D-Bus",
+        "Icon": "preferences-system-windows",
+        "Id": "kwin-bridge",
+        "Version": "0.1.0"
+    },
+    "X-Plasma-API": "javascript",
+    "X-Plasma-MainScript": "code/main.js"
+}
