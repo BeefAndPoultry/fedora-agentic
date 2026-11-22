@@ -177,7 +177,11 @@ WORDS = list(dict.fromkeys(WORDS.split()))
 WORDS.extend(w for w in extra_words.split() if w not in WORDS)
 WORDS = [w for w in WORDS if w.isalpha()]
 
-WORD_COUNT = 8
+# Issue #59: entropy per key is log2(dict_size) * WORD_COUNT, so WORD_COUNT is
+# the dominant lever for "harder to guess" keys (raising it 8 -> 12 adds ~50% of
+# bits). The key is consumed as an opaque file via --api-key-file, so any length
+# is accepted; nothing caps it. See also issue #48 / PR #58 (vocabulary + dedup).
+WORD_COUNT = 12
 
 
 def generate_api_key():
