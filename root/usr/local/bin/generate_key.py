@@ -136,7 +136,46 @@ agent algorithm attention bot byte chat chip
 code context data debug embedding prompt token
 vector neural model tensor llama kernel
 robotics pixel matrix quantum
-""".split()
+"""  # end of the base word list
+
+# Issue #48: append a larger dictionary of easy, plain-English words so each
+# generated API key has more entropy while staying simple to read and remember.
+extra_words = """
+badger beaver bobcat buffalo camel cheetah chipmunk cobra condor coyote ferret
+gazelle gecko gopher heron hornet iguana jackal jellyfish jay koala lemur macaque
+marlin meerkat mole mongoose newt oriole osprey penguin quokka rabbit raccoon rat
+ray scorpion shark skunk spider stork swan tapir terrapin toucan vulture walrus
+weasel wombat wren yak
+amber beige black brown crimson cyan ebony ivory jade khaki lilac maroon navy
+ochre pearl scarlet sepia teal white vermilion
+aurora blizzard comet crater delta eclipse fog frost glacier gust hail haze
+lagoon lava mist nebula ripple soil storm surf tide cove geyser desert dune
+basil beet chive chili dill kale leek lentil mango pecan quinoa radish sage
+sesame spinach squash thyme turnip yam date corn oat rice pea bean
+awl blade bolt caliper chisel clamp drill gauge hatchet lathe level mallet
+pliers pulley screw saw spool vise wrench nail nut hook rope ladder
+blouse cape cloak denim shawl skirt veil boot hat glove scarf coat dress
+shirt sock shoe vest
+chime chord fanfare gong hum note pipe tone tune viola harp
+brow calf chin foot forehead gum jaw joint rib shin skull spine toe
+tongue vein nail ear nose cheek
+run walk jump hop skip crawl climb swim fly drive sail row dig build write read
+talk listen watch wait help find keep give take make feel want
+big small long short tall wide deep light hard soft warm cool clean new old
+slow fast bright loud quiet brave calm quick keen neat
+attic barn cabin camp cellar church clover coast dairy dock farm forest grove
+garden harbor hotel island market meadow office palace park port quay railway
+ranch river road route shop stall street tunnel valley yard
+anchor bell button candle chain clock compass cookie cup drawer hammer hook key
+lock mailbox marble match needle notebook pencil pin plate pot rope spool
+switch table thread token torch tower vase wheel whistle wrench
+"""
+
+# Order-preserving de-dup so sample() below can never return the same word twice,
+# even if a word is listed more than once (the base list had a couple of repeats).
+WORDS = list(dict.fromkeys(WORDS.split()))
+WORDS.extend(w for w in extra_words.split() if w not in WORDS)
+WORDS = [w for w in WORDS if w.isalpha()]
 
 WORD_COUNT = 8
 
