@@ -2,10 +2,11 @@
 """Verify the integrity of repository configuration files.
 
 This script walks the repository and confirms that every known
-configuration file (XML, YAML, TOML) is *well-formed* — i.e. it parses
-without errors according to its format. It catches accidental corruption
-or malformed edits (for example a truncated ``<package>`` tag or a broken
-YAML list) before such a change reaches the built ISO.
+configuration file (XML, YAML, TOML, Python, Bash) is *well-formed* — i.e. it
+parses without errors according to its format. It catches accidental corruption
+or malformed edits (for example a truncated ``<package>`` tag, a broken YAML
+list, or a syntax error in a shell script) before such a change reaches the
+built ISO.
 
 Supported formats
 -----------------
@@ -16,6 +17,10 @@ Supported formats
   are themselves YAML, so they share the same validator.
 * TOML (``.toml``) — validated with the standard library ``tomllib``
   (Python 3.11+).
+* Python (``.py``) — syntax-checked via the standard library ``compile``; no
+  execution and no third-party dependency.
+* Bash (``.sh``) — syntax-checked via ``bash -n``; no execution. A missing
+  interpreter is surfaced as a failure rather than silently skipped.
 
 Directory overrides
 -------------------
@@ -55,6 +60,8 @@ VALIDATORS = {
     "yml": "yaml",
     "fmf": "yaml",
     "toml": "toml",
+    "py": "python",
+    "sh": "bash",
 }
 
 # Directories whose contents are always validated as YAML regardless of file
@@ -100,10 +107,33 @@ def load_toml(path: Path) -> None:
         tomllib.load(handle)
 
 
+def load_python(path: Path) -> None:
+    """Syntax-check a Python file (no execution, no .pyc written)."""
+    source = path.read_text(encoding="utf-8")
+    # ``compile`` raises SyntaxError on malformed code; the filename makes the
+    # traceback readable and ast.parse would miss run-time-ish compile errors.
+    compile(source, str(path), "exec")
+
+
+def load_bash(path: Path) -> None:
+    """Syntax-check a shell script with ``bash -n`` (no execution)."""
+    import subprocess
+
+    # ``-n`` parses only; missing interpreter is reported as an error so CI fails
+    # loudly instead of silently skipping.
+    result = subprocess.run(
+        ["bash", "-n", str(path)], capture_output=True, text=True
+    )
+    if result.returncode != 0:
+        raise ValueError(result.stderr.strip() or "bash -n reported a syntax error")
+
+
 PARSERS = {
     "xml": load_xml,
     "yaml": load_yaml,
     "toml": load_toml,
+    "python": load_python,
+    "bash": load_bash,
 }
 
 
@@ -154,7 +184,7 @@ def main(argv: list[str]) -> int:
 
     # Report.
     print(f"Checked {checked} file(s) in {root}")
-    for name in ("xml", "yaml", "toml"):
+    for name in ("xml", "yaml", "toml", "python", "bash"):
         if totals.get(name):
             print(f"  {name:>4}: {totals[name]} validated")
     if skipped:
