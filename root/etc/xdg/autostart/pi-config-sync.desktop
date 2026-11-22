@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Fedora Agentic pi Config Sync
+Comment=Refresh this user's pi agent config for the local LLM server
+Exec=/usr/bin/python3 /usr/local/libexec/pi-config-sync.py
+OnlyShowIn=KDE;
+NoDisplay=true
