@@ -9,6 +9,11 @@
 #   * auth.json        <- /etc/llama-cpp/apikey        (inference API key)
 #   * models.json      <- /var/lib/llama-cpp/models.ini (model id + context size)
 #   * settings.json    <- defaults (provider, model, thinking level)
+# It also refreshes the world-readable global env file
+#   * /etc/llama-cpp/environment  <- sourceable URL/API-key/default-model
+# so any user or client can read the connection details without touching pi's
+# per-user config (issue #62). The global file is only writable as root, so a
+# normal-user login that cannot overwrite it degrades gracefully.
 #
 # It is idempotent and best-effort: a missing source file or a failed pi install
 # is ignored so desktop startup is never blocked. The first-boot script installs
