@@ -42,6 +42,11 @@ PORT_DEFAULT = 9931
 API_KEY_PATH = "/etc/llama-cpp/apikey"
 SERVICES_CONFIG_PATH = "/etc/sysconfig/llama-server"
 MODELS_INI_PATH = "/var/lib/llama-cpp/models.ini"
+# World-readable, sourceable env file exposing the connection details so any
+# user or client (KDE widget, another OpenAI-compatible client) can read them
+# without digging into pi's per-user ~/.pi/agent/ config. Co-located with the
+# key file and refreshed by this script on every run (see issue #62).
+GLOBAL_ENV_PATH = "/etc/llama-cpp/environment"
 
 
 def parse_args(argv):
@@ -137,6 +142,47 @@ def write_config(path, data):
     with open(path, "w", encoding="utf-8") as handle:
         json.dump(data, handle, indent=2)
         handle.write("\n")
+
+
+def build_global_env(ctx):
+    """Content of the sourceable, world-readable env file exposing the
+    connection details any user or client can read.
+
+    The values match the existing ``LLAMA_*`` convention and pi's own
+    ``LLAMA_BASE_URL``: the base URL built from the host/port in
+    ``/etc/sysconfig/llama-server``, the default model id from the active preset
+    in ``/var/lib/llama-cpp/models.ini``, and the API key read live so a rotation
+    is picked up without re-running this script.
+    """
+    base = f"http://{ctx['host']}:{ctx['port']}"
+    model_id = ctx["model_id"]
+    lines = [
+        f'LLAMA_BASE_URL="{base}"',
+        # Read the key live at ``source`` time so it always tracks the current
+        # /etc/llama-cpp/apikey (which is itself world-readable; the server only
+        # listens on loopback).
+        'LLAMA_API_KEY="$(cat /etc/llama-cpp/apikey)"',
+        f'LLAMA_DEFAULT_MODEL="{model_id}"',
+    ]
+    return "\n".join(lines) + "\n"
+
+
+def write_global_env(ctx):
+    """Best-effort publish of the connection details to the global env file.
+
+    Only succeeds where ``/etc/llama-cpp`` is writable (i.e. run as root, such
+    as first boot); a normal-user login cannot overwrite a root-owned file here,
+    so this degrades gracefully (logged) instead of blocking startup. The file
+    itself, like the key file, is world-readable and loopback-only.
+    """
+    try:
+        os.makedirs(os.path.dirname(GLOBAL_ENV_PATH), exist_ok=True)
+        with open(GLOBAL_ENV_PATH, "w", encoding="utf-8") as handle:
+            handle.write(build_global_env(ctx))
+        os.chmod(GLOBAL_ENV_PATH, 0o644)
+        print(f"pi-config-sync: wrote global env to {GLOBAL_ENV_PATH}")
+    except OSError as exc:
+        print(f"pi-config-sync: could not write {GLOBAL_ENV_PATH} ({exc})")
 
 
 def build_configs(ctx):
@@ -244,6 +290,12 @@ def main(argv=None):
     else:
         home = os.environ.get("HOME")
         homes = [home] if home else []
+
+    # Publish the connection details as a global, sourceable env file regardless
+    # of whether any user home exists yet. Run as root (first boot) this creates
+    # /etc/llama-cpp/environment; a normal-user login degrades gracefully. Best
+    # effort so it never blocks startup (issue #62).
+    write_global_env(load_context())
 
     synced = False
     for home in homes:
