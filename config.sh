@@ -550,6 +550,9 @@ fi
 
 cat /var/log/largest-packages.txt
 
-systemctl enable agentic-firstboot.timer
+# Run agentic first-boot setup immediately at next boot (no 2-min timer delay).
+# The service waits for network-online.target itself, so enabling the service
+# directly is safe and starts setup as soon as multi-user.target is reached.
+systemctl enable --now agentic-firstboot.service
 
 exit 0

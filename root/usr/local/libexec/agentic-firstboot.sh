@@ -24,13 +24,15 @@ set_progress() {
 }
 
 if [ -e /var/lib/agentic/firstboot-complete ]; then
-    systemctl disable --now agentic-firstboot.timer
-    systemctl disable --now agentic-firstboot.service
+    systemctl disable --now agentic-firstboot.service 2>/dev/null || true
     exit 0
 fi
 
+set_progress 0 "Installing zswap"
+
 /usr/local/libexec/install-zswap.sh
 
+set_progress 1 "Waiting for internet..."
 echo "Waiting for internet connection..."
 
 while true; do
@@ -46,11 +48,9 @@ while true; do
     sleep 15
 done
 
-set_progress 15 "Detecting hardware and internet connection..."
-
 echo "Internet connection detected."
 
-set_progress 30 "Installing additional packages..."
+set_progress 10 "Installing additional packages..."
 
 echo "Installing additional packages..."
 
@@ -78,7 +78,7 @@ else
     echo "generate_key.py not found or not executable; skipping API key generation." >&2
 fi
 
-set_progress 50 "Setting up the llama.cpp inference server..."
+set_progress 45 "Setting up the llama.cpp inference server..."
 
 if rpm -q llama-cpp >/dev/null 2>&1; then
     systemctl enable --now llama-server.service
@@ -90,10 +90,10 @@ fi
 mkdir -p /var/lib/agentic
 touch /var/lib/agentic/firstboot-complete
 
-systemctl disable --now agentic-firstboot.timer
-systemctl disable agentic-firstboot.service
-
-set_progress 80 "Finalizing first-boot services..."
+# Service no longer runs again: the marker above short-circuits re-runs, and we
+# drop the enablement so a stray boot can't re-trigger setup. The timer was
+# removed in favor of enabling the service directly.
+systemctl disable --now agentic-firstboot.service 2>/dev/null || true
 
 systemctl enable --now grub-btrfsd.service
 
@@ -105,6 +105,7 @@ systemctl enable --now grub-btrfsd.service
 # context window in /var/lib/llama-cpp/models.ini (written by llama-server at
 # startup). Per-user configs are re-synced on each login by a KDE autostart entry
 # so an API-key rotation or a new model preset stays current.
+set_progress 50 "Installing pi agent..."
 if npm install -g --ignore-scripts @earendil-works/pi-coding-agent; then
     echo "pi installed ($(npm ls -g --depth=0 2>/dev/null | grep '@earendil' || echo pi))"
 else
@@ -113,11 +114,11 @@ fi
 /usr/local/libexec/pi-config-sync.py
 
 # Install missing recommended pacakkages, filter out boolean '(' expressions and install remaining weak deps
+set_progress 60 "Installing extra packages..."
 dnf install -y --skip-unavailable --setopt=install_weak_deps=True @standard @kde-apps @kde-media @kde-desktop @printing @guest-desktop-agents @fonts @core @hardware-support plasma-workspace-wallpapers bluedevil NetworkManager-bluetooth mediawriter
 mapfile -t RECOMMENDS < <(rpm -qa --recommends | grep -v '^(' | awk '{print $1}' | sort -u)
 
 if [[ ${#RECOMMENDS[@]} -gt 0 ]]; then
-  set_progress 93 "Installing recommended packages..."
   dnf install -y --setopt=install_weak_deps=True --skip-unavailable "${RECOMMENDS[@]}"
 fi
 
