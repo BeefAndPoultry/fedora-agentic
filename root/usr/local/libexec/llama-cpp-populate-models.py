@@ -143,7 +143,8 @@ def main():
             "hf-file": "Tiel-Coder-35B-A3B-UD-Q4_K_XL.gguf",
             "ctx-size": 131072,
             "load-on-startup": True,
-            "cache-ram": 6000,
+            "ubatch-size": 2048,
+            "cache-ram": 4000,
             "min_ram_gb": 44,
             "min_vram_gb": 30,
         },
@@ -151,11 +152,22 @@ def main():
             "name": "tiel-35b",
             "hf-repo": "peculiar-ragdoll/Tiel-Coder-35B-A3B-GGUF",
             "hf-file": "Tiel-Coder-35B-A3B-UD-Q4_K_XL.gguf",
-            "ctx-size": 81920,
-            "cache-type-k": "q8_0",
-            "cache-type-v": "q8_0",
+            "ctx-size": 131072,
             "load-on-startup": True,
-            "ubatch-size": 4096,
+            "ubatch-size": 3072,
+            "n-cpu-moe": 999,
+            "moe-cache-mib": 10000,
+            "cache-ram": 3000,
+            "min_ram_gb": 31,
+            "min_vram_gb": 22,
+        },
+        {
+            "name": "tiel-35b",
+            "hf-repo": "peculiar-ragdoll/Tiel-Coder-35B-A3B-GGUF",
+            "hf-file": "Tiel-Coder-35B-A3B-UD-Q4_K_XL.gguf",
+            "ctx-size": 81920,
+            "load-on-startup": True,
+            "ubatch-size": 2048,
             "n-cpu-moe": 999,
             "moe-cache-mib": 6000,
             "moe-cache-cpu-share": 0.2,
@@ -167,11 +179,11 @@ def main():
             "name": "tiel-35b",
             "hf-repo": "peculiar-ragdoll/Tiel-Coder-35B-A3B-GGUF",
             "hf-file": "Tiel-Coder-35B-A3B-UD-Q4_K_XL.gguf",
-            "ctx-size": 81920,
+            "ctx-size": 79872,
             "cache-type-k": "q8_0",
             "cache-type-v": "q8_0",
             "load-on-startup": True,
-            "ubatch-size": 4096,
+            "ubatch-size": 2048,
             "n-cpu-moe": 999,
             "moe-cache-mib": 4000,
             "moe-cache-cpu-share": 0.5,
@@ -183,11 +195,11 @@ def main():
             "name": "tiel-35b",
             "hf-repo": "peculiar-ragdoll/Tiel-Coder-35B-A3B-GGUF",
             "hf-file": "Tiel-Coder-35B-A3B-UD-Q4_K_XL.gguf",
-            "ctx-size": 81920,
+            "ctx-size": 79872,
             "cache-type-k": "q8_0",
             "cache-type-v": "q8_0",
             "load-on-startup": True,
-            "ubatch-size": 4096,
+            "ubatch-size": 2048,
             "n-cpu-moe": 999,
             "moe-cache-mib": 3000,
             "moe-cache-cpu-share": 0.75,
@@ -199,17 +211,53 @@ def main():
             "name": "tiel-35b",
             "hf-repo": "peculiar-ragdoll/Tiel-Coder-35B-A3B-GGUF",
             "hf-file": "Tiel-Coder-35B-A3B-UD-Q4_K_XL.gguf",
-            "ctx-size": 81920,
+            #"ctx-size": 81920,
+            "ctx-size": 79872,
             "cache-type-k": "q8_0",
             "cache-type-v": "q8_0",
             "load-on-startup": True,
-            "ubatch-size": 4096, # 5.8 GB VRAM plus moe-cache-mib, 32768 ctx brings it down to 5.5 GB VRAM
+            #"ubatch-size": 4096, # 5.8 GB VRAM plus moe-cache-mib, 32768 ctx brings it down to 5.5 GB VRAM
+            "ubatch-size": 2048,
+            "n-cpu-moe": 999,
+            "moe-cache-mib": 2400,
+            "moe-cache-cpu-share": 0.85,
+            "cache-ram": 2500,
+            "min_ram_gb": 30,
+            "min_vram_gb": 9.5, # RTX 3080
+        },
+
+        # Tieliq3_xxs batch 1024 65536 q8 4.3GB, batch 4096 5.4GB
+        {
+            "name": "tiel-35b",
+            "hf-repo": "peculiar-ragdoll/Tiel-Coder-35B-A3B-GGUF",
+            "hf-file": "Tiel-Coder-35B-A3B-UD-IQ3_XXS.gguf",
+            "ctx-size": 65536,
+            "cache-type-k": "q8_0",
+            "cache-type-v": "q8_0",
+            "load-on-startup": True,
+            "ubatch-size": 1024,
             "n-cpu-moe": 999,
             "moe-cache-mib": 2000,
             "moe-cache-cpu-share": 0.9,
             "cache-ram": 2500,
-            "min_ram_gb": 30,
-            "min_vram_gb": 9.5, # RTX 3080
+            "min_ram_gb": 20,
+            "min_vram_gb": 7.5,
+        },
+        {
+            "name": "tiel-35b",
+            "hf-repo": "peculiar-ragdoll/Tiel-Coder-35B-A3B-GGUF",
+            "hf-file": "Tiel-Coder-35B-A3B-UD-IQ3_XXS.gguf",
+            "ctx-size": 65536,
+            "cache-type-k": "q8_0",
+            "cache-type-v": "q8_0",
+            "load-on-startup": True,
+            "ubatch-size": 1024,
+            "n-cpu-moe": 999,
+            "moe-cache-mib": 2000,
+            "moe-cache-cpu-share": 0.9,
+            "cache-ram": 1500,
+            "min_ram_gb": 15,
+            "min_vram_gb": 7.5,
         },
 
         # https://huggingface.co/peculiar-ragdoll/Tiel-Coder-35B-A3B-GGUF?show_file_info=Tiel-Coder-35B-A3B-UD-Q2_K_XL.gguf
@@ -228,19 +276,24 @@ def main():
         #    "min_vram_gb": 7.5,
         #},
 
-        # TODO: test Ling 3.0 Tiny 8b-a1b and Ornith 1.5 9b
-        {
-            "name": "ling-3-0-tiny",
-            "hf-repo": "bartowski/Ling-3.0-tiny-GGUF",
-            "hf-file": "Ling-3.0-tiny-Q4_K_M.gguf",
-            "ctx-size": 81920,
-            "cache-type-k": "q8_0",
-            "cache-type-v": "q8_0",
-            "load-on-startup": True,
-            "cache-ram": 2000,
-            "min_ram_gb": 15,
-            "min_vram_gb": 7.5,
-        },
+        # TODO: test Ling 3.0 Tiny 8b-a1b and Ornith 1.5 9b, ling has really slow prefill at depth maybe it will be fixed?
+        # ling 65536 q8 1024 ubatch-size 6GB, n-cpu-moe 2.4 GB
+        # {
+        #     "name": "ling-3-0-tiny",
+        #     "hf-repo": "bartowski/Ling-3.0-tiny-GGUF",
+        #     "hf-file": "Ling-3.0-tiny-Q4_K_M.gguf",
+        #     "ctx-size": 65536,
+        #     "cache-type-k": "q8_0",
+        #     "cache-type-v": "q8_0",
+        #     "load-on-startup": True,
+        #     "ubatch-size": 1024,
+        #     "n-cpu-moe": 999,
+        #     "moe-cache-mib": 3000,
+        #     #"moe-cache-cpu-share": 0.5,
+        #     "cache-ram": 2000,
+        #     "min_ram_gb": 15,
+        #     "min_vram_gb": 7.5,
+        # },
 
         # LFM 3 1.7b
         # F16: 4.7GB 32768 q8, 5.2GB unquant 65536
@@ -262,8 +315,6 @@ def main():
             "hf-repo": "LiquidAI/LFM3-1.7B-GGUF",
             "hf-file": "LFM3-1.7B-Q6_K.gguf",
             "ctx-size": 65536,
-            "cache-type-k": "q8_0",
-            "cache-type-v": "q8_0",
             "load-on-startup": True,
             "cache-ram": 1600,
             "min_ram_gb": 11,
@@ -297,7 +348,8 @@ def main():
 
     for tier in tiers:
         if mem_gb >= tier["min_ram_gb"] and vram_gb >= tier["min_vram_gb"]:
-            print(f"Selected model preset: {tier['name']}")
+            tier["alias"] = "default"
+            print('Selected model preset:', repr(tier))
             write_models_ini(tier)
             return 0
 

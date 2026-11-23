@@ -86,7 +86,7 @@ def parse_models_ini(path):
     """Return (model_id, context_size) for the active model preset.
 
     ``models.ini`` starts with a ``[*]`` global section followed by one or more
-    model sections; the last non-``*`` section is the chosen preset. We read the
+    model sections; the first non-``*`` section is the chosen preset. We read the
     section name (the pi model id) and its ``ctx-size`` (the context window).
     """
     model_id = None
@@ -114,6 +114,7 @@ def parse_models_ini(path):
         if parser.has_option(section, "ctx-size"):
             try:
                 ctx_size = int(parser.get(section, "ctx-size"))
+                break
             except (TypeError, ValueError):
                 pass
 
