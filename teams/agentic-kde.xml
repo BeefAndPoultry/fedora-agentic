@@ -114,14 +114,11 @@
 		<ignore name="wine*" />
 	</packages>
 
-	<!-- Recommended extras: Plasma Discover backends + Flatpak so users can add
+	<!-- Recommended extras: Plasma Discover backends so users can add
 	     apps after install (mirrors the KDE spin's optional tooling) -->
 	<packages type="image" patternType="plusRecommended" profiles="KDE-Agentic-Live">
 		<package name="plasma-discover" />
 		<package name="plasma-discover-packagekit" />
 		<package name="PackageKit" />
-		<package name="plasma-discover-flatpak" />
-		<package name="flatpak" />
-		<package name="fedora-flathub-remote" />
 	</packages>
 </image>
