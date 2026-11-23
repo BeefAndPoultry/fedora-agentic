@@ -50,10 +50,11 @@ hazel heart hedgehog hello helmet hill history
 honey horizon horse hospital hotel house hummingbird
 hurricane
 
-ice idea igloo ink insect island ivy
+ice icebox icicle idle idea igloo image immigrate impala
+ink inkwell insect inward iris island isle item ivy
 
-jacket jam jar jasmine jelly jewel journey judge
-juice jungle
+jab jaguar jailjacket jam jar jersey jester jingle jolt journal jubilee
+jasmine jelly jellybean jewel journey judge juice jungle
 
 kangaroo kettle key keyboard kidney kitten kite
 kitchen kiwi knee knife knot
@@ -69,8 +70,8 @@ mint mirror mitten mitten mixture mobile monkey
 moon morning mosquito mountain mouse movie muffin
 mushroom music mustard
 
-nail napkin necklace needle nest net news night
-nightingale notebook nut
+nab nail naive napkin navy nebula necklace needle nest net news nickel
+night nightingale nimble noble nod nook nostril notebook nucleus numb nut
 
 oak oatmeal ocean octopus office oil olive onion
 orange orbit orchard organ ostrich otter oven owl
@@ -85,7 +86,8 @@ poem pond popcorn poppy porch potato pottery
 pouch prairie present pretzel prince princess printer
 prism prize pumpkin puppy puzzle
 
-quail quality quarter quartz queen quilt quiver
+quack quaff quail quality quarry quart quarter quartz queen
+queer quest quick quilt quinoa quirk quiver quorum
 
 rabbit raccoon radio rainbow raincoat raisin rake
 ranch raspberry raven recipe record red reef
@@ -116,7 +118,10 @@ toothbrush torch tornado towel tower toy tractor
 train treasure tree triangle trumpet tulip tunnel
 turkey turtle twilight
 
-umbrella uncle unicorn uniform universe update
+ukelele ulna umask umber umbrella uncle under unicorn
+uniform union unique unit unity universe update upper
+upright upset urban urge useful usual utter
+
 valley vanilla vase vegetable velvet velvet violin
 violet volcano volume
 
@@ -126,7 +131,7 @@ whistle willow window windmill winter wire wisdom
 wizard wolf wonder wood wool world worm
 writer
 
-xylophone
+xenon xylophone
 
 yacht yard yarn year yellow yogurt
 
@@ -177,11 +182,7 @@ WORDS = list(dict.fromkeys(WORDS.split()))
 WORDS.extend(w for w in extra_words.split() if w not in WORDS)
 WORDS = [w for w in WORDS if w.isalpha()]
 
-# Issue #59: entropy per key is log2(dict_size) * WORD_COUNT, so WORD_COUNT is
-# the dominant lever for "harder to guess" keys (raising it 8 -> 12 adds ~50% of
-# bits). The key is consumed as an opaque file via --api-key-file, so any length
-# is accepted; nothing caps it. See also issue #48 / PR #58 (vocabulary + dedup).
-WORD_COUNT = 12
+WORD_COUNT = 8
 
 
 def generate_api_key():

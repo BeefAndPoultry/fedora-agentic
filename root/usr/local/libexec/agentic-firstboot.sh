@@ -18,6 +18,7 @@ trap cleanup_progress EXIT
 set_progress() {
     # Atomic write (temp file + chmod + rename) so the watcher never reads a
     # half-written status line.
+    printf "%s%% %s\n" "$1" "$2"
     printf "%s\n%s\n" "$1" "$2" > "${PROGRESS_FILE}.tmp"
     chmod 0644 "${PROGRESS_FILE}.tmp"
     mv "${PROGRESS_FILE}.tmp" "${PROGRESS_FILE}"
@@ -33,7 +34,6 @@ set_progress 0 "Installing zswap"
 /usr/local/libexec/install-zswap.sh
 
 set_progress 1 "Waiting for internet..."
-echo "Waiting for internet connection..."
 
 while true; do
     if nmcli -t -f STATE general | grep -qx connected; then
@@ -48,21 +48,17 @@ while true; do
     sleep 15
 done
 
-echo "Internet connection detected."
+set_progress 5 "Updating packages..."
+dnf upgrade --refresh
 
-set_progress 10 "Installing additional packages..."
-
-echo "Installing additional packages..."
-
+set_progress 10 "Installing copr..."
 dnf install -y --skip-unavailable --setopt=install_weak_deps=True dnf-plugins-core dnf5-plugins
 
 dnf copr enable -y sneed/llama-cpp-vulkan
 dnf copr enable -y jmarcoshp/grub-btrfs
 
-dnf install -y --skip-unavailable --setopt=install_weak_deps=True mesa-vulkan-drivers intel-gpu-firmware amd-gpu-firmware nvidia-gpu-firmware flatpak llama-cpp snapper btrfs-assistant grub-btrfs
-
-# Node.js + npm: required to install pi (@earendil-works/pi-coding-agent) globally.
-dnf install -y --skip-unavailable --setopt=install_weak_deps=True nodejs nodejs-npm
+set_progress 15 "Installing packages..."
+dnf install -y --skip-unavailable --setopt=install_weak_deps=True mesa-vulkan-drivers intel-gpu-firmware amd-gpu-firmware nvidia-gpu-firmware flatpak plasma-discover-flatpak llama-cpp snapper btrfs-assistant grub-btrfs
 
 # Generate the API key *before* starting llama-server so the first boot launch
 # already requires it (the launcher reads /etc/llama-cpp/apikey). The server
@@ -78,7 +74,7 @@ else
     echo "generate_key.py not found or not executable; skipping API key generation." >&2
 fi
 
-set_progress 45 "Setting up the llama.cpp inference server..."
+set_progress 40 "Setting up the llama.cpp inference server..."
 
 if rpm -q llama-cpp >/dev/null 2>&1; then
     systemctl enable --now llama-server.service
@@ -105,7 +101,9 @@ systemctl enable --now grub-btrfsd.service
 # context window in /var/lib/llama-cpp/models.ini (written by llama-server at
 # startup). Per-user configs are re-synced on each login by a KDE autostart entry
 # so an API-key rotation or a new model preset stays current.
-set_progress 50 "Installing pi agent..."
+set_progress 45 "Installing pi agent..."
+# Node.js + npm: required to install pi (@earendil-works/pi-coding-agent) globally.
+dnf install -y --skip-unavailable --setopt=install_weak_deps=True nodejs nodejs-npm
 if npm install -g --ignore-scripts @earendil-works/pi-coding-agent; then
     echo "pi installed ($(npm ls -g --depth=0 2>/dev/null | grep '@earendil' || echo pi))"
 else
@@ -113,8 +111,9 @@ else
 fi
 /usr/local/libexec/pi-config-sync.py
 
-# Install missing recommended pacakkages, filter out boolean '(' expressions and install remaining weak deps
-set_progress 60 "Installing extra packages..."
+# Install missing recommended packages, filter out boolean '(' expressions and install remaining weak deps
+set_progress 50 "Installing extra packages..."
+flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 dnf install -y --skip-unavailable --setopt=install_weak_deps=True @standard @kde-apps @kde-media @kde-desktop @printing @guest-desktop-agents @fonts @core @hardware-support plasma-workspace-wallpapers bluedevil NetworkManager-bluetooth mediawriter
 mapfile -t RECOMMENDS < <(rpm -qa --recommends | grep -v '^(' | awk '{print $1}' | sort -u)
 
