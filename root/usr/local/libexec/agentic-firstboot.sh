@@ -29,7 +29,7 @@ if [ -e /var/lib/agentic/firstboot-complete ]; then
     exit 0
 fi
 
-set_progress 0 "Installing zswap"
+set_progress 0 "Installing zswap..."
 
 /usr/local/libexec/install-zswap.sh
 
@@ -112,14 +112,17 @@ fi
 /usr/local/libexec/pi-config-sync.py
 
 # Install missing recommended packages, filter out boolean '(' expressions and install remaining weak deps
-set_progress 50 "Installing extra packages..."
+set_progress 50 "Checking basic packages..."
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 dnf install -y --skip-unavailable --setopt=install_weak_deps=True @standard @kde-apps @kde-media @kde-desktop @printing @guest-desktop-agents @fonts @core @hardware-support plasma-workspace-wallpapers bluedevil NetworkManager-bluetooth mediawriter
 mapfile -t RECOMMENDS < <(rpm -qa --recommends | grep -v '^(' | awk '{print $1}' | sort -u)
 
+set_progress 60 "Installing extra packages..."
 if [[ ${#RECOMMENDS[@]} -gt 0 ]]; then
   dnf install -y --setopt=install_weak_deps=True --skip-unavailable "${RECOMMENDS[@]}"
 fi
 
-set_progress 100 "Fedora Agentic setup complete!"
+set_progress 100 "Fedora Agentic setup complete! You may want to reboot."
+
 sleep 2
+# then trap cleanup_progress EXIT
