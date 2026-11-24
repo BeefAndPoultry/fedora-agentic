@@ -33,8 +33,8 @@ while [ -f "$PROGRESS_FILE" ]; do
 
     # If the user closed the window, qdbus calls fail and we stop cleanly
     # without touching the producer.
-    qdbus-qt6 "$DBUS_REF" Set "" "" "$PCT" >/dev/null 2>&1 || break
-    qdbus-qt6 "$DBUS_REF" setLabelText "$MSG" >/dev/null 2>&1 || break
+    qdbus-qt6 $DBUS_REF Set "" value "$PCT" >/dev/null 2>&1 || break
+    qdbus-qt6 $DBUS_REF setLabelText "$MSG" >/dev/null 2>&1 || break
 
     sleep 0.5
 done

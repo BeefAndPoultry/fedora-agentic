@@ -136,6 +136,8 @@ def main():
     vram_gb = detect_vram_gb()
     print(f"Detected {mem_gb:.1f} GiB RAM, {vram_gb:.1f} GiB VRAM")
 
+    # TODO: next llama release we can do https://huggingface.co/bartowski/Inkling-2-Mini-GGUF ? but it's a bit slower with more active params, might at least be better for people with 16GB RAM 12+GB RAM?
+
     tiers = [
         {
             "name": "tiel-35b",

@@ -31,7 +31,7 @@ fi
 
 set_progress 0 "Installing zswap..."
 
-/usr/local/libexec/install-zswap.sh
+/usr/local/libexec/install-zswap.sh || true
 
 set_progress 1 "Waiting for internet..."
 
@@ -49,7 +49,7 @@ while true; do
 done
 
 set_progress 5 "Updating packages..."
-dnf upgrade --refresh
+dnf upgrade -y --refresh
 
 set_progress 10 "Installing copr..."
 dnf install -y --skip-unavailable --setopt=install_weak_deps=True dnf-plugins-core dnf5-plugins
@@ -67,9 +67,12 @@ dnf install -y --skip-unavailable --setopt=install_weak_deps=True mesa-vulkan-dr
 # etc.). Skip generation if generate_key.py is absent so first boot still works.
 if [ -x /usr/local/bin/generate_key.py ]; then
     mkdir -p /etc/llama-cpp
-    /usr/local/bin/generate_key.py > /etc/llama-cpp/apikey
-    chmod 0644 /etc/llama-cpp/apikey
-    echo "Wrote LLM API key to /etc/llama-cpp/apikey (world-readable; loopback-only server)."
+    if python3 /usr/local/bin/generate_key.py > /etc/llama-cpp/apikey; then
+        chmod 0644 /etc/llama-cpp/apikey
+        echo "Wrote LLM API key to /etc/llama-cpp/apikey (world-readable; loopback-only server)."
+    else
+        echo "generate_key.py failed; skipping API key generation." >&2
+    fi
 else
     echo "generate_key.py not found or not executable; skipping API key generation." >&2
 fi

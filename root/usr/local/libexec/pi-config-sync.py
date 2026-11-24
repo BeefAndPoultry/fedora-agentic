@@ -32,8 +32,8 @@ import json
 import os
 import sys
 
-DEFAULT_MODEL_ID = "tiel-35b"
-DEFAULT_CONTEXT_WINDOW = 81920
+DEFAULT_MODEL_ID = "default"
+DEFAULT_CONTEXT_WINDOW = 65536
 DEFAULT_THINKING_LEVEL = "medium"
 PROVIDER = "llama.cpp"
 HOST_DEFAULT = "127.0.0.1"
