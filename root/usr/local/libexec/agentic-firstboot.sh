@@ -57,8 +57,11 @@ dnf install -y --skip-unavailable --setopt=install_weak_deps=True dnf-plugins-co
 dnf copr enable -y sneed/llama-cpp-vulkan
 dnf copr enable -y jmarcoshp/grub-btrfs
 
-set_progress 15 "Installing packages..."
-dnf install -y --skip-unavailable --setopt=install_weak_deps=True mesa-vulkan-drivers intel-gpu-firmware amd-gpu-firmware nvidia-gpu-firmware flatpak plasma-discover-flatpak llama-cpp snapper btrfs-assistant grub-btrfs
+set_progress 15 "Installing basic packages..."
+dnf install -y --skip-unavailable --setopt=install_weak_deps=True flatpak plasma-discover-flatpak llama-cpp snapper btrfs-assistant grub-btrfs
+
+set_progress 25 "Installing graphics packages..."
+dnf install -y --skip-unavailable --setopt=install_weak_deps=True mesa-vulkan-drivers intel-gpu-firmware amd-gpu-firmware nvidia-gpu-firmware
 
 # Generate the API key *before* starting llama-server so the first boot launch
 # already requires it (the launcher reads /etc/llama-cpp/apikey). The server
