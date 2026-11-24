@@ -68,16 +68,20 @@ dnf install -y --skip-unavailable --setopt=install_weak_deps=True --allowerasing
 # only listens on 127.0.0.1 (loopback), so making the key world-readable here is
 # safe; users read it to configure their OpenAI-compatible clients (pi-agent,
 # etc.). Skip generation if generate_key.py is absent so first boot still works.
-if [ -x /usr/local/bin/generate_key.py ]; then
-    mkdir -p /etc/llama-cpp
-    if python3 /usr/local/bin/generate_key.py > /etc/llama-cpp/apikey; then
-        chmod 0644 /etc/llama-cpp/apikey
-        echo "Wrote LLM API key to /etc/llama-cpp/apikey (world-readable; loopback-only server)."
-    else
-        echo "generate_key.py failed; skipping API key generation." >&2
-    fi
+if [ -s /etc/llama-cpp/apikey ]; then
+    echo "LLM API key already present at /etc/llama-cpp/apikey; reusing it."
 else
-    echo "generate_key.py not found or not executable; skipping API key generation." >&2
+    if [ -x /usr/local/bin/generate_key.py ]; then
+        mkdir -p /etc/llama-cpp
+        if python3 /usr/local/bin/generate_key.py > /etc/llama-cpp/apikey; then
+            chmod 0644 /etc/llama-cpp/apikey
+            echo "Wrote LLM API key to /etc/llama-cpp/apikey (world-readable; loopback-only server)."
+        else
+            echo "generate_key.py failed; skipping API key generation." >&2
+        fi
+    else
+        echo "generate_key.py not found or not executable; skipping API key generation." >&2
+    fi
 fi
 
 set_progress 40 "Setting up the llama.cpp inference server..."
@@ -87,15 +91,6 @@ if rpm -q llama-cpp >/dev/null 2>&1; then
 else
     echo "llama-cpp is not installed; skipping llama-server."
 fi
-
-# Prevent this service from running again.
-mkdir -p /var/lib/agentic
-touch /var/lib/agentic/firstboot-complete
-
-# Service no longer runs again: the marker above short-circuits re-runs, and we
-# drop the enablement so a stray boot can't re-trigger setup. The timer was
-# removed in favor of enabling the service directly.
-systemctl disable --now agentic-firstboot.service 2>/dev/null || true
 
 systemctl enable --now grub-btrfsd.service
 
@@ -130,5 +125,14 @@ fi
 
 set_progress 100 "Fedora Agentic setup complete! You may want to reboot."
 
+# Prevent this service from running again.
+mkdir -p /var/lib/agentic
+touch /var/lib/agentic/firstboot-complete
+
 sleep 2
-# then trap cleanup_progress EXIT
+cleanup_progress
+
+# Service no longer runs again: the marker above short-circuits re-runs, and we
+# drop the enablement so a stray boot can't re-trigger setup. The timer was
+# removed in favor of enabling the service directly.
+systemctl disable --now agentic-firstboot.service 2>/dev/null || true

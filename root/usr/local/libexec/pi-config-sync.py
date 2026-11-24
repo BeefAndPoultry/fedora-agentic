@@ -182,11 +182,12 @@ def build_configs(ctx):
 
     settings = {
         "lastChangelogVersion": "1.6.0",
-        "httpIdleTimeoutMs": 300000,
+        "httpIdleTimeoutMs": 0,
         "extensions": ["+builtin:llama.cpp"],
         "defaultProvider": PROVIDER,
         "defaultModel": model_id,
-        "defaultThinkingLevel": DEFAULT_THINKING_LEVEL,
+        #"defaultThinkingLevel": DEFAULT_THINKING_LEVEL,
+        "hideThinkingBlock": True, # maybe depending on computer speed
     }
 
     return {
