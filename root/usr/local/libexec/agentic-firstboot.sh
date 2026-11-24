@@ -52,16 +52,16 @@ set_progress 5 "Updating packages..."
 dnf upgrade -y --refresh
 
 set_progress 10 "Installing copr..."
-dnf install -y --skip-unavailable --setopt=install_weak_deps=True dnf-plugins-core dnf5-plugins
+dnf install -y --skip-unavailable --setopt=install_weak_deps=True --allowerasing --skip-broken dnf-plugins-core dnf5-plugins
 
 dnf copr enable -y sneed/llama-cpp-vulkan
 dnf copr enable -y jmarcoshp/grub-btrfs
 
 set_progress 15 "Installing basic packages..."
-dnf install -y --skip-unavailable --setopt=install_weak_deps=True flatpak plasma-discover-flatpak llama-cpp snapper btrfs-assistant grub-btrfs
+dnf install -y --skip-unavailable --setopt=install_weak_deps=True --allowerasing --skip-broken flatpak plasma-discover-flatpak llama-cpp snapper btrfs-assistant grub-btrfs
 
 set_progress 25 "Installing graphics packages..."
-dnf install -y --skip-unavailable --setopt=install_weak_deps=True mesa-vulkan-drivers intel-gpu-firmware amd-gpu-firmware nvidia-gpu-firmware
+dnf install -y --skip-unavailable --setopt=install_weak_deps=True --allowerasing --skip-broken mesa-vulkan-drivers intel-gpu-firmware amd-gpu-firmware nvidia-gpu-firmware
 
 # Generate the API key *before* starting llama-server so the first boot launch
 # already requires it (the launcher reads /etc/llama-cpp/apikey). The server
@@ -109,7 +109,7 @@ systemctl enable --now grub-btrfsd.service
 # so an API-key rotation or a new model preset stays current.
 set_progress 45 "Installing pi agent..."
 # Node.js + npm: required to install pi (@earendil-works/pi-coding-agent) globally.
-dnf install -y --skip-unavailable --setopt=install_weak_deps=True nodejs nodejs-npm
+dnf install -y --skip-unavailable --setopt=install_weak_deps=True --allowerasing --skip-broken nodejs22-npm-bin
 if npm install -g --ignore-scripts @earendil-works/pi-coding-agent; then
     echo "pi installed ($(npm ls -g --depth=0 2>/dev/null | grep '@earendil' || echo pi))"
 else
@@ -118,14 +118,14 @@ fi
 /usr/local/libexec/pi-config-sync.py
 
 # Install missing recommended packages, filter out boolean '(' expressions and install remaining weak deps
-set_progress 50 "Checking basic packages..."
+set_progress 50 "Installing basic packages..."
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-dnf install -y --skip-unavailable --setopt=install_weak_deps=True @standard @kde-apps @kde-media @kde-desktop @printing @guest-desktop-agents @fonts @core @hardware-support plasma-workspace-wallpapers bluedevil NetworkManager-bluetooth mediawriter
+dnf install -y --skip-unavailable --setopt=install_weak_deps=True --allowerasing --skip-broken @standard @kde-apps @kde-media @kde-desktop @printing @guest-desktop-agents @fonts @core @hardware-support plasma-workspace-wallpapers bluedevil NetworkManager-bluetooth mediawriter
 mapfile -t RECOMMENDS < <(rpm -qa --recommends | grep -v '^(' | awk '{print $1}' | sort -u)
 
 set_progress 60 "Installing extra packages..."
 if [[ ${#RECOMMENDS[@]} -gt 0 ]]; then
-  dnf install -y --setopt=install_weak_deps=True --skip-unavailable "${RECOMMENDS[@]}"
+  dnf install -y --setopt=install_weak_deps=True --skip-unavailable --allowerasing --skip-broken "${RECOMMENDS[@]}"
 fi
 
 set_progress 100 "Fedora Agentic setup complete! You may want to reboot."

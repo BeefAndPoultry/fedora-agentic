@@ -62,7 +62,7 @@ def read_env_file(path):
                 if not line or line.startswith("#"):
                     continue
                 key, _, value = line.partition("=")
-                values[key.strip()] = value.strip()
+                values[key.strip()] = value.strip().strip('"')
     except OSError:
         return None
     return values
@@ -153,7 +153,7 @@ def build_configs(ctx):
             "type": "api_key",
             "key": ctx["api_key"],
             "env": {
-                "LLAMA_BASE_URL": f"{base}",
+                "LLAMA_BASE_URL": base,
             },
         }
     }
@@ -164,13 +164,16 @@ def build_configs(ctx):
     models = {
         "providers": {
             PROVIDER: {
+                "baseUrl": f"{base}/v1",
+                "api": "openai-completions",
+                "apiKey": "none", # this seems to make it use the api key from the auth.json file
                 "models": [
                     {
                         "id": model_id,
                         "name": model_id,
                         "reasoning": True,
                         "contextWindow": context_window,
-                        "maxTokens": max(256, context_window // 16),
+                        #"maxTokens": max(256, context_window // 16),
                     }
                 ],
             }
@@ -178,7 +181,7 @@ def build_configs(ctx):
     }
 
     settings = {
-        "lastChangelogVersion": "1.3.0",
+        "lastChangelogVersion": "1.6.0",
         "httpIdleTimeoutMs": 300000,
         "extensions": ["+builtin:llama.cpp"],
         "defaultProvider": PROVIDER,
