@@ -16,9 +16,11 @@ ConfigurationDirectory=llama-cpp
 EnvironmentFile=-/etc/sysconfig/llama-server
 # Reduce CPU priority so the server does not starve the desktop of resources.
 Nice=19
+
 # (Re)generate models.ini from the host's RAM/VRAM specs as this dynamic user
 # (StateDirectory=/var/lib/llama-cpp is writable by it).
 ExecStartPre=/usr/bin/python3 /usr/local/libexec/llama-cpp-populate-models.py
+
 # Start llama-server via the launcher as the unprivileged dynamic user.
 ExecStart=/bin/bash /usr/local/libexec/llama-cpp-launcher.sh
 Restart=on-failure

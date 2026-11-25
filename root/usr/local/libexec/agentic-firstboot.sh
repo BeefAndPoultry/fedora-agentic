@@ -141,6 +141,16 @@ touch /var/lib/agentic/firstboot-complete
 sleep 2
 cleanup_progress
 
+# Take an initial snapper snapshot of the root subvolume so the freshly-configured
+# system can be rolled back. Skip silently when the root filesystem is not Btrfs
+# or snapper is unavailable: first boot must succeed regardless, and snapshotted
+# restore is a best-effort convenience (issue: system rollback).
+if command -v snapper >/dev/null 2>&1 && [ "$(stat -fc %T /)" == "btrfs" ]; then
+    snapper -c root create -d "Initial Fedora Agentic snapshot" \
+        && echo "Created initial snapper snapshot of /." \
+        || echo "SNAPSHOT: snapper snapshot creation failed; continuing without it." >&2
+fi
+
 # Service no longer runs again: the marker above short-circuits re-runs, and we
 # drop the enablement so a stray boot can't re-trigger setup. The timer was
 # removed in favor of enabling the service directly.

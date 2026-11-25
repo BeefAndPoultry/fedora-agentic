@@ -7,4 +7,4 @@ LLAMA_PRESET="/var/lib/llama-cpp/models.ini"
 # that protects the inference server (see llama-cpp-launcher.sh), so this is safe.
 # The systemd/ksystemstats bridge for issue #41 polls these two endpoints.
 LLAMA_ARGS="--metrics --slots --models-max 1"
-LLAMA_CACHE=/var/lib/llama-cpp/cache
+# LLAMA_CACHE=/var/lib/llama-cpp/cache
