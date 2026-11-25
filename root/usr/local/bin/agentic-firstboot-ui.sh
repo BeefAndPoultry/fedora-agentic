@@ -5,7 +5,7 @@
 # Launched automatically on every KDE login (see
 # /etc/xdg/autostart/agentic-firstboot-ui.desktop). It watches the atomic
 # status file written by agentic-firstboot.service and, while first-boot setup
-# is running, shows a native kdialog progress bar that updates live.
+# is running, shows a zenity progress bar that updates live.
 #
 # Design notes:
 #   * The producer (agentic-firstboot.sh) and this watcher are decoupled through
@@ -13,32 +13,40 @@
 #     isolation and survives logouts, user switches and concurrent sessions.
 #   * On a normal boot the file does not exist, so we exit immediately with
 #     ~2 ms overhead and no popup.
-
-set -u
+set -u -o pipefail
 
 PROGRESS_FILE="/run/agentic-firstboot-progress"
 
 # Nothing to watch: first-boot setup is not currently running.
 [ -f "$PROGRESS_FILE" ] || exit 0
 
-# Only make sense under KDE; bail out elsewhere without erroring the autostart.
-command -v kdialog >/dev/null 2>&1 || exit 0
-command -v qdbus-qt6 >/dev/null 2>&1 || exit 0
+# Bail out cleanly if zenity is not installed.
+command -v zenity >/dev/null 2>&1 || exit 0
 
-DBUS_REF=$(kdialog --title "Fedora Agentic Setup" --progressbar "Initializing background setup..." 100)
+(
+    while [ -f "$PROGRESS_FILE" ]; do
+        PCT=$(sed -n '1p' "$PROGRESS_FILE" 2>/dev/null || echo 0)
+        MSG=$(sed -n '2p' "$PROGRESS_FILE" 2>/dev/null || echo "Configuring system...")
 
-while [ -f "$PROGRESS_FILE" ]; do
-    PCT=$(sed -n '1p' "$PROGRESS_FILE" 2>/dev/null || echo 0)
-    MSG=$(sed -n '2p' "$PROGRESS_FILE" 2>/dev/null || echo "Configuring system...")
+        # Clamp percentage below 100 while still running so OK doesn't activate early
+        #if [[ "$PCT" =~ ^[0-9]+$ ]] && [ "$PCT" -ge 100 ]; then
+        #    PCT=99
+        #fi
 
-    # If the user closed the window, qdbus calls fail and we stop cleanly
-    # without touching the producer.
-    qdbus-qt6 $DBUS_REF Set "" value "$PCT" || break
-    qdbus-qt6 $DBUS_REF setLabelText "$MSG" || break
+        echo "${PCT:-0}" || exit 0
+        echo "# ${MSG:-Configuring system...}" || exit 0
 
-    sleep 0.5
-done
+        sleep 0.5
+    done
 
-qdbus-qt6 "$DBUS_REF" close >/dev/null 2>&1 || true
+    echo "100"
+    echo "# Setup complete!"
+) | zenity --progress \
+    --title="Fedora Agentic Setup" \
+    --text="Initializing background setup..." \
+    --cancel-label="Hide" \
+    --ok-label="OK" \
+    --percentage=0 \
+    --width=420 || true
 
 /usr/local/libexec/create-shortcuts.sh ~/Desktop || true

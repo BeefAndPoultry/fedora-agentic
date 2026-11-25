@@ -125,6 +125,7 @@
 		<namedCollection name="networkmanager-submodules"/>
 		<package name="snapper"/>
 		<package name="libdnf5-plugin-actions"/>
+		<package name="zenity"/>
 		<ignore name="gfs2-utils"/>
 		<ignore name="reiserfs-utils"/>
 	</packages>
