@@ -1,13 +1,17 @@
 [Unit]
 Description=llama.cpp Router Inference Server
-After=network-online.target
-Wants=network-online.target
+After=network-online.target systemd-udev-settle.service nvidia-persistenced.service
+Wants=network-online.target nvidia-persistenced.service
 ConditionFileIsExecutable=/usr/bin/llama-server
 
 [Service]
 Type=simple
 DynamicUser=yes
 StateDirectory=llama-cpp
+SupplementaryGroups=render video
+PrivateDevices=no
+CacheDirectory=llama-server
+Environment="XDG_CACHE_HOME=/var/cache/llama-server"
 ConfigurationDirectory=llama-cpp
 EnvironmentFile=-/etc/sysconfig/llama-server
 # Reduce CPU priority so the server does not starve the desktop of resources.

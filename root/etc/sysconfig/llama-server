@@ -6,5 +6,5 @@ LLAMA_PRESET="/var/lib/llama-cpp/models.ini"
 # metrics. Both routes stay loopback-bound and are gated behind the same API key
 # that protects the inference server (see llama-cpp-launcher.sh), so this is safe.
 # The systemd/ksystemstats bridge for issue #41 polls these two endpoints.
-LLAMA_ARGS="--metrics --slots"
+LLAMA_ARGS="--metrics --slots --models-max 1"
 LLAMA_CACHE=/var/lib/llama-cpp/cache

@@ -112,9 +112,19 @@ def write_models_ini(model):
     lines.append("""
 [*]
 models-max = 1
-n-gpu-layers = 999
 load-mode = mmap
 parallel = 1
+no-mmproj-offload = true
+dedup-cache-models = true
+stop-timeout = 60
+ctx-size = 65536
+cache-type-k = q8_0
+cache-type-v = q8_0
+cpu-moe = true
+cache-ram = 2000
+reasoning-budget = 10000
+reasoning-budget-message = ' [Reasoning budget exhausted. Proceeding to final response...]'
+predict = 100000
 
     """)
 
