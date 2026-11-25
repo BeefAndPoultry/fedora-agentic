@@ -133,10 +133,26 @@ def load_context():
 
 
 def write_config(path, data):
+    """Write ``data`` as JSON to ``path`` only if it differs from what's there.
+
+    Compares the parsed dict against the new dict rather than the raw text, so a
+    reordering or whitespace difference in an already-equivalent file does not
+    trigger a needless write (and SSD churn). This only skips a write when the
+    existing content is valid JSON and structurally identical; anything else
+    (missing file, malformed JSON) falls through to a rewrite. Returns True when
+    a write happened, False when the file already matched.
+    """
+    try:
+        with open(path, "r", encoding="utf-8") as handle:
+            if json.load(handle) == data:
+                return False
+    except (OSError, ValueError):
+        pass
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8") as handle:
         json.dump(data, handle, indent=2)
         handle.write("\n")
+    return True
 
 
 def build_configs(ctx):
@@ -206,10 +222,12 @@ def sync_home(home):
     configs = build_configs(ctx)
     agent_dir = os.path.join(home, ".pi", "agent")
 
+    wrote = 0
     for name, data in configs.items():
-        write_config(os.path.join(agent_dir, name), data)
+        if write_config(os.path.join(agent_dir, name), data):
+            wrote += 1
 
-    print(f"pi-config-sync: wrote {len(configs)} file(s) to {agent_dir}")
+    print(f"pi-config-sync: wrote {wrote} of {len(configs)} file(s) to {agent_dir}")
     return True
 
 
