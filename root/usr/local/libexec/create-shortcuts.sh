@@ -132,4 +132,16 @@ Categories=System;Utility;'
 # 4. The API key text file (opens /etc/llama-cpp/apikey in the file manager).
 write_desktop "${DEST}/llama-cpp-apikey.desktop" "$([ ${desktop_dir} = true ] && echo yes || echo no)" "$(render_launcher "file://${API_KEY_FILE}" "LLM API Key" "text-plain" "Open the local llama.cpp inference server API key file" "Utility;")"
 
+# 4b. Follow the systemd logs for the llama.cpp inference server. Logs live on the
+# systemd journal and are only readable with sudo, so launch journalctl -f to follow
+# the unit live; Ctrl-C simply closes the terminal.
+write_desktop "${DEST}/watch-llama-server.logs.desktop" "$([ ${desktop_dir} = true ] && echo yes || echo no)" '[Desktop Entry]
+Type=Application
+Name=llama-server Logs
+Comment=Follow the systemd logs for the llama.cpp inference server
+Icon=utilities-terminal
+Exec=sudo journalctl -f -u llama-server.service
+Terminal=true
+Categories=System;Utility;'
+
 echo "create-shortcuts: wrote shortcuts to ${DEST}"

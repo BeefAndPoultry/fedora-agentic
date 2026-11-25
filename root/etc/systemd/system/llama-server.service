@@ -21,6 +21,9 @@ Nice=19
 # (StateDirectory=/var/lib/llama-cpp is writable by it).
 ExecStartPre=/usr/bin/python3 /usr/local/libexec/llama-cpp-populate-models.py
 
+# 2. Runs as root (+) to sync /root/.pi/agent/ configs from the newly generated models.ini
+ExecStartPre=+/usr/local/libexec/pi-config-sync.py
+
 # Start llama-server via the launcher as the unprivileged dynamic user.
 ExecStart=/bin/bash /usr/local/libexec/llama-cpp-launcher.sh
 Restart=on-failure
