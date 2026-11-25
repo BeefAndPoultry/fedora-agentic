@@ -18,7 +18,11 @@ if [[ ! -s "$MODELS_INI" ]]; then
     exit 1
 fi
 
-mkdir -p "${LLAMA_CACHE}"
+# Guard against an unset/empty LLAMA_CACHE (which would make mkdir try to
+# create a directory named ""), then ensure the cache directory exists.
+if [ -n "${LLAMA_CACHE:-}" ]; then
+    mkdir -p "${LLAMA_CACHE}"
+fi
 
 # 2. Launch llama-server at lower CPU priority, like `nice -n 19`.
 #    The priority is applied via the systemd unit's "Nice=" directive instead

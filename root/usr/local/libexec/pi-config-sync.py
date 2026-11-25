@@ -32,8 +32,8 @@ import json
 import os
 import sys
 
-DEFAULT_MODEL_ID = "tiel-35b"
-DEFAULT_CONTEXT_WINDOW = 81920
+DEFAULT_MODEL_ID = "default"
+DEFAULT_CONTEXT_WINDOW = 65536
 DEFAULT_THINKING_LEVEL = "medium"
 PROVIDER = "llama.cpp"
 HOST_DEFAULT = "127.0.0.1"
@@ -62,7 +62,7 @@ def read_env_file(path):
                 if not line or line.startswith("#"):
                     continue
                 key, _, value = line.partition("=")
-                values[key.strip()] = value.strip()
+                values[key.strip()] = value.strip().strip('"')
     except OSError:
         return None
     return values
@@ -133,10 +133,26 @@ def load_context():
 
 
 def write_config(path, data):
+    """Write ``data`` as JSON to ``path`` only if it differs from what's there.
+
+    Compares the parsed dict against the new dict rather than the raw text, so a
+    reordering or whitespace difference in an already-equivalent file does not
+    trigger a needless write (and SSD churn). This only skips a write when the
+    existing content is valid JSON and structurally identical; anything else
+    (missing file, malformed JSON) falls through to a rewrite. Returns True when
+    a write happened, False when the file already matched.
+    """
+    try:
+        with open(path, "r", encoding="utf-8") as handle:
+            if json.load(handle) == data:
+                return False
+    except (OSError, ValueError):
+        pass
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8") as handle:
         json.dump(data, handle, indent=2)
         handle.write("\n")
+    return True
 
 
 def build_configs(ctx):
@@ -153,7 +169,7 @@ def build_configs(ctx):
             "type": "api_key",
             "key": ctx["api_key"],
             "env": {
-                "LLAMA_BASE_URL": f"{base}",
+                "LLAMA_BASE_URL": base,
             },
         }
     }
@@ -164,13 +180,16 @@ def build_configs(ctx):
     models = {
         "providers": {
             PROVIDER: {
+                "baseUrl": f"{base}/v1",
+                "api": "openai-completions",
+                "apiKey": "none", # this seems to make it use the api key from the auth.json file
                 "models": [
                     {
                         "id": model_id,
                         "name": model_id,
                         "reasoning": True,
                         "contextWindow": context_window,
-                        "maxTokens": max(256, context_window // 16),
+                        #"maxTokens": max(256, context_window // 16),
                     }
                 ],
             }
@@ -178,12 +197,13 @@ def build_configs(ctx):
     }
 
     settings = {
-        "lastChangelogVersion": "1.3.0",
-        "httpIdleTimeoutMs": 300000,
+        "lastChangelogVersion": "1.6.0",
+        "httpIdleTimeoutMs": 0,
         "extensions": ["+builtin:llama.cpp"],
         "defaultProvider": PROVIDER,
         "defaultModel": model_id,
-        "defaultThinkingLevel": DEFAULT_THINKING_LEVEL,
+        #"defaultThinkingLevel": DEFAULT_THINKING_LEVEL,
+        "hideThinkingBlock": True, # maybe depending on computer speed
     }
 
     return {
@@ -202,10 +222,12 @@ def sync_home(home):
     configs = build_configs(ctx)
     agent_dir = os.path.join(home, ".pi", "agent")
 
+    wrote = 0
     for name, data in configs.items():
-        write_config(os.path.join(agent_dir, name), data)
+        if write_config(os.path.join(agent_dir, name), data):
+            wrote += 1
 
-    print(f"pi-config-sync: wrote {len(configs)} file(s) to {agent_dir}")
+    print(f"pi-config-sync: wrote {wrote} of {len(configs)} file(s) to {agent_dir}")
     return True
 
 

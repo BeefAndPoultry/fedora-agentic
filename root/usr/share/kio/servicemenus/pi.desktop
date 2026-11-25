@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Service
+MimeType=inode/directory;
+Actions=OpenPiAgentHere
+X-KDE-Priority=TopLevel
+
+[Desktop Action OpenPiAgentHere]
+Name=Open Pi Agent Here
+Icon=utilities-terminal
+Exec=konsole --workdir %f -e pi

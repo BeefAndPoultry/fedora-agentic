@@ -27,8 +27,8 @@ fi
 
 # Maximum context size from the active model preset in models.ini.
 # The first non-"*" section header names the chosen preset; its ctx-size is the
-# window. Fall back to 81920 when the file is absent or unparsable.
-LLAMA_MAX_CTX_SIZE=81920
+# window. Fall back to 65536 when the file is absent or unparsable.
+LLAMA_MAX_CTX_SIZE=65536
 if [ -r /var/lib/llama-cpp/models.ini ]; then
     _ini=$(mktemp) && cp /var/lib/llama-cpp/models.ini "$_ini" 2>/dev/null \
         || _ini=/var/lib/llama-cpp/models.ini

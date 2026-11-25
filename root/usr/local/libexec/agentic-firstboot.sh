@@ -31,7 +31,7 @@ fi
 
 set_progress 0 "Installing zswap..."
 
-/usr/local/libexec/install-zswap.sh
+/usr/local/libexec/install-zswap.sh || true
 
 set_progress 1 "Waiting for internet..."
 
@@ -49,29 +49,39 @@ while true; do
 done
 
 set_progress 5 "Updating packages..."
-dnf upgrade --refresh
+dnf upgrade -y --refresh
 
 set_progress 10 "Installing copr..."
-dnf install -y --skip-unavailable --setopt=install_weak_deps=True dnf-plugins-core dnf5-plugins
+dnf install -y --skip-unavailable --setopt=install_weak_deps=True --allowerasing --skip-broken dnf-plugins-core dnf5-plugins
 
 dnf copr enable -y sneed/llama-cpp-vulkan
 dnf copr enable -y jmarcoshp/grub-btrfs
 
-set_progress 15 "Installing packages..."
-dnf install -y --skip-unavailable --setopt=install_weak_deps=True mesa-vulkan-drivers intel-gpu-firmware amd-gpu-firmware nvidia-gpu-firmware flatpak plasma-discover-flatpak llama-cpp snapper btrfs-assistant grub-btrfs
+set_progress 15 "Installing basic packages..."
+dnf install -y --skip-unavailable --setopt=install_weak_deps=True --allowerasing --skip-broken flatpak plasma-discover-flatpak llama-cpp snapper btrfs-assistant grub-btrfs
+
+set_progress 25 "Installing graphics packages..."
+dnf install -y --skip-unavailable --setopt=install_weak_deps=True --allowerasing --skip-broken mesa-vulkan-drivers intel-gpu-firmware amd-gpu-firmware nvidia-gpu-firmware
 
 # Generate the API key *before* starting llama-server so the first boot launch
 # already requires it (the launcher reads /etc/llama-cpp/apikey). The server
 # only listens on 127.0.0.1 (loopback), so making the key world-readable here is
 # safe; users read it to configure their OpenAI-compatible clients (pi-agent,
 # etc.). Skip generation if generate_key.py is absent so first boot still works.
-if [ -x /usr/local/bin/generate_key.py ]; then
-    mkdir -p /etc/llama-cpp
-    /usr/local/bin/generate_key.py > /etc/llama-cpp/apikey
-    chmod 0644 /etc/llama-cpp/apikey
-    echo "Wrote LLM API key to /etc/llama-cpp/apikey (world-readable; loopback-only server)."
+if [ -s /etc/llama-cpp/apikey ]; then
+    echo "LLM API key already present at /etc/llama-cpp/apikey; reusing it."
 else
-    echo "generate_key.py not found or not executable; skipping API key generation." >&2
+    if [ -x /usr/local/bin/generate_key.py ]; then
+        mkdir -p /etc/llama-cpp
+        if python3 /usr/local/bin/generate_key.py > /etc/llama-cpp/apikey; then
+            chmod 0644 /etc/llama-cpp/apikey
+            echo "Wrote LLM API key to /etc/llama-cpp/apikey (world-readable; loopback-only server)."
+        else
+            echo "generate_key.py failed; skipping API key generation." >&2
+        fi
+    else
+        echo "generate_key.py not found or not executable; skipping API key generation." >&2
+    fi
 fi
 
 set_progress 40 "Setting up the llama.cpp inference server..."
@@ -81,15 +91,6 @@ if rpm -q llama-cpp >/dev/null 2>&1; then
 else
     echo "llama-cpp is not installed; skipping llama-server."
 fi
-
-# Prevent this service from running again.
-mkdir -p /var/lib/agentic
-touch /var/lib/agentic/firstboot-complete
-
-# Service no longer runs again: the marker above short-circuits re-runs, and we
-# drop the enablement so a stray boot can't re-trigger setup. The timer was
-# removed in favor of enabling the service directly.
-systemctl disable --now agentic-firstboot.service 2>/dev/null || true
 
 systemctl enable --now grub-btrfsd.service
 
@@ -103,26 +104,54 @@ systemctl enable --now grub-btrfsd.service
 # so an API-key rotation or a new model preset stays current.
 set_progress 45 "Installing pi agent..."
 # Node.js + npm: required to install pi (@earendil-works/pi-coding-agent) globally.
-dnf install -y --skip-unavailable --setopt=install_weak_deps=True nodejs nodejs-npm
+dnf install -y --skip-unavailable --setopt=install_weak_deps=True --allowerasing --skip-broken nodejs22-npm-bin
 if npm install -g --ignore-scripts @earendil-works/pi-coding-agent; then
     echo "pi installed ($(npm ls -g --depth=0 2>/dev/null | grep '@earendil' || echo pi))"
 else
     echo "WARNING: failed to install pi globally" >&2
 fi
+# Create desktop shortcuts now that the API key (/etc/llama-cpp/apikey), llama.cpp
+# server URL, pi binary and its config all exist. We do NOT ship these .desktop
+# files in the image overlay: they must only appear after first boot runs so every
+# entry points at values generated for this machine. They land in /etc/skel/Desktop
+# (new users get them on their Desktop) and /usr/share/applications (register them
+# in the launcher for all users, including the running live user).
+/usr/local/libexec/create-shortcuts.sh /etc/skel/Desktop || true
+/usr/local/libexec/create-shortcuts.sh /usr/share/applications || true
+
 /usr/local/libexec/pi-config-sync.py
 
 # Install missing recommended packages, filter out boolean '(' expressions and install remaining weak deps
-set_progress 50 "Checking basic packages..."
+set_progress 50 "Installing basic packages..."
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-dnf install -y --skip-unavailable --setopt=install_weak_deps=True @standard @kde-apps @kde-media @kde-desktop @printing @guest-desktop-agents @fonts @core @hardware-support plasma-workspace-wallpapers bluedevil NetworkManager-bluetooth mediawriter
+dnf install -y --skip-unavailable --setopt=install_weak_deps=True --allowerasing --skip-broken @standard @kde-apps @kde-media @kde-desktop @printing @guest-desktop-agents @fonts @core @hardware-support plasma-workspace-wallpapers bluedevil NetworkManager-bluetooth mediawriter
 mapfile -t RECOMMENDS < <(rpm -qa --recommends | grep -v '^(' | awk '{print $1}' | sort -u)
 
 set_progress 60 "Installing extra packages..."
 if [[ ${#RECOMMENDS[@]} -gt 0 ]]; then
-  dnf install -y --setopt=install_weak_deps=True --skip-unavailable "${RECOMMENDS[@]}"
+  dnf install -y --setopt=install_weak_deps=True --skip-unavailable --allowerasing --skip-broken "${RECOMMENDS[@]}"
 fi
 
 set_progress 100 "Fedora Agentic setup complete! You may want to reboot."
 
+# Prevent this service from running again.
+mkdir -p /var/lib/agentic
+touch /var/lib/agentic/firstboot-complete
+
 sleep 2
-# then trap cleanup_progress EXIT
+cleanup_progress
+
+# Take an initial snapper snapshot of the root subvolume so the freshly-configured
+# system can be rolled back. Skip silently when the root filesystem is not Btrfs
+# or snapper is unavailable: first boot must succeed regardless, and snapshotted
+# restore is a best-effort convenience (issue: system rollback).
+if command -v snapper >/dev/null 2>&1 && [ "$(stat -fc %T /)" == "btrfs" ]; then
+    snapper -c root create -d "Initial Fedora Agentic snapshot" \
+        && echo "Created initial snapper snapshot of /." \
+        || echo "SNAPSHOT: snapper snapshot creation failed; continuing without it." >&2
+fi
+
+# Service no longer runs again: the marker above short-circuits re-runs, and we
+# drop the enablement so a stray boot can't re-trigger setup. The timer was
+# removed in favor of enabling the service directly.
+systemctl disable --now agentic-firstboot.service 2>/dev/null || true

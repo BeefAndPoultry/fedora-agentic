@@ -540,6 +540,15 @@ if [[ "$kiwi_profiles" == *"FEX"* ]]; then
 	rm /usr/bin/rm
 fi
 
+# RPM Fusion
+dnf install -y \
+	https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
+	https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+
+# Clean DNF metadata/cache so it doesn't add 100+ MB to your SquashFS ISO
+dnf clean all
+rm -rf /var/cache/dnf/* /var/cache/libdnf5/*
+
 #======================================
 # Report the largest packages (ISO-size diagnosis)
 #======================================
@@ -553,6 +562,6 @@ cat /var/log/largest-packages.txt
 # Run agentic first-boot setup immediately at next boot (no 2-min timer delay).
 # The service waits for network-online.target itself, so enabling the service
 # directly is safe and starts setup as soon as multi-user.target is reached.
-systemctl enable --now agentic-firstboot.service
+systemctl enable agentic-firstboot.service
 
 exit 0

@@ -75,6 +75,8 @@
 		<package name="linux-firmware"/>
 		<package name="bcm283x-firmware" arch="aarch64"/>
 
+		<package name="upower"/> <!-- to show battery level -->
+
         <!-- Wireless firmware for a broad range of built-in and USB adapters. -->
 		<package name="atheros-firmware"/>
 		<package name="b43-fwcutter"/>
@@ -121,6 +123,9 @@
 		<namedCollection name="fonts"/>
 		<namedCollection name="multimedia"/>
 		<namedCollection name="networkmanager-submodules"/>
+		<package name="snapper"/>
+		<package name="libdnf5-plugin-actions"/>
+		<package name="zenity"/>
 		<ignore name="gfs2-utils"/>
 		<ignore name="reiserfs-utils"/>
 	</packages>
