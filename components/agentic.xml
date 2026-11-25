@@ -123,6 +123,7 @@
 		<namedCollection name="fonts"/>
 		<namedCollection name="multimedia"/>
 		<namedCollection name="networkmanager-submodules"/>
+		<package name="snapper"/>
 		<ignore name="gfs2-utils"/>
 		<ignore name="reiserfs-utils"/>
 	</packages>
