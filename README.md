@@ -1,11 +1,13 @@
 Minimum Requirements:
+- 2GHz dual core Intel or AMD processor
 - Memory: 8 GB RAM
 - Storage: 100 GB SSD
+- Display resolution of at least 1024x768
 
 Recommended Hardware:
 - 2018 or newer PC (x86_64)
 - Memory: 32 GB RAM
-- Graphics: Vulkan GPU/iGPU/APU
+- Graphics: Modern Vulkan GPU/iGPU/APU
 - 256 GB NVMe SSD
 
 # Fedora KIWI image descriptions
