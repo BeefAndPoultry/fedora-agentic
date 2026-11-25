@@ -124,6 +124,7 @@
 		<namedCollection name="multimedia"/>
 		<namedCollection name="networkmanager-submodules"/>
 		<package name="snapper"/>
+		<package name="libdnf5-plugin-actions"/>
 		<ignore name="gfs2-utils"/>
 		<ignore name="reiserfs-utils"/>
 	</packages>

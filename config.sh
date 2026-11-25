@@ -540,6 +540,15 @@ if [[ "$kiwi_profiles" == *"FEX"* ]]; then
 	rm /usr/bin/rm
 fi
 
+# RPM Fusion
+dnf install -y \
+	https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
+	https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+
+# Clean DNF metadata/cache so it doesn't add 100+ MB to your SquashFS ISO
+dnf clean all
+rm -rf /var/cache/dnf/* /var/cache/libdnf5/*
+
 #======================================
 # Report the largest packages (ISO-size diagnosis)
 #======================================
