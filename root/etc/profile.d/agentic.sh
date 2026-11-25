@@ -69,5 +69,3 @@ if [ -r /var/lib/llama-cpp/models.ini ]; then
     rm -f "$_ini"
 fi
 export LLAMA_MAX_CTX_SIZE
-
-# TODO: desktop shortcuts we don't want to show in the installer: llama webui, api key, pi

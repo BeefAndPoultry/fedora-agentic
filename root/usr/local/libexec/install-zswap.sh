@@ -54,7 +54,6 @@ else
 fi
 
 # ensure no zram
-dnf remove -y zram-generator-defaults zram-generator || true
 : > /etc/systemd/zram-generator.conf
 swapoff /dev/zram0 || true
 zramctl -r /dev/zram0 || true

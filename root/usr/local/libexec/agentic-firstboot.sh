@@ -110,6 +110,15 @@ if npm install -g --ignore-scripts @earendil-works/pi-coding-agent; then
 else
     echo "WARNING: failed to install pi globally" >&2
 fi
+# Create desktop shortcuts now that the API key (/etc/llama-cpp/apikey), llama.cpp
+# server URL, pi binary and its config all exist. We do NOT ship these .desktop
+# files in the image overlay: they must only appear after first boot runs so every
+# entry points at values generated for this machine. They land in /etc/skel/Desktop
+# (new users get them on their Desktop) and /usr/share/applications (register them
+# in the launcher for all users, including the running live user).
+/usr/local/libexec/create-shortcuts.sh /etc/skel/Desktop || true
+/usr/local/libexec/create-shortcuts.sh /usr/share/applications || true
+
 /usr/local/libexec/pi-config-sync.py
 
 # Install missing recommended packages, filter out boolean '(' expressions and install remaining weak deps

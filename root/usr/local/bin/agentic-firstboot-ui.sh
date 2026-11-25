@@ -40,3 +40,5 @@ while [ -f "$PROGRESS_FILE" ]; do
 done
 
 qdbus-qt6 "$DBUS_REF" close >/dev/null 2>&1 || true
+
+/usr/local/libexec/create-shortcuts.sh ~/Desktop || true

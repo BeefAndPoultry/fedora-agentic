@@ -1,8 +1,0 @@
-[Desktop Entry]
-Type=Link
-URL=http://127.0.0.1:9931
-Name=Fedora Agentic Web UI
-Comment=Open the local llama.cpp inference server web UI
-Icon=web-browser
-Terminal=false
-Categories=Network;WebBrowser;
