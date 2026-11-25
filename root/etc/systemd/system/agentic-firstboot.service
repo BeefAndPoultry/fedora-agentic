@@ -1,7 +1,7 @@
 [Unit]
 Description=Fedora Agentic First Boot Setup
-Wants=network-online.target
-After=network-online.target
+Wants=network-online.target dbus.service
+After=network-online.target local-fs.target dbus.service
 
 # Don't run in the live environment
 ConditionKernelCommandLine=!rd.live.image
