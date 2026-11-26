@@ -51,21 +51,36 @@ jobs:
         # See plugins/ksystemstats-llamacpp/README.md and issue #41.
         run: |
           set -euo pipefail
-          dnf install -y gcc-c++ extra-cmake-modules \
-            qt6-qtbase-devel kf6-coreaddons-devel kf6-i18n-devel \
-            libksysguard-devel cmake
+          # Install via CMake "Provides" specs (cmake(KF6CoreAddons), etc.) so we
+          # are immune to KF6 dev-package name drift, e.g. kf6-kcoreaddons-devel
+          # vs the older kf6-coreaddons-devel. libksysguard-devel pulls in
+          # kf6-ki18n-devel as a dependency.
+          dnf install -y gcc-c++ extra-cmake-modules qt6-qtbase-devel cmake \
+            'cmake(Qt6Core)' 'cmake(Qt6Network)' \
+            'cmake(KF6CoreAddons)' 'cmake(KF6I18n)' \
+            libksysguard-devel
 
           mkdir -p plugins/ksystemstats-llamacpp/build
           cd plugins/ksystemstats-llamacpp/build
           cmake .. -DCMAKE_BUILD_TYPE=Release
           cmake --build . -j
 
-          # Install the built .so + metadata.json next to where KIWI/KDE expects
-          # it inside the overlay, so it ships in the final image.
+          # The plugin target's *install* destination (KDEInstallDirs) is
+          # lib64/qt6/plugins/ksystemstats, but its location in the build tree is
+          # not reliable — so stage-install into a local prefix and copy from there.
+          PREFIX=$(pwd)/stage
+          cmake --install . --prefix "$PREFIX"
+
           DEST=root/usr/lib64/qt6/plugins/ksystemstats
           mkdir -p "$DEST"
-          install -m0755 lib64/qt6/plugins/ksystemstats/libksystemstats_plugin_llamacpp.so "$DEST/"
+          SO=$(find "$PREFIX" -name 'libksystemstats_plugin_llamacpp.so' | head -n 1)
+          if [ -z "$SO" ]; then
+            echo "ERROR: plugin .so not found after install" >&2
+            exit 1
+          fi
+          install -m0755 "$SO" "$DEST/"
           install -m0644 ../metadata.json "$DEST/"
+          rm -rf "$PREFIX"
 
       - name: Build Live ISO
         run: |

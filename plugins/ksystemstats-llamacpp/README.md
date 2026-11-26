@@ -52,9 +52,15 @@ Requires Fedora 45+ development packages (also what CI installs in
 
 ```bash
 sudo dnf install -y cmake gcc-c++ extra-cmake-modules \
-    qt6-qtbase-devel kf6-coreaddons-devel kf6-i18n-devel \
-    libksysguard-devel
+    qt6-qtbase-devel 'cmake(Qt6Core)' 'cmake(Qt6Network)' \
+    'cmake(KF6CoreAddons)' 'cmake(KF6I18n)' libksysguard-devel
 ```
+
+The `cmake(Qt6Core)`, `cmake(KF6CoreAddons)` … specs install any package that
+provides those CMake config files and are immune to KF6 dev-package name drift
+(e.g. the old `kf6-coreaddons-devel` names no longer resolve on Fedora 45).
+`libksysguard-devel` pulls in the `kf6-ki18n-devel` the KF6::I18n link needs as a
+dependency.
 
 ```bash
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
