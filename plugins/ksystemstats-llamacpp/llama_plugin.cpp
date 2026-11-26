@@ -45,40 +45,40 @@ LlamaPlugin::LlamaPlugin(QObject *parent, const QVariantList &args)
     m_activeModel = new KSysGuard::SensorProperty(QStringLiteral("active_model"),
         i18n("Loaded Model"), m_routerObj);
     m_activeModel->setShortName(i18n("Model"));
-    m_activeModel->setVariantType(QMetaType::QString);
+    m_activeModel->setVariantType(QVariant::String);
 
     // Numeric sensors carried as double; units stay consistent for readers.
     m_busySlots = new KSysGuard::SensorProperty(QStringLiteral("busy_slots"),
         i18n("Active Slots"), m_routerObj);
     m_busySlots->setShortName(i18n("Busy Slots"));
-    m_busySlots->setVariantType(QMetaType::Double);
+    m_busySlots->setVariantType(QVariant::Double);
 
     m_totalSlots = new KSysGuard::SensorProperty(QStringLiteral("total_slots"),
         i18n("Total Slots"), m_routerObj);
     m_totalSlots->setShortName(i18n("Slots"));
-    m_totalSlots->setVariantType(QMetaType::Double);
+    m_totalSlots->setVariantType(QVariant::Double);
 
     m_kvCachePercent = new KSysGuard::SensorProperty(QStringLiteral("kv_cache_usage"),
         i18n("KV Cache Usage"), m_routerObj);
     m_kvCachePercent->setShortName(i18n("KV Cache"));
-    m_kvCachePercent->setVariantType(QMetaType::Double);
+    m_kvCachePercent->setVariantType(QVariant::Double);
     m_kvCachePercent->setMin(0.0);
     m_kvCachePercent->setMax(100.0);
 
     m_promptTps = new KSysGuard::SensorProperty(QStringLiteral("prompt_tps"),
         i18n("Prompt Processing Speed"), m_routerObj);
     m_promptTps->setShortName(i18n("Prompt t/s"));
-    m_promptTps->setVariantType(QMetaType::Double);
+    m_promptTps->setVariantType(QVariant::Double);
 
     m_genTps = new KSysGuard::SensorProperty(QStringLiteral("gen_tps"),
         i18n("Token Generation Speed"), m_routerObj);
     m_genTps->setShortName(i18n("Gen t/s"));
-    m_genTps->setVariantType(QMetaType::Double);
+    m_genTps->setVariantType(QVariant::Double);
 
     m_tokensGeneratedTotal = new KSysGuard::SensorProperty(QStringLiteral("tokens_generated_total"),
         i18n("Total Tokens Generated"), m_routerObj);
     m_tokensGeneratedTotal->setShortName(i18n("Tokens"));
-    m_tokensGeneratedTotal->setVariantType(QMetaType::Double);
+    m_tokensGeneratedTotal->setVariantType(QVariant::Double);
 }
 
 QString LlamaPlugin::providerName() const
