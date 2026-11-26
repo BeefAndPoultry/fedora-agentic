@@ -45,6 +45,28 @@ jobs:
         run: |
           dnf install -y kiwi kiwi-systemdeps distribution-gpg-keys git zip
 
+      - name: Build ksystemstats llama.cpp plugin
+        # Compile the native sensor plugin from source, then copy the .so +
+        # metadata.json into the image overlay so KIWI bakes them into the ISO.
+        # See plugins/ksystemstats-llamacpp/README.md and issue #41.
+        run: |
+          set -euo pipefail
+          dnf install -y gcc-c++ extra-cmake-modules \
+            qt6-qtbase-devel kf6-coreaddons-devel kf6-i18n-devel \
+            libksysguard-devel cmake
+
+          mkdir -p plugins/ksystemstats-llamacpp/build
+          cd plugins/ksystemstats-llamacpp/build
+          cmake .. -DCMAKE_BUILD_TYPE=Release
+          cmake --build . -j
+
+          # Install the built .so + metadata.json next to where KIWI/KDE expects
+          # it inside the overlay, so it ships in the final image.
+          DEST=root/usr/lib64/qt6/plugins/ksystemstats
+          mkdir -p "$DEST"
+          install -m0755 lib64/qt6/plugins/ksystemstats/libksystemstats_plugin_llamacpp.so "$DEST/"
+          install -m0644 ../metadata.json "$DEST/"
+
       - name: Build Live ISO
         run: |
           mkdir -p outdir
@@ -123,6 +145,31 @@ jobs:
               exit 1
             fi
           done
+
+      - name: Verify ksystemstats llama.cpp plugin shipped in image
+        # The native sensor plugin (.so + metadata.json) is built from source
+        # and copied into the root overlay, so confirm it reached both the build
+        # image-root AND the final ISO before this step runs.
+        run: |
+          set -euo pipefail
+          IMAGE_ROOT=$(realpath ./outdir-build/build/image-root)
+          SO="$IMAGE_ROOT/usr/lib64/qt6/plugins/ksystemstats/libksystemstats_plugin_llamacpp.so"
+          if [ ! -f "$SO" ]; then
+            echo "ERROR: ksystemstats llama.cpp plugin .so not in image root: $SO" >&2
+            exit 1
+          fi
+          ISO_FILE=$(find ./outdir -name "*.iso" | head -n 1)
+          mkdir -p /tmp/ksplugin-mount
+          xorriso -indev "$ISO_FILE" -osirrox on -extract /usr/lib64/qt6/plugins/ksystemstats \
+            /tmp/ksplugin-mount || {
+            echo "ERROR: could not extract ksystemstats dir from $ISO_FILE" >&2
+            exit 1
+          }
+          if [ ! -f /tmp/ksplugin-mount/libksystemstats_plugin_llamacpp.so ]; then
+            echo "ERROR: .so missing inside ISO: $ISO_FILE" >&2
+            exit 1
+          fi
+          echo "SUCCESS: ksystemstats llama.cpp plugin present in image root and ISO"
 
       - name: Test boot ISO in QEMU (UEFI)
         run: |

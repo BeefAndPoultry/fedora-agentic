@@ -48,6 +48,16 @@
 		<package name="konsole" />
 		<package name="kate" />
 
+		<!-- System Monitor: surfaces the native ksystemstats sensor providers so
+		     users can watch the llama.cpp router (loaded model, active slots, KV
+		     cache, prompt/generation t/s) alongside CPU/memory/disk. The plugin's
+		     .so is built by GitHub Actions into the root overlay (see the build's
+		     "Build ksystemstats llama.cpp plugin" step). -->
+		<package name="plasma-systemmonitor" />
+		<package name="ksystemstats" />
+		<package name="libksysguard" />
+		<package name="libksysguard-plugins" />
+
 		<!-- Display and system configuration (KDE System Settings modules / KCMs) -->
 		<package name="kscreen" />
 		<package name="kinfocenter" />

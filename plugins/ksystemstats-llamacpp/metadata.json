@@ -1,0 +1,11 @@
+{
+    "KPlugin": {
+        "Id": "llamacpp",
+        "Name": "llama.cpp Server",
+        "Description": "Monitors active models, slots, KV cache and token throughput from a router-mode llama-server (feeds ksystemstats / plasma-systemmonitor)",
+        "Version": "1.0.0",
+        "Category": "Monitoring",
+        "Author": "Fedora Agentic",
+        "License": "LGPL-2.1-or-later"
+    }
+}
