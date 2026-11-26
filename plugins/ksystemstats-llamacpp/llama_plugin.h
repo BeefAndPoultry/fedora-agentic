@@ -50,7 +50,7 @@ private:
     QNetworkRequest makeRequest(const QString &path, const QString &modelId = QString()) const;
     void resetIdleValues();
 
-    QString m_baseUrl;              // server base URL, resolved by loadServerConfig()
+    QUrl m_baseUrl;                 // server base URL, resolved by loadServerConfig()
     QString m_apiKey;               // bearer key, or empty if none configured
 
     QMutex m_mutex;                 // guards state and the in-flight chain
