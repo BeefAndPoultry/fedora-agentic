@@ -54,9 +54,9 @@
 		     .so is built by GitHub Actions into the root overlay (see the build's
 		     "Build ksystemstats llama.cpp plugin" step). -->
 		<package name="plasma-systemmonitor" />
-		<package name="ksystemstats" />
-		<package name="libksysguard" />
-		<package name="libksysguard-plugins" />
+        <package name="ksystemstats" />
+        <package name="libksysguard" />
+		
 
 		<!-- Display and system configuration (KDE System Settings modules / KCMs) -->
 		<package name="kscreen" />
