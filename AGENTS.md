@@ -191,13 +191,31 @@ Notes:
 - No `.gguf` model ships in the ISO (keeps it small); users download one into
   `/var/lib/llama-cpp/models/`. The `ConditionPathExists` guard prevents the
   service from failing on first boot.
-- `LLAMA_ARGS` enables `--metrics` and `--slots`, so the Prometheus telemetry
-  endpoint (`http://127.0.0.1:<LLAMA_PORT>/metrics`) and the slots API
-  (`/slots`, `/slot`, `/batch`) are live. Both routes listen on loopback and are
-  gated by the same API key that protects the inference server, so they are safe
-  to expose system-wide. They exist for tooling such as plasma-systemmonitor
-  (issue #41); the systemd sensor bridge that publishes them as native sensors
-  is planned as a follow-up.
+`LLAMA_ARGS` enables `--metrics` and `--slots`, so the Prometheus telemetry
+endpoint (`http://127.0.0.1:<LLAMA_PORT>/metrics`) and the slots API
+(`/slots`, `/slot`, `/batch`) are live. Both routes listen on loopback and are
+gated by the same API key that protects the inference server, so they are safe
+to expose system-wide. They exist for tooling such as plasma-systemmonitor
+(issue #41).
+
+A native C++ `ksystemstats` plugin publishes them as **native sensors** in
+plasma-systemmonitor — issue #41 is now implemented, not planned. The source
+lives in [`plugins/ksystemstats-llamacpp/`](plugins/ksystemstats-llamacpp/)
+(`llama_plugin.cpp`, `llama_plugin.h`, `metadata.json`, `CMakeLists.txt`). It
+reads `/slots` and `/metrics` **only** for the model currently `loaded` (it
+fetches `/models` first, finds the `loaded` entry's id, then queries the other
+two with `?model=<id>`) so it never triggers `--models-autoload` on a second
+GGUF in the preset. It obeys a zero-idle rule: from `update()` it returns
+immediately unless some sensor property is subscribed, so it never polls
+`llama-server` while no sensor is shown.
+
+The `.so` is built by GitHub Actions (in `.github/workflows/build.yml`, before
+`./kiwi-build`) and copied into the image overlay at
+`root/usr/lib64/qt6/plugins/ksystemstats/`; the plugin's build deps are
+installed as part of that step. `plasma-systemmonitor` + `ksystemstats` +
+`libksysguard*` are added to the `KDE-Agentic-Live` profile in
+[`teams/agentic-kde.xml`](teams/agentic-kde.xml) so the sensors are visible.
+See [`plugins/ksystemstats-llamacpp/README.md`](plugins/ksystemstats-llamacpp/README.md).
 
 ### API key for the local LLM
 

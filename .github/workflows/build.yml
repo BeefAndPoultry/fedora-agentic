@@ -45,6 +45,52 @@ jobs:
         run: |
           dnf install -y kiwi kiwi-systemdeps distribution-gpg-keys git zip
 
+      - name: Build ksystemstats llama.cpp plugin
+        # Compile the native sensor plugin from source, then copy the .so +
+        # metadata.json into the image overlay so KIWI bakes them into the ISO.
+        # See plugins/ksystemstats-llamacpp/README.md and issue #41.
+        run: |
+          set -euo pipefail
+          # Build runs in plugins/ksystemstats-llamacpp/build/, a subdirectory of
+          # the checkout. CMake's VCS probe stops at the container mount boundary
+          # and bails out ("not a git repository"); allow it to cross filesystems
+          # so git finds the repo root, eliminating those fatal messages.
+          export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
+          # Install via CMake "Provides" specs (cmake(KF6CoreAddons), etc.) so we
+          # are immune to KF6 dev-package name drift, e.g. kf6-kcoreaddons-devel
+          # vs the older kf6-coreaddons-devel. libksysguard-devel pulls in
+          # kf6-ki18n-devel as a dependency.
+          dnf install -y gcc-c++ extra-cmake-modules qt6-qtbase-devel cmake \
+            'cmake(Qt6Core)' 'cmake(Qt6Network)' \
+            'cmake(KF6CoreAddons)' 'cmake(KF6I18n)' \
+            libksysguard-devel lm_sensors-devel
+          # libksysguard (KSysGuard::SystemStats) transitively links lm_sensors;
+          # the unversioned /usr/lib64/libsensors.so symlink ships in
+          # lm_sensors-devel (Fedora uses an underscore, not a hyphen) and is
+          # required to resolve the plugin's link input.
+
+          mkdir -p plugins/ksystemstats-llamacpp/build
+          cd plugins/ksystemstats-llamacpp/build
+          cmake .. -DCMAKE_BUILD_TYPE=Release
+          cmake --build . -j
+
+          # The plugin target's *install* destination (KDEInstallDirs) is
+          # lib64/qt6/plugins/ksystemstats, but its location in the build tree is
+          # not reliable — so stage-install into a local prefix and copy from there.
+          PREFIX=$(pwd)/stage
+          cmake --install . --prefix "$PREFIX"
+
+          DEST=root/usr/lib64/qt6/plugins/ksystemstats
+          mkdir -p "$DEST"
+          SO=$(find "$PREFIX" -name 'ksystemstats_plugin_llamacpp.so' -o -name 'libksystemstats_plugin_llamacpp.so' | head -n 1)
+          if [ -z "$SO" ]; then
+            echo "ERROR: plugin .so not found after install" >&2
+            exit 1
+          fi
+          install -m0755 "$SO" "$DEST/"
+          install -m0644 ../metadata.json "$DEST/"
+          rm -rf "$PREFIX"
+
       - name: Build Live ISO
         run: |
           mkdir -p outdir
@@ -123,6 +169,31 @@ jobs:
               exit 1
             fi
           done
+
+      - name: Verify ksystemstats llama.cpp plugin shipped in image
+        # The native sensor plugin (.so + metadata.json) is built from source
+        # and copied into the root overlay, so confirm it reached both the build
+        # image-root AND the final ISO before this step runs.
+        run: |
+          set -euo pipefail
+          IMAGE_ROOT=$(realpath ./outdir-build/build/image-root)
+          SO="$IMAGE_ROOT/usr/lib64/qt6/plugins/ksystemstats/libksystemstats_plugin_llamacpp.so"
+          if [ ! -f "$SO" ]; then
+            echo "ERROR: ksystemstats llama.cpp plugin .so not in image root: $SO" >&2
+            exit 1
+          fi
+          ISO_FILE=$(find ./outdir -name "*.iso" | head -n 1)
+          mkdir -p /tmp/ksplugin-mount
+          xorriso -indev "$ISO_FILE" -osirrox on -extract /usr/lib64/qt6/plugins/ksystemstats \
+            /tmp/ksplugin-mount || {
+            echo "ERROR: could not extract ksystemstats dir from $ISO_FILE" >&2
+            exit 1
+          }
+          if [ ! -f /tmp/ksplugin-mount/libksystemstats_plugin_llamacpp.so ]; then
+            echo "ERROR: .so missing inside ISO: $ISO_FILE" >&2
+            exit 1
+          fi
+          echo "SUCCESS: ksystemstats llama.cpp plugin present in image root and ISO"
 
       - name: Test boot ISO in QEMU (UEFI)
         run: |
