@@ -82,7 +82,7 @@ jobs:
 
           DEST=root/usr/lib64/qt6/plugins/ksystemstats
           mkdir -p "$DEST"
-          SO=$(find "$PREFIX" -name 'libksystemstats_plugin_llamacpp.so' | head -n 1)
+          SO=$(find "$PREFIX" -name 'ksystemstats_plugin_llamacpp.so' -o -name 'libksystemstats_plugin_llamacpp.so' | head -n 1)
           if [ -z "$SO" ]; then
             echo "ERROR: plugin .so not found after install" >&2
             exit 1
