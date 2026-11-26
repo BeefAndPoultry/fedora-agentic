@@ -19,9 +19,7 @@
 #include <QStandardPaths>
 #include <QString>
 #include <QStringList>
-#include <QStringRef>
 #include <QTextStream>
-#include <QUrl>
 #include <QUrlQuery>
 
 namespace KSysGuard
