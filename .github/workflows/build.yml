@@ -51,6 +51,11 @@ jobs:
         # See plugins/ksystemstats-llamacpp/README.md and issue #41.
         run: |
           set -euo pipefail
+          # Build runs in plugins/ksystemstats-llamacpp/build/, a subdirectory of
+          # the checkout. CMake's VCS probe stops at the container mount boundary
+          # and bails out ("not a git repository"); allow it to cross filesystems
+          # so git finds the repo root, eliminating those fatal messages.
+          export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
           # Install via CMake "Provides" specs (cmake(KF6CoreAddons), etc.) so we
           # are immune to KF6 dev-package name drift, e.g. kf6-kcoreaddons-devel
           # vs the older kf6-coreaddons-devel. libksysguard-devel pulls in

@@ -51,9 +51,9 @@ target_link_libraries(ksystemstats_plugin_llamacpp
         KF6::CoreAddons
         KF6::I18n
         KSysGuard::SystemStats)
-
-include(GNUInstallDirs)
-install(EXPORT ksystemstats_plugin_llamacpp DESTINATION "${KDE_INSTALL_CMAKEPACKAGEDIR}")
+# The kcoreaddons plugin macro already emits an install rule for the .so under
+# lib64/qt6/plugins/ksystemstats; a downstream find_package() export set is not
+# needed here (no consumer in this repo), so skip install(EXPORT).
 
 install(FILES metadata.json
     DESTINATION "${LLMACPP_PLUGIN_DESTINATION}")
