@@ -251,7 +251,7 @@ void LlamaPlugin::fetchSlots(const QString &modelId)
 
     QNetworkAccessManager nam;
     QNetworkReply *reply = nam.get(makeRequest(QStringLiteral("/slots"), modelId));
-    connect(reply, &QNetworkReply::finished, this, [this, reply]() {
+    connect(reply, &QNetworkReply::finished, this, [this, reply, modelId]() {
         reply->deleteLater();
 
         int total = 0;

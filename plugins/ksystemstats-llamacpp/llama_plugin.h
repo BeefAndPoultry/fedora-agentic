@@ -45,6 +45,14 @@ private:
     void fetchSlots(const QString &modelId);
     void fetchMetrics(const QString &modelId);
 
+    // Convenience request builder + the idle-sensor reset used when no model
+    // is loaded, so their .cpp definitions link and are callable.
+    QNetworkRequest makeRequest(const QString &path, const QString &modelId = QString()) const;
+    void resetIdleValues();
+
+    QString m_baseUrl;              // server base URL, resolved by loadServerConfig()
+    QString m_apiKey;               // bearer key, or empty if none configured
+
     QMutex m_mutex;                 // guards state and the in-flight chain
     bool m_pollInFlight = false;
 
