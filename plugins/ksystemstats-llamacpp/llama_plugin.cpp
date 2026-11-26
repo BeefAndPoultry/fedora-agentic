@@ -81,6 +81,8 @@ LlamaPlugin::LlamaPlugin(QObject *parent, const QVariantList &args)
     m_tokensGeneratedTotal->setVariantType(QVariant::Double);
 }
 
+LlamaPlugin::~LlamaPlugin() = default;
+
 QString LlamaPlugin::providerName() const
 {
     return QStringLiteral("llamacpp");
