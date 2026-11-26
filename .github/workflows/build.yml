@@ -63,10 +63,11 @@ jobs:
           dnf install -y gcc-c++ extra-cmake-modules qt6-qtbase-devel cmake \
             'cmake(Qt6Core)' 'cmake(Qt6Network)' \
             'cmake(KF6CoreAddons)' 'cmake(KF6I18n)' \
-            libksysguard-devel lm-sensors-devel
+            libksysguard-devel lm_sensors-devel
           # libksysguard (KSysGuard::SystemStats) transitively links lm_sensors;
           # the unversioned /usr/lib64/libsensors.so symlink ships in
-          # lm-sensors-devel and is required to resolve the plugin's link input.
+          # lm_sensors-devel (Fedora uses an underscore, not a hyphen) and is
+          # required to resolve the plugin's link input.
 
           mkdir -p plugins/ksystemstats-llamacpp/build
           cd plugins/ksystemstats-llamacpp/build

@@ -54,7 +54,7 @@ Requires Fedora 45+ development packages (also what CI installs in
 sudo dnf install -y cmake gcc-c++ extra-cmake-modules \
     qt6-qtbase-devel 'cmake(Qt6Core)' 'cmake(Qt6Network)' \
     'cmake(KF6CoreAddons)' 'cmake(KF6I18n)' \
-    libksysguard-devel lm-sensors-devel
+    libksysguard-devel lm_sensors-devel
 ```
 
 The `cmake(Qt6Core)`, `cmake(KF6CoreAddons)` … specs install any package that
@@ -63,10 +63,11 @@ provides those CMake config files and are immune to KF6 dev-package name drift
 `libksysguard-devel` pulls in the `kf6-ki18n-devel` the KF6::I18n link needs as a
 dependency.
 
-`lm-sensors-devel` provides the unversioned `/usr/lib64/libsensors.so` linker
+`lm_sensors-devel` provides the unversioned `/usr/lib64/libsensors.so` linker
 symlink: `KSysGuard::SystemStats` (via `libksysguard`) links lm_sensors, and the
 plugin's link step references that symlink through CMake's imported target —
 without it, make aborts with `No rule to make target '/usr/lib64/libsensors.so'`.
+Fedora uses an underscore in this package name (not a hyphen).
 
 ```bash
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
