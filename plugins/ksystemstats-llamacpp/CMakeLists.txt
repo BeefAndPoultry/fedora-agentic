@@ -27,6 +27,11 @@ find_package(KF6 REQUIRED COMPONENTS CoreAddons I18n)
 find_package(KSysGuard REQUIRED)
 
 # ---- Plugin -----------------------------------------------------------------
+# kcoreaddons_add_plugin + KDECMakeSettings require CMAKE_LIBRARY_OUTPUT_DIRECTORY
+# to be defined (KDE projects set it via KDEInstallDirs); define an explicit
+# default so a plain `cmake ..` build works outside of a full KF6 project layout.
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${KDE_INSTALL_LIBDIR}/plugins")
+
 kcoreaddons_add_plugin(ksystemstats_plugin_llamacpp
     SOURCES
         llama_plugin.cpp
